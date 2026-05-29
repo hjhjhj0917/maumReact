@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { getUserStatus } from '../../api/authApi';
+import { getUserStatus } from '../api/authApi';
 
 export const useHeader = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

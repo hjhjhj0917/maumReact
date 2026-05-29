@@ -1,5 +1,5 @@
 import React from 'react';
-import * as S from '../../style/components/common/CustomModal.styles';
+import * as S from '../style/components/CustomModal.styles';
 
 const CustomModal = ({ isOpen, title, message, isConfirm, onConfirm, onCancel }) => {
     if (!isOpen) return null;

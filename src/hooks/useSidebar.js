@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { logoutUser } from '../../api/authApi';
-import {getRecentDiaries } from "../../api/diaryApi.js";
+import { logoutUser } from '../api/authApi';
+import {getRecentDiaries } from "../api/diaryApi.js";
 
 export const useSidebar = () => {
     const navigate = useNavigate();

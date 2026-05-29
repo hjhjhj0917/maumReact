@@ -1,6 +1,6 @@
 import React from 'react';
-import CustomModal from '../common/CustomModal';
-import * as S from '../../style/components/layout/Sidebar.styles';
+import CustomModal from './CustomModal';
+import * as S from '../style/components/Sidebar.styles';
 
 const Sidebar = ({
                      isOpen,

@@ -1,7 +1,7 @@
 import React from 'react';
-import { useHeader } from '../../hooks/layout/useHeader';
-import logoImg from '../../assets/images/includes/logo.png';
-import * as S from '../../style/components/layout/Header.styles';
+import { useHeader } from '../hooks/useHeader';
+import logoImg from '../assets/images/includes/logo.png';
+import * as S from '../style/components/Header.styles';
 
 const Header = () => {
     const {

@@ -1,6 +1,6 @@
 import React from 'react';
-import {useFooter} from '../../hooks/common/useFooter.js';
-import * as S from '../../style/components/common/Footer.styles';
+import {useFooter} from '../hooks/useFooter.js';
+import * as S from '../style/components/Footer.styles';
 
 const Footer = () => {
     const {currentYear, socialLinks} = useFooter();

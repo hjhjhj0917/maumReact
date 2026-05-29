@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import InputField from '../../components/common/InputField';
-import CustomModal from '../../components/common/CustomModal';
+import InputField from '../../components/InputField';
+import CustomModal from '../../components/CustomModal';
 import { useRegisterForm } from '../../hooks/account/useRegisterForm';
-import RollerDatePicker from '../../components/common/RollerDatePicker';
+import RollerDatePicker from '../../components/RollerDatePicker';
 import * as S from '../../style/pages/Account/Register.styles';
 
 const Register = () => {

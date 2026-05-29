@@ -1,5 +1,5 @@
 import React from 'react';
-import RollerDatePicker from '../../components/common/RollerDatePicker';
+import RollerDatePicker from '../../components/RollerDatePicker';
 import { useDiaryWriteForm } from '../../hooks/diary/useDiaryWriteForm';
 import * as S from '../../style/pages/Diary/DiaryWrite.styles';
 

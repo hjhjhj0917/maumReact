@@ -1,5 +1,5 @@
 import React from 'react';
-import * as S from '../../style/components/account/ZodiacItem.styles.js';
+import * as S from '../style/components/ZodiacItem.styles.js';
 
 const ZodiacItem = ({ data, isSelected, onClick }) => {
     return (

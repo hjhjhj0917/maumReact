@@ -1,6 +1,6 @@
 import React from 'react';
-import { useRollerDatePicker } from '../../hooks/common/useRollerDatePicker';
-import * as S from '../../style/components/common/RollerDatePicker.styles';
+import { useRollerDatePicker } from '../hooks/useRollerDatePicker';
+import * as S from '../style/components/RollerDatePicker.styles';
 
 const RollerDatePicker = ({ onConfirm, onClose, initialDate }) => {
     const {

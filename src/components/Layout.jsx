@@ -2,8 +2,8 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from './Header';
 import Sidebar from './Sidebar';
-import { useSidebar } from '../../hooks/layout/useSidebar';
-import * as S from '../../style/components/layout/AppLayout.styles';
+import { useSidebar } from '../hooks/useSidebar';
+import * as S from '../style/components/AppLayout.styles';
 
 const Layout = () => {
     const {

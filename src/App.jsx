@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import {GlobalStyle} from './style/GlobalStyle';
-import HeaderLayout from './components/layout/HeaderLayout';
-import Layout from './components/layout/Layout';
+import HeaderLayout from './components/HeaderLayout';
+import Layout from './components/Layout';
 import Index from './pages/Index';
 import DiaryWrite from './pages/Diary/DiaryWrite';
 import AccountRoutes from './routes/AccountRoutes';

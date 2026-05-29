@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from './Header';
-import * as S from '../../style/components/layout/HeaderLayout.styles';
+import * as S from '../style/components/HeaderLayout.styles';
 
 const HeaderLayout = () => {
     return (

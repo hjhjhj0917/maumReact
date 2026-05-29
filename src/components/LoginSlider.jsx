@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import * as S from '../../style/components/account/LoginSlider.styles';
-import bg1 from '../../assets/images/account/login-background1.jpg';
-import bg2 from '../../assets/images/account/login-background2.jpg';
-import bg3 from '../../assets/images/account/login-background3.jpg';
+import * as S from '../style/components/LoginSlider.styles';
+import bg1 from '../assets/images/account/login-background1.jpg';
+import bg2 from '../assets/images/account/login-background2.jpg';
+import bg3 from '../assets/images/account/login-background3.jpg';
 
 const LoginSlider = () => {
     const [slideIndex, setSlideIndex] = useState(0);
