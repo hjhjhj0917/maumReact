@@ -71,9 +71,10 @@ export const SliderWrapper = styled.div`
 export const Slide = styled.div`
     display: ${props => (props.$active ? 'block' : 'none')};
     animation: ${fadeText} 1s ease-out;
-
+    margin-top: 50px;
+    
     h2 {
-        font-size: 3.5rem;
+        font-size: 2.5rem;
         margin-bottom: 20px;
         font-weight: 700;
         white-space: nowrap;
@@ -86,7 +87,7 @@ export const Slide = styled.div`
     }
 
     p {
-        font-size: 1.2rem;
+        font-size: 1.0rem;
         line-height: 1.6;
         white-space: nowrap;
         text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);

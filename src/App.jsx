@@ -10,6 +10,7 @@ import DiaryDetail from "./pages/Diary/DiaryDetail.jsx";
 import ChatBot from "./pages/ChatBot/ChatBot.jsx";
 import Map from "./pages/Map/Map.jsx";
 import Profile from "./pages/Account/Profile.jsx";
+import NotFound from "./pages/NotFound.jsx";
 
 function App() {
     return (
@@ -32,6 +33,8 @@ function App() {
                     <Route path="/map" element={<Map />} />
                     <Route path="/diary/:diaryNo" element={<DiaryDetail />} />
                 </Route>
+
+                <Route path="*" element={<NotFound />} />
             </Routes>
         </BrowserRouter>
     );

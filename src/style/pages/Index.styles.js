@@ -332,7 +332,7 @@ export const FooterGrid = styled.div`
     max-width: 1200px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 60px;
 
     @media (max-width: 768px) {

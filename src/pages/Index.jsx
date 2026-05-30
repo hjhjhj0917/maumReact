@@ -1,11 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useIndex, useDraggable } from '../hooks/useIndex.js';
 import * as S from '../style/pages/Index.styles';
 import logoImg from '../assets/images/includes/logo.png';
+import Login from './Account/Login';
+
+// 💡 핵심 해결책: 에러가 나지 않도록 useDraggable을 별도의 컴포넌트로 완전히 분리했습니다.
+const DraggableEmotion = ({ data, index }) => {
+    const draggable = useDraggable(data.x, data.y);
+
+    return (
+        <S.DraggableItem {...draggable.dragProps}>
+            <S.FloatingElement
+                $isDragging={draggable.isDragging}
+                $duration={`${5 + (index % 3)}s`}
+                $delay={`${index * 0.2}s`}
+            >
+                <S.HeroPill
+                    $color={data.color}
+                    $isDark={['#4B0082', '#1E3A8A', '#556B2F'].includes(data.color)}
+                >
+                    #{data.label}
+                </S.HeroPill>
+            </S.FloatingElement>
+        </S.DraggableItem>
+    );
+};
 
 const Index = () => {
     const { scrolled, stats, statsRef1, statsRef2 } = useIndex();
+    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
     const emotionData = [
         { label: "무감정", color: "#9E9E9E", x: -620, y: -240 },
@@ -19,8 +43,6 @@ const Index = () => {
         { label: "분노", color: "#FF3B30", x: 630, y: 240 },
     ];
 
-    const draggables = emotionData.map(data => useDraggable(data.x, data.y));
-
     return (
         <S.PageWrapper>
             <S.Header $scrolled={scrolled}>
@@ -33,9 +55,17 @@ const Index = () => {
                     <Link to="#about">About</Link>
                 </S.NavLinks>
                 <S.AuthButtons>
-                    <Link to="/account/login">
-                        <S.Button>Sign in</S.Button>
-                    </Link>
+                    {/* Sign up 버튼: 테두리/배경 없애고 페이지 이동 */}
+                    <S.Button
+                        as={Link}
+                        to="/account/register"
+                        style={{ border: 'none', background: 'transparent' }}
+                    >
+                        Sign up
+                    </S.Button>
+                    <S.Button onClick={() => setIsLoginModalOpen(true)}>
+                        Sign in
+                    </S.Button>
                 </S.AuthButtons>
             </S.Header>
 
@@ -46,11 +76,9 @@ const Index = () => {
                         HyperCLOVA X와 감정 분석 모델을 통해 당신의 일상 속에 숨겨진 감정을 발견하세요.
                         AI와의 대화를 통해 지친 마음을 다독이고 내일을 위한 힘을 <br />얻어 보세요.
                     </S.Subtitle>
-                    <Link to="/account/login">
-                        <S.Button $primary style={{ padding: '16px 32px', fontSize: '18px' }}>
-                            지금 시작하기
-                        </S.Button>
-                    </Link>
+                    <S.Button $primary style={{ padding: '16px 32px', fontSize: '18px' }} onClick={() => setIsLoginModalOpen(true)}>
+                        지금 시작하기
+                    </S.Button>
 
                     <S.LogoTicker>
                         <i className="fa-brands fa-java" title="Java"></i>
@@ -62,21 +90,9 @@ const Index = () => {
                 </S.HeroContent>
 
                 <S.InteractiveCanvas>
-                    {draggables.map((draggable, index) => (
-                        <S.DraggableItem key={index} {...draggable.dragProps}>
-                            <S.FloatingElement
-                                $isDragging={draggable.isDragging}
-                                $duration={`${5 + (index % 3)}s`}
-                                $delay={`${index * 0.2}s`}
-                            >
-                                <S.HeroPill
-                                    $color={emotionData[index].color}
-                                    $isDark={['#4B0082', '#1E3A8A', '#556B2F'].includes(emotionData[index].color)}
-                                >
-                                    #{emotionData[index].label}
-                                </S.HeroPill>
-                            </S.FloatingElement>
-                        </S.DraggableItem>
+                    {/* 분리된 안전한 컴포넌트를 호출하여 렌더링합니다 */}
+                    {emotionData.map((data, index) => (
+                        <DraggableEmotion key={index} data={data} index={index} />
                     ))}
                 </S.InteractiveCanvas>
             </S.HeroSection>
@@ -204,21 +220,18 @@ const Index = () => {
                     <div>
                         <h4>Technology</h4>
                         <ul>
-                            <li><Link to="#">HyperCLOVA X</Link></li>
+                            <li><Link to="https://clova.ai/">HyperCLOVA X</Link></li>
                             <li><Link to="#">NLP Models</Link></li>
                             <li><Link to="#">RAG Architecture</Link></li>
                         </ul>
                     </div>
-                    {/*<div>*/}
-                    {/*    <h4>Support</h4>*/}
-                    {/*    <ul>*/}
-                    {/*        <li><Link to="#">이용약관</Link></li>*/}
-                    {/*        <li><Link to="#">개인정보 처리방침</Link></li>*/}
-                    {/*        <li><Link to="#">문의하기</Link></li>*/}
-                    {/*    </ul>*/}
-                    {/*</div>*/}
                 </S.FooterGrid>
             </S.Footer>
+
+            {/* 로그인 모달 렌더링 */}
+            {isLoginModalOpen && (
+                <Login onClose={() => setIsLoginModalOpen(false)} />
+            )}
         </S.PageWrapper>
     );
 };
