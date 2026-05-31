@@ -22,7 +22,7 @@ const FindPw = () => {
         handleStep2Submit,
         handleStep3Submit,
         handleResend,
-        navigate
+        // navigate
     } = useFindPwForm();
 
     const steps = [
@@ -127,15 +127,15 @@ const FindPw = () => {
                     </S.SlideViewport>
 
                     <S.AuthLinks>
-                        <Link to="/account/login">로그인</Link>
+                        <Link to="/account/register">회원가입</Link>
                         <S.Separator>|</S.Separator>
                         <Link to="/account/findId">아이디 찾기</Link>
                     </S.AuthLinks>
 
-                    <S.SignupBox>
-                        아직 회원이 아니시라면, 지금 바로 마음을 시작해 보세요.
-                        <S.LinkSignup to="/account/register">가입하기</S.LinkSignup>
-                    </S.SignupBox>
+                    {/*<S.SignupBox>*/}
+                    {/*    아직 회원이 아니시라면, 지금 바로 마음을 시작해 보세요.*/}
+                    {/*    <S.LinkSignup to="/account/register">가입하기</S.LinkSignup>*/}
+                    {/*</S.SignupBox>*/}
                 </S.FindPwCard>
             </S.Container>
         </S.FindPwWrapper>

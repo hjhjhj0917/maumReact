@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+// import React, { useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import InputField from '../../components/InputField';
 import CustomModal from '../../components/CustomModal';
@@ -132,15 +132,15 @@ const FindId = () => {
                     </S.SlideViewport>
 
                     <S.AuthLinks>
-                        <Link to="/account/login">로그인</Link>
+                        <Link to="/account/register">회원가입</Link>
                         <S.Separator>|</S.Separator>
                         <Link to="/account/findPw">비밀번호 찾기</Link>
                     </S.AuthLinks>
 
-                    <S.SignupBox>
-                        아직 회원이 아니시라면, 지금 바로 마음을 시작해 보세요.
-                        <S.LinkSignup to="/account/register">가입하기</S.LinkSignup>
-                    </S.SignupBox>
+                    {/*<S.SignupBox>*/}
+                    {/*    아직 회원이 아니시라면, 지금 바로 마음을 시작해 보세요.*/}
+                    {/*    <S.LinkSignup to="/account/register">가입하기</S.LinkSignup>*/}
+                    {/*</S.SignupBox>*/}
                 </S.FindIdCard>
             </S.Container>
         </S.FindIdWrapper>

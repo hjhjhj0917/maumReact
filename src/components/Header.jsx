@@ -8,8 +8,8 @@ const Header = () => {
         isMobileMenuOpen,
         user,
         toggleMobileMenu,
-        isLoginPage,
-        isRegisterPage
+        // isLoginPage,
+        // isRegisterPage
     } = useHeader();
 
     return (
@@ -31,21 +31,7 @@ const Header = () => {
             </S.MenuToggle>
 
             <S.NavMenu $isOpen={isMobileMenuOpen}>
-                {!user ? (
-                    <>
-                        {!isRegisterPage && (
-                            <S.NavItem>
-                                <S.NavLink to="/account/register">회원가입</S.NavLink>
-                            </S.NavItem>
-                        )}
-
-                        {!isLoginPage && (
-                            <S.NavItem>
-                                <S.NavLink to="/account/login">로그인</S.NavLink>
-                            </S.NavItem>
-                        )}
-                    </>
-                ) : (
+                {!user ? "" : (
                     <S.NavItem>
                         <S.UserProfileContainer>
                             <S.ProfileImg src={user.profileImg} alt="프로필" />

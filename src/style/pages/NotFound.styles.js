@@ -1,9 +1,15 @@
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 
-const float = keyframes`
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-15px); }
-    100% { transform: translateY(0px); }
+// const float = keyframes`
+//     0% { transform: translateY(0px); }
+//     50% { transform: translateY(-15px); }
+//     100% { transform: translateY(0px); }
+// `;
+
+const floatAnimation = keyframes`
+    0% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(2deg); }
+    100% { transform: translateY(0px) rotate(0deg); }
 `;
 
 export const NotFoundContainer = styled.div`
@@ -12,11 +18,20 @@ export const NotFoundContainer = styled.div`
     align-items: center;
     justify-content: center;
     height: 100vh;
-    /* 따뜻하고 편안한 오프화이트 ~ 연한 그레이 배경 */
     background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
     font-family: 'Pretendard', sans-serif;
     text-align: center;
     padding: 20px;
+    position: relative;
+    overflow: hidden;
+`;
+
+export const ContentWrapper = styled.div`
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 `;
 
 export const ErrorCode = styled.h1`
@@ -24,13 +39,7 @@ export const ErrorCode = styled.h1`
     font-weight: 800;
     margin: 0;
     line-height: 1;
-    animation: ${float} 4s ease-in-out infinite;
-    
-    /* 기존 챗봇 인풋창에 쓰신 따뜻한 무지개/선셋 그라데이션 재사용 */
-    background: linear-gradient(
-        115deg,
-        #FFD700, #FFA500, #FF3B30, #4B0082, #00BFFF
-    );
+    background: linear-gradient(115deg, #555555, #888888, #cccccc);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     opacity: 0.8;
@@ -81,5 +90,46 @@ export const HomeButton = styled.button`
     
     i {
         font-size: 14px;
+    }
+`;
+
+export const InteractiveCanvas = styled.div`
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+`;
+
+export const DraggableItem = styled.div`
+    pointer-events: auto;
+    touch-action: none;
+    user-select: none;
+    will-change: transform;
+    left: 50%;
+    top: 50%;
+`;
+
+export const FloatingElement = styled.div`
+    animation: ${props => !props.$isDragging && css`${floatAnimation} ${props.$duration || '6s'} ease-in-out infinite`};
+    animation-delay: ${props => props.$delay || '0s'};
+`;
+
+export const HeroPill = styled.div`
+    padding: 10px 22px;
+    border-radius: 30px;
+    font-size: 15px;
+    font-weight: 700;
+    color: ${props => props.$isDark ? '#ffffff' : '#000000'};
+    background: ${props => props.$color || '#fff'};
+    white-space: nowrap;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    cursor: grab;
+
+    &:active {
+        cursor: grabbing;
     }
 `;

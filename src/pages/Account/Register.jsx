@@ -164,10 +164,10 @@ const Register = () => {
                         )}
                     </form>
 
-                    <S.LoginBox>
-                        이미 마음(MAÜM) 회원이신가요?
-                        <S.LinkLogin to="/account/login">로그인</S.LinkLogin>
-                    </S.LoginBox>
+                    {/*<S.LoginBox>*/}
+                    {/*    이미 마음(MAÜM) 회원이신가요?*/}
+                    {/*    <S.LinkLogin to="/account/login">로그인</S.LinkLogin>*/}
+                    {/*</S.LoginBox>*/}
                 </S.RegisterCard>
             </S.Container>
         </S.RegisterWrapper>
