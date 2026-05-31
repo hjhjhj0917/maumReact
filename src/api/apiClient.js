@@ -58,7 +58,7 @@ apiClient.interceptors.response.use(
                     isTokenRefreshing = false;
                     refreshSubscribers = [];
 
-                    window.location.href = '/account/login';
+                    window.location.href = '/';
                     return Promise.reject(refreshError);
                 }
             }

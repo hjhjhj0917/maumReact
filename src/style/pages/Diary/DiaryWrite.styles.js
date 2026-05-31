@@ -1,82 +1,167 @@
 import styled, { keyframes } from 'styled-components';
 
-export const WritePageContainer = styled.div`
-    padding: 90px 50px 0 50px;
-    max-width: 1200px;
-    margin: 0 auto;
+const spin = keyframes`
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+`;
+
+export const LoadingOverlay = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(2px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+`;
+
+export const Spinner = styled.div`
+    width: 40px;
+    height: 40px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #37352f;
+    border-radius: 50%;
+    animation: ${spin} 1s linear infinite;
+    margin-bottom: 16px;
+`;
+
+export const LoadingText = styled.div`
+    font-size: 15px;
+    font-weight: 500;
+    color: #37352f;
+    text-align: center;
+
+    span {
+        display: block;
+        font-size: 13px;
+        color: #787774;
+        margin-top: 8px;
+        font-weight: 400;
+    }
+`;
+
+export const PageContainer = styled.div`
     width: 100%;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    gap: 40px;
-    box-sizing: border-box;
-
-    @media (max-width: 768px) {
-        padding: 80px 20px 0 20px;
-    }
+    align-items: center;
+    background-color: #ffffff;
+    color: #37352f;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    padding-bottom: 100px;
+    padding-top: 100px;
 `;
 
-export const HeaderSection = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-
-    p {
-        font-size: 18px;
-        color: #8e918f;
-        margin-top: 5px;
-    }
-`;
-
-export const TitleDateRow = styled.div`
+export const TopBar = styled.div`
+    width: 100%;
+    max-width: 900px;
+    padding: 20px 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 20px;
+    box-sizing: border-box;
+`;
 
-    @media (max-width: 560px) {
-        flex-direction: column;
-        align-items: flex-start;
+export const ButtonGroup = styled.div`
+    display: flex;
+    gap: 8px;
+`;
+
+export const ActionButton = styled.button`
+    background: transparent;
+    border: none;
+    color: #787774;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    &:hover:not(:disabled) {
+        background: #efefef;
+        color: #37352f;
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
     }
 `;
 
+export const SaveButton = styled(ActionButton)`
+    color: #0f7b6c;
+
+    &:hover:not(:disabled) {
+        background: #e1f5f2;
+        color: #0f7b6c;
+    }
+`;
+
+export const ContentWrapper = styled.div`
+    width: 100%;
+    max-width: 900px;
+    padding: 40px 40px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+`;
+
 export const TitleInput = styled.input`
-    flex: 1;
-    background: transparent;
+    font-size: 40px;
+    font-weight: 700;
+    color: #37352f;
+    margin: 0 0 30px 0;
+    letter-spacing: -0.02em;
+    width: 100%;
     border: none;
     outline: none;
-    color: #333;
-    font-size: 40px;
-    font-weight: 400;
-    width: 100%;
+    background: transparent;
+    font-family: inherit;
+    padding: 0;
 
     &::placeholder {
-        color: #e3e3e3;
+        color: #e2e2e0;
     }
+`;
+
+export const EntrySection = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 20px;
+`;
+
+export const EntryHeader = styled.div`
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
 `;
 
 export const DateWrapper = styled.div`
     position: relative;
 `;
 
-export const DateSelector = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: #333;
-    font-size: 16px;
-    font-weight: 400;
+export const DateSelector = styled.span`
+    font-size: 22px;
+    font-weight: 600;
+    color: #9a9a97;
     cursor: pointer;
-    padding: 8px 12px;
-    border-radius: 8px;
-    transition: background-color 0.2s;
+    transition: color 0.2s;
 
     &:hover {
-        background-color: rgba(255, 255, 255, 0.05);
-    }
-
-    i {
-        font-size: 18px;
+        color: #787774;
     }
 `;
 
@@ -92,111 +177,33 @@ export const PickerOverlay = styled.div`
 export const PickerContainer = styled.div`
     position: absolute;
     top: calc(100% + 10px);
-    right: 0;
+    left: 0;
     width: 300px;
     z-index: 100;
-
-    @media (max-width: 560px) {
-        left: 0;
-        right: auto;
-    }
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ededeb;
+    overflow: hidden;
 `;
 
-export const EditorWrapper = styled.div`
-    background-color: #fff;
-    border-radius: 28px 28px 0 0;
-    padding: 40px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
-
-    textarea {
-        flex: 1;
-        background: transparent;
-        border: none;
-        outline: none;
-        color: #333;
-        font-size: 17px;
-        line-height: 1.6;
-        resize: none;
-
-        &::placeholder {
-            color: #8e918f;
-        }
-    }
-`;
-
-export const FooterActions = styled.div`
-    display: flex;
-    justify-content: flex-end;
-    padding-top: 20px;
-`;
-
-export const SubmitButton = styled.button`
-    background-color: #FFD166;
-    color: #131314;
-    border: none;
-    padding: 14px 28px;
-    border-radius: 24px;
+export const ContentTextarea = styled.textarea`
+    width: 100%;
+    min-height: 400px;
     font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s;
+    line-height: 1.7;
+    color: #37352f;
+    background: transparent;
+    border: none;
+    padding: 0;
+    outline: none;
+    resize: none;
+    overflow: hidden;
+    font-family: inherit;
+    white-space: pre-wrap;
+    word-break: break-all;
 
-    &:hover:not(:disabled) {
-        background-color: #f7c244;
-    }
-
-    &:disabled {
-        background-color: #e0e0e0;
-        color: #a0a0a0;
-        cursor: not-allowed;
-    }
-`;
-
-const spin = keyframes`
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-`;
-
-export const LoadingOverlay = styled.div`
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(5px);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-`;
-
-export const Spinner = styled.div`
-    width: 60px;
-    height: 60px;
-    border: 5px solid #f3f3f3;
-    border-top: 5px solid #FFD166;
-    border-radius: 50%;
-    animation: ${spin} 1s linear infinite;
-    margin-bottom: 24px;
-`;
-
-export const LoadingText = styled.div`
-    font-size: 20px;
-    font-weight: 600;
-    color: #333;
-    text-align: center;
-    line-height: 1.5;
-
-    span {
-        display: block;
-        font-size: 15px;
-        font-weight: 400;
-        color: #888;
-        margin-top: 10px;
+    &::placeholder {
+        color: #e2e2e0;
     }
 `;

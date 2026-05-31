@@ -11,8 +11,8 @@ export const LoadingOverlay = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(5px);
+    background-color: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(2px);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -21,300 +21,250 @@ export const LoadingOverlay = styled.div`
 `;
 
 export const Spinner = styled.div`
-    width: 60px;
-    height: 60px;
-    border: 5px solid #f3f3f3;
-    border-top: 5px solid #FFD166;
+    width: 40px;
+    height: 40px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #37352f;
     border-radius: 50%;
     animation: ${spin} 1s linear infinite;
-    margin-bottom: 24px;
+    margin-bottom: 16px;
 `;
 
 export const LoadingText = styled.div`
-    font-size: 20px;
-    font-weight: 600;
-    color: #333;
+    font-size: 15px;
+    font-weight: 500;
+    color: #37352f;
     text-align: center;
-    line-height: 1.5;
-
-    span {
-        display: block;
-        font-size: 15px;
-        font-weight: 400;
-        color: #888;
-        margin-top: 10px;
-    }
 `;
 
-export const DetailPageContainer = styled.div`
-    padding: 90px 50px 50px 50px;
-    max-width: 1200px;
-    margin: 0 auto;
+export const PageContainer = styled.div`
     width: 100%;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    gap: 30px;
-    box-sizing: border-box;
-
-    @media (max-width: 768px) {
-        padding: 80px 20px 30px 20px;
-    }
-`;
-
-export const HeaderSection = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-`;
-
-export const TopActions = styled.div`
-    display: flex;
-    justify-content: space-between;
-`;
-
-export const BackButton = styled.button`
-    background: none;
-    border: none;
-    color: #8e918f;
-    font-size: 16px;
-    cursor: pointer;
-    display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 0;
-
-    &:hover {
-        color: #333;
-    }
-
-    &:disabled {
-        color: #ccc;
-        cursor: not-allowed;
-    }
+    background-color: #ffffff;
+    color: #37352f;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    padding-bottom: 100px;
+    padding-top: 100px;
 `;
 
-export const TitleDateRow = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 20px;
-
-    @media (max-width: 768px) {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-`;
-
-export const TitleText = styled.h1`
-    margin: 0;
-    color: #333;
-    font-size: 40px;
-    font-weight: 600;
-    line-height: 1.3;
-    word-break: keep-all;
-`;
-
-export const DateText = styled.div`
-    color: #8e918f;
-    font-size: 18px;
-    font-weight: 400;
-    padding-bottom: 5px;
-`;
-
-export const MainContentWrapper = styled.div`
-    display: flex;
-    gap: 30px;
-    align-items: flex-start;
-
-    @media (max-width: 900px) {
-        flex-direction: column;
-    }
-`;
-
-export const ContentArea = styled.div`
-    flex: 1;
-    background-color: #fff;
-    border-radius: 28px;
-    padding: 40px;
-    min-height: 400px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+export const TopBar = styled.div`
     width: 100%;
-    box-sizing: border-box;
-`;
-
-export const ContentText = styled.div`
-    color: #333;
-    font-size: 17px;
-    line-height: 1.8;
-    white-space: pre-wrap;
-    word-break: break-all;
-`;
-
-export const SidebarArea = styled.div`
-    width: 320px;
-    flex-shrink: 0;
-    background-color: #fff;
-    border-radius: 28px;
-    padding: 30px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    max-width: 900px;
+    padding: 20px 40px;
     display: flex;
-    flex-direction: column;
-    gap: 25px;
-    box-sizing: border-box;
-
-    @media (max-width: 900px) {
-        width: 100%;
-    }
-`;
-
-export const SidebarTitle = styled.h3`
-    margin: 0;
-    font-size: 18px;
-    color: #333;
-    display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 8px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #f0f0f0;
-
-    i {
-        color: #FFD166;
-    }
-`;
-
-export const AnalysisCard = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-`;
-
-export const AnalysisLabel = styled.span`
-    font-size: 14px;
-    color: #8e918f;
-    font-weight: 500;
-`;
-
-export const EmotionRow = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 12px;
-`;
-
-export const ColorCircle = styled.div`
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background-color: ${props => props.$color};
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-`;
-
-export const EmotionText = styled.span`
-    font-size: 18px;
-    font-weight: 600;
-    color: #333;
-`;
-
-export const SummaryText = styled.p`
-    margin: 0;
-    font-size: 16px;
-    line-height: 1.5;
-    color: #555;
-    font-style: italic;
-    background-color: #fcfcfc;
-    padding: 15px;
-    border-radius: 12px;
-    border-left: 4px solid #FFD166;
-`;
-
-export const LevelText = styled.div`
-    font-size: 18px;
-    font-weight: 600;
-    color: #e74c3c;
+    box-sizing: border-box;
 `;
 
 export const ButtonGroup = styled.div`
     display: flex;
-    gap: 10px;
+    gap: 8px;
 `;
 
 export const ActionButton = styled.button`
-    background-color: #fff;
-    border: 1px solid #d1d4d2;
-    color: #555;
-    padding: 6px 16px;
-    border-radius: 8px;
+    background: transparent;
+    border: none;
+    color: #787774;
     font-size: 14px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 4px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: background 0.2s, color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 
     &:hover:not(:disabled) {
-        background-color: #f8f9fa;
-        color: #333;
+        background: #efefef;
+        color: #37352f;
     }
 
     &:disabled {
-        background-color: #e0e0e0;
-        color: #a0a0a0;
-        border-color: #e0e0e0;
+        opacity: 0.5;
         cursor: not-allowed;
     }
 `;
 
 export const SaveButton = styled(ActionButton)`
-    background-color: #FFD166;
-    border-color: #FFD166;
-    color: #333;
-    font-weight: 600;
+    color: #0f7b6c;
 
     &:hover:not(:disabled) {
-        background-color: #ffc233;
-    }
-`;
-
-export const TitleInput = styled.input`
-    width: 100%;
-    font-size: 40px;
-    font-weight: 600;
-    color: #333;
-    border: none;
-    border-bottom: 2px solid #FFD166;
-    padding-bottom: 5px;
-    outline: none;
-    background: transparent;
-
-    &::placeholder {
-        color: #ccc;
-    }
-`;
-
-export const ContentTextarea = styled.textarea`
-    width: 100%;
-    height: 100%;
-    min-height: 400px;
-    font-size: 17px;
-    line-height: 1.8;
-    color: #333;
-    border: 1px solid #eee;
-    border-radius: 12px;
-    padding: 15px;
-    outline: none;
-    resize: vertical;
-    font-family: inherit;
-    box-sizing: border-box;
-
-    &:focus {
-        border-color: #FFD166;
+        background: #e1f5f2;
+        color: #0f7b6c;
     }
 `;
 
 export const DeleteButton = styled(ActionButton)`
-    border-color: #ff6b6b;
-    color: #ff6b6b;
-
     &:hover:not(:disabled) {
-        background-color: #ff6b6b;
-        color: #fff;
+        background: #fcebe9;
+        color: #eb5757;
+    }
+`;
+
+export const ContentWrapper = styled.div`
+    width: 100%;
+    max-width: 900px;
+    padding: 40px 40px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+`;
+
+export const PageTitle = styled.h1`
+    font-size: 40px;
+    font-weight: 700;
+    color: #37352f;
+    margin: 0 0 30px 0;
+    letter-spacing: -0.02em;
+    word-break: keep-all;
+`;
+
+export const TitleInput = styled.input`
+    font-size: 40px;
+    font-weight: 700;
+    color: #37352f;
+    margin: 0 0 30px 0;
+    letter-spacing: -0.02em;
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: inherit;
+    padding: 0;
+
+    &::placeholder {
+        color: #e2e2e0;
+    }
+`;
+
+export const AICallout = styled.div`
+    background-color: #f7f7f5;
+    border: 1px solid #ededeb;
+    border-radius: 4px;
+    padding: 20px 24px;
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+`;
+
+export const CalloutHeader = styled.div`
+    font-size: 15px;
+    font-weight: 600;
+    color: #37352f;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    i {
+        color: #e5a443;
+    }
+`;
+
+export const CalloutContent = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+`;
+
+export const CalloutRow = styled.div`
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+`;
+
+export const CalloutLabel = styled.div`
+    width: 60px;
+    font-size: 14px;
+    color: #787774;
+    flex-shrink: 0;
+`;
+
+export const EmotionTag = styled.div`
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: #37352f;
+    font-weight: 500;
+`;
+
+export const ColorDot = styled.div`
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: ${props => props.$color};
+`;
+
+export const CalloutText = styled.div`
+    font-size: 14px;
+    color: #37352f;
+    line-height: 1.5;
+`;
+
+export const EntrySection = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 20px;
+`;
+
+export const EntryHeader = styled.div`
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+`;
+
+export const EntryDate = styled.span`
+    font-size: 22px;
+    font-weight: 600;
+    color: #9a9a97;
+`;
+
+export const EntryTitleDivider = styled.span`
+    font-size: 22px;
+    font-weight: 600;
+    color: #37352f;
+`;
+
+export const EntryTitle = styled.span`
+    font-size: 22px;
+    font-weight: 700;
+    color: #37352f;
+`;
+
+export const EntryContent = styled.div`
+    font-size: 16px;
+    color: #37352f;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-break: break-all;
+`;
+
+export const ContentTextarea = styled.textarea`
+    width: 100%;
+    min-height: 400px;
+    font-size: 16px;
+    line-height: 1.7;
+    color: #37352f;
+    background: transparent;
+    border: none;
+    padding: 0;
+    outline: none;
+    resize: none;
+    overflow: hidden;
+    font-family: inherit;
+    white-space: pre-wrap;
+    word-break: break-all;
+
+    &::placeholder {
+        color: #e2e2e0;
     }
 `;
