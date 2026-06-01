@@ -40,7 +40,6 @@ export const useDiaryWriteForm = () => {
             const res = await insertDiary(title, content, apiDate);
 
             if (res && res.data) {
-                alert(res.message || '일기가 성공적으로 저장되었습니다.');
 
                 window.dispatchEvent(new CustomEvent('diary-updated'));
 

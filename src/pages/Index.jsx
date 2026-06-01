@@ -84,8 +84,12 @@ const Index = () => {
                         <i className="fa-brands fa-java" title="Java"></i>
                         <i className="fa-brands fa-python" title="Python"></i>
                         <i className="fa-brands fa-react" title="React"></i>
-                        <i className="fa-brands fa-github" title="GitHub"></i>
+                        <i className="fa-brands fa-npm"></i>
+                        <i className="fa-brands fa-node"></i>
                         <i className="fa-brands fa-js"></i>
+                        <i className="fa-brands fa-github" title="GitHub"></i>
+                        <i className="fa-brands fa-google"></i>
+                        <i className="fa-solid fa-database"></i>
                     </S.LogoTicker>
                 </S.HeroContent>
 
@@ -150,12 +154,12 @@ const Index = () => {
                     </S.StatBox>
                 </S.StatsGrid>
 
-                <S.SectionTitle style={{ fontSize: '32px', marginTop: '60px' }}>오늘 당신의 마음은 어떤가요?</S.SectionTitle>
-                <S.Subtitle style={{ margin: '0 auto' }}>이메일을 등록하시면 MauM의 새로운 소식과 마음 건강 가이드를 보내드립니다.</S.Subtitle>
-                <S.EmailForm>
-                    <input type="email" placeholder="이메일 주소" />
-                    <button>구독하기</button>
-                </S.EmailForm>
+                {/*<S.SectionTitle style={{ fontSize: '32px', marginTop: '60px' }}>오늘 당신의 마음은 어떤가요?</S.SectionTitle>*/}
+                {/*<S.Subtitle style={{ margin: '0 auto' }}>이메일을 등록하시면 MauM의 새로운 소식과 마음 건강 가이드를 보내드립니다.</S.Subtitle>*/}
+                {/*<S.EmailForm>*/}
+                {/*    <input type="email" placeholder="이메일 주소" />*/}
+                {/*    <button>구독하기</button>*/}
+                {/*</S.EmailForm>*/}
             </S.Section>
 
             <S.Section $center id="technology" ref={statsRef2}>
