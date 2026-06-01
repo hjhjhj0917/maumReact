@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import {GlobalStyle} from './style/GlobalStyle';
+import { GlobalStyle } from './style/GlobalStyle';
+import { AuthProvider } from './context/AuthContext';
+import { ProtectedRoute } from './components/ProtectedRoute';
 import HeaderLayout from './components/HeaderLayout';
 import Layout from './components/Layout';
 import Index from './pages/Index';
@@ -15,27 +17,29 @@ import NotFound from "./pages/NotFound.jsx";
 function App() {
     return (
         <BrowserRouter>
-            <GlobalStyle />
-            <Routes>
-                <Route path="/" element={<Index />} />
+            <AuthProvider>
+                <GlobalStyle />
+                <Routes>
+                    <Route path="/" element={<Index />} />
 
-                {/* Header */}
-                <Route element={<HeaderLayout />}>
-                    <Route path="/account/*" element={<AccountRoutes />} />
-                </Route>
+                    <Route element={<HeaderLayout />}>
+                        <Route path="/account/*" element={<AccountRoutes />} />
+                    </Route>
 
-                {/* Header + Sidebar */}
-                <Route element={<Layout />}>
-                    <Route path="/diary/write" element={<DiaryWrite />} />
-                    <Route path="/diary/list" element={<DiaryList />} />
-                    <Route path="/chatbot" element={<ChatBot />} />
-                    <Route path="/account/profile" element={<Profile />}/>
-                    <Route path="/map" element={<Map />} />
-                    <Route path="/diary/:diaryNo" element={<DiaryDetail />} />
-                </Route>
+                    <Route element={<ProtectedRoute />}>
+                        <Route element={<Layout />}>
+                            <Route path="/diary/write" element={<DiaryWrite />} />
+                            <Route path="/diary/list" element={<DiaryList />} />
+                            <Route path="/chatbot" element={<ChatBot />} />
+                            <Route path="/account/profile" element={<Profile />}/>
+                            <Route path="/map" element={<Map />} />
+                            <Route path="/diary/:diaryNo" element={<DiaryDetail />} />
+                        </Route>
+                    </Route>
 
-                <Route path="*" element={<NotFound />} />
-            </Routes>
+                    <Route path="*" element={<NotFound />} />
+                </Routes>
+            </AuthProvider>
         </BrowserRouter>
     );
 }

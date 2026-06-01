@@ -7,7 +7,10 @@ export const getUserStatus = () =>
     apiClient.post('/account/userInfo');
 
 export const registerUser = (formData) => {
-    const {code, passwordConfirm, ...userData} = formData;
+    const userData = { ...formData };
+
+    delete userData.code;
+    delete userData.passwordConfirm;
 
     userData.profileImgUrl = "/images/account/profile1.png";
 

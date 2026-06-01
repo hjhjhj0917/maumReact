@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import {
     getUserStatus,
     updateProfileImg,
@@ -30,6 +31,7 @@ const characters = characterData.map(c => c.url);
 
 export const useProfile = () => {
     const navigate = useNavigate();
+    const { setUser } = useAuth();
 
     const [userInfo, setUserInfo] = useState({
         userId: '',
@@ -43,7 +45,6 @@ export const useProfile = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedCharacterUrl, setSelectedCharacterUrl] = useState('');
-
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [activeModalType, setActiveModalType] = useState(null);
     const [withdrawStep, setWithdrawStep] = useState(1);
@@ -126,13 +127,14 @@ export const useProfile = () => {
             const res = await updateProfileImg(selectedCharacterUrl);
             if (res.data && res.data.result === 1) {
                 setUserInfo(prev => ({ ...prev, profileImgUrl: selectedCharacterUrl }));
+                setUser(prev => ({ ...prev, profileImg: selectedCharacterUrl }));
                 setIsModalOpen(false);
                 alert("프로필 이미지가 변경되었습니다.");
-                window.location.reload();
             } else {
                 alert(res?.msg || "프로필 이미지 변경에 실패했습니다.");
             }
         } catch (error) {
+            console.error("오류:", error);
             alert("서버 연결에 실패했습니다.");
         }
     };
@@ -203,6 +205,7 @@ export const useProfile = () => {
                 alert(res.data?.msg || '비밀번호가 일치하지 않습니다.');
             }
         } catch (error) {
+            console.error("오류:", error);
             alert('인증 중 오류가 발생했습니다.');
         }
     };
@@ -218,6 +221,7 @@ export const useProfile = () => {
                 alert('이미 사용중인 이메일입니다.');
             }
         } catch (error) {
+            console.error("오류:", error);
             alert('인증 코드 발송 중 오류가 발생했습니다.');
         }
     };
@@ -233,6 +237,7 @@ export const useProfile = () => {
                 alert(res?.msg || '인증 코드가 일치하지 않습니다.');
             }
         } catch (error) {
+            console.error("오류:", error);
             alert('이메일 인증 중 오류가 발생했습니다.');
         }
     };
@@ -264,6 +269,7 @@ export const useProfile = () => {
                 alert(res.data?.msg || '수정에 실패했습니다.');
             }
         } catch (error) {
+            console.error("오류:", error);
             alert('수정 처리 중 오류가 발생했습니다.');
         }
     };
@@ -278,6 +284,7 @@ export const useProfile = () => {
                 alert(res.data?.msg || '비밀번호가 일치하지 않습니다.');
             }
         } catch (error) {
+            console.error("오류:", error);
             alert('인증 중 오류가 발생했습니다.');
         }
     };
@@ -292,6 +299,7 @@ export const useProfile = () => {
                 alert(res.data?.msg || '코드 발송에 실패했습니다.');
             }
         } catch (error) {
+            console.error("오류:", error);
             alert('인증 코드 발송 중 오류가 발생했습니다.');
         }
     };
@@ -308,6 +316,7 @@ export const useProfile = () => {
                 alert(res?.msg || '인증 코드가 일치하지 않습니다.');
             }
         } catch (error) {
+            console.error("오류:", error);
             alert('이메일 인증 중 오류가 발생했습니다.');
         }
     };
@@ -319,8 +328,10 @@ export const useProfile = () => {
         try {
             await deleteUser();
             alert('회원 탈퇴가 완료되었습니다.');
+            setUser(null);
             navigate('/');
         } catch (error) {
+            console.error("오류:", error);
             alert('탈퇴 처리에 실패했습니다.');
         }
     };

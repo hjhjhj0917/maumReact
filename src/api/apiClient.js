@@ -58,6 +58,9 @@ apiClient.interceptors.response.use(
                     isTokenRefreshing = false;
                     refreshSubscribers = [];
 
+                    alert('보안을 위해 로그아웃 되었습니다. 다시 로그인해 주세요.');
+
+                    window.dispatchEvent(new Event('auth_logout'));
                     window.location.href = '/';
                     return Promise.reject(refreshError);
                 }

@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { logoutUser } from '../api/authApi';
-import {getRecentDiaries } from "../api/diaryApi.js";
+import { getRecentDiaries } from "../api/diaryApi.js";
+import { useAuth } from '../context/AuthContext';
 
 export const useSidebar = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const { setUser } = useAuth();
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [showLogoutModal, setShowLogoutModal] = useState(false);
 
@@ -21,6 +23,7 @@ export const useSidebar = () => {
             const res = await logoutUser();
 
             if (res && res.data && res.data.result === 1) {
+                setUser(null);
                 setShowLogoutModal(false);
                 navigate('/');
             } else {

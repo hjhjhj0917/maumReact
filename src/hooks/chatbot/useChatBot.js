@@ -5,7 +5,7 @@ export const useChatBot = () => {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
     const [isStreaming, setIsStreaming] = useState(false);
-    const [isWaiting, setIsWaiting] = useState(false); // 응답 대기 상태 추가
+    const [isWaiting, setIsWaiting] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const messagesEndRef = useRef(null);
 
@@ -19,7 +19,6 @@ export const useChatBot = () => {
             try {
                 const history = await getChatHistoryApi();
                 if (history && history.length > 0) {
-                    // 불러온 내역에서도 태그 변환 처리 (기존에 저장된 데이터 대응)
                     const formattedHistory = history.map(msg => ({
                         ...msg,
                         content: msg.role === 'bot' 
@@ -48,13 +47,12 @@ export const useChatBot = () => {
         setInput('');
         setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
         setIsStreaming(true);
-        setIsWaiting(true); // 메시지 전송 직후 대기 상태 시작
+        setIsWaiting(true);
 
         await streamChatApi(
             userMessage,
             (chunk) => {
-                // 데이터가 한 글자라도 들어오면 대기 상태를 즉시 해제
-                setIsWaiting(false); 
+                setIsWaiting(false);
                 setMessages(prev => {
                     const lastMessage = prev[prev.length - 1];
                     if (lastMessage && lastMessage.role === 'bot') {
@@ -73,11 +71,11 @@ export const useChatBot = () => {
             (error) => {
                 console.error(error);
                 setIsStreaming(false);
-                setIsWaiting(false); // 에러 시에도 해제
+                setIsWaiting(false);
             },
             () => {
                 setIsStreaming(false);
-                setIsWaiting(false); // 완료 시에도 확실히 해제
+                setIsWaiting(false);
             }
         );
     };

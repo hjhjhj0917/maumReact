@@ -67,21 +67,14 @@ export const useRegisterForm = () => {
         inputRefs.current[nextIndex]?.focus();
     };
 
-    useEffect(() => {
-        if (step === 2 && formData.password && formData.passwordConfirm) {
-            if (formData.password === formData.passwordConfirm) {
-                if (!flags.userIdChecked) {
-                    setMessage('userIdMsg', '아이디 중복 체크를 완료해 주세요.', 'error');
-                    return;
-                }
-                setMessage('passwordConfirmMsg', '비밀번호가 일치합니다.', 'success');
-                const timer = setTimeout(() => {
-                    setStep(3);
-                }, 1000);
-                return () => clearTimeout(timer);
-            }
-        }
-    }, [formData.password, formData.passwordConfirm, flags.userIdChecked, step]);
+    const clearMessage = (id) => {
+        if (messageTimers.current[id]) clearTimeout(messageTimers.current[id]);
+        setMessages(prev => {
+            const newMsgs = { ...prev };
+            delete newMsgs[id];
+            return newMsgs;
+        });
+    };
 
     const setMessage = (id, message, type) => {
         if (messageTimers.current[id]) clearTimeout(messageTimers.current[id]);
@@ -91,14 +84,31 @@ export const useRegisterForm = () => {
         }, type === 'success' ? 2000 : 3000);
     };
 
-    const clearMessage = (id) => {
-        if (messageTimers.current[id]) clearTimeout(messageTimers.current[id]);
-        setMessages(prev => {
-            const newMsgs = { ...prev };
-            delete newMsgs[id];
-            return newMsgs;
-        });
-    };
+    useEffect(() => {
+        let stepTimer;
+
+        if (step === 2 && formData.password && formData.passwordConfirm) {
+            if (formData.password === formData.passwordConfirm) {
+
+                const checkTimer = setTimeout(() => {
+                    if (!flags.userIdChecked) {
+                        setMessage('userIdMsg', '아이디 중복 체크를 완료해 주세요.', 'error');
+                    } else {
+                        setMessage('passwordConfirmMsg', '비밀번호가 일치합니다.', 'success');
+
+                        stepTimer = setTimeout(() => {
+                            setStep(3);
+                        }, 1000);
+                    }
+                }, 0);
+
+                return () => {
+                    clearTimeout(checkTimer);
+                    if (stepTimer) clearTimeout(stepTimer);
+                };
+            }
+        }
+    }, [formData.password, formData.passwordConfirm, flags.userIdChecked, step]);
 
     const showAlert = (title, message, onConfirm = null) => {
         setModal({ show: true, title, message, onConfirm });
@@ -139,7 +149,8 @@ export const useRegisterForm = () => {
             } else {
                 setMessage('codeMsg', res.msg || '잘못된 인증번호입니다.', 'error');
             }
-        } catch (e) {
+        } catch (error) {
+            console.error("오류:", error);
             setMessage('codeMsg', '서버 통신 중 오류가 발생했습니다.', 'error');
         }
     };

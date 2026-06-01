@@ -1,9 +1,12 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { loginRequest } from '../../api/authApi.js';
+import { loginRequest, getUserStatus } from '../../api/authApi.js';
+import { useAuth } from '../../context/AuthContext.jsx';
 
 export const useLoginForm = () => {
     const navigate = useNavigate();
+    const { setUser } = useAuth();
+
     const [userId, setUserId] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -43,11 +46,26 @@ export const useLoginForm = () => {
 
         try {
             const res = await loginRequest(userId, password);
-
             const msgDto = res.data;
 
             if (msgDto && msgDto.result === 1) {
+
+                try {
+                    const statusRes = await getUserStatus();
+                    if (statusRes.data && statusRes.data.userId) {
+                        setUser({
+                            no: statusRes.data.userNo,
+                            id: statusRes.data.userId,
+                            name: statusRes.data.userName,
+                            profileImg: statusRes.data.profileImgUrl
+                        });
+                    }
+                } catch (err) {
+                    console.error("유저 정보 업데이트 실패:", err);
+                }
+
                 navigate('/diary/write');
+
             } else {
                 setMessage('userId', msgDto?.msg || "로그인 정보를 확인해주세요.", 'error');
                 setPassword('');
