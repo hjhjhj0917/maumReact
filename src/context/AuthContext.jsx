@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { getUserStatus } from '../api/authApi';
 
@@ -28,6 +29,7 @@ export const AuthProvider = ({ children }) => {
                     });
                 }
             } catch (error) {
+                console.error("오류 : ", error);
                 setUser(null);
             } finally {
                 // 검증이 성공하든 실패하든(재발급 포함) 완료되면 로딩 종료
