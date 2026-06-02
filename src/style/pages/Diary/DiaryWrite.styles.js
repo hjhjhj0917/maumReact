@@ -157,34 +157,7 @@ export const DateSelector = styled.span`
     font-size: 22px;
     font-weight: 600;
     color: #9a9a97;
-    cursor: pointer;
     transition: color 0.2s;
-
-    &:hover {
-        color: #787774;
-    }
-`;
-
-export const PickerOverlay = styled.div`
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 90;
-`;
-
-export const PickerContainer = styled.div`
-    position: absolute;
-    top: calc(100% + 10px);
-    left: 0;
-    width: 300px;
-    z-index: 100;
-    background: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border: 1px solid #ededeb;
-    overflow: hidden;
 `;
 
 export const ContentTextarea = styled.textarea`

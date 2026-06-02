@@ -9,10 +9,14 @@ export const useDiaryWriteForm = () => {
     const queryDate = searchParams.get('date');
     const today = new Date();
 
+    const [modal, setModal] = useState({ show: false, title: '', message: '', onConfirm: null });
+
+    const showAlert = (title, message, onConfirm = null) => {
+        setModal({ show: true, title, message, onConfirm });
+    };
+
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
-    const [showDatePicker, setShowDatePicker] = useState(false);
-
     const [isLoading, setIsLoading] = useState(false);
 
     const [date, setDate] = useState(() => {
@@ -31,8 +35,8 @@ export const useDiaryWriteForm = () => {
     const apiDate = `${date.year}-${String(date.month).padStart(2, '0')}-${String(date.day).padStart(2, '0')}`;
 
     const handleSubmit = async () => {
-        if (!title.trim()) return alert('제목을 입력해주세요.');
-        if (!content.trim()) return alert('내용을 입력해주세요.');
+        if (!title.trim()) return showAlert('알림', '제목을 입력해주세요.');
+        if (!content.trim()) return showAlert('알림', '내용을 입력해주세요.');
 
         try {
             setIsLoading(true);
@@ -40,17 +44,17 @@ export const useDiaryWriteForm = () => {
             const res = await insertDiary(title, content, apiDate);
 
             if (res && res.data) {
-
-                window.dispatchEvent(new CustomEvent('diary-updated'));
-
-                navigate(`/diary/${res.data}`);
+                showAlert('알림', '일기가 작성되었습니다.', () => {
+                    window.dispatchEvent(new CustomEvent('diary-updated'));
+                    navigate(`/diary/${res.data}`);
+                });
             } else {
-                alert(res.message || '저장에 실패했습니다.');
+                showAlert('오류', res.message || '저장에 실패했습니다.');
                 setIsLoading(false);
             }
         } catch (error) {
             const errorMsg = error.response?.data?.message || "서버 통신 중 오류가 발생했습니다.";
-            alert(errorMsg);
+            showAlert('오류', errorMsg);
             setIsLoading(false);
         }
     };
@@ -58,10 +62,10 @@ export const useDiaryWriteForm = () => {
     return {
         title, setTitle,
         content, setContent,
-        showDatePicker, setShowDatePicker,
         date, setDate,
         formattedDate,
         handleSubmit,
-        isLoading
+        isLoading,
+        modal, setModal
     };
 };

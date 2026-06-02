@@ -3,15 +3,13 @@ import { Link } from 'react-router-dom';
 import InputField from '../../components/InputField';
 import CustomModal from '../../components/CustomModal';
 import { useRegisterForm } from '../../hooks/account/useRegisterForm';
-import RollerDatePicker from '../../components/RollerDatePicker';
 import * as S from '../../style/pages/Account/Register.styles';
 
 const Register = () => {
     const {
         step, handleStepClick,
-        formData, setFormData, handleChange, handleOtpChange, handleKeyDown, handlePaste,
+        formData, handleChange, handleOtpChange, handleKeyDown, handlePaste,
         messages, flags,
-        showDatePicker, setShowDatePicker,
         modal, setModal, inputRefs,
         handleEmailSend, handleCodeVerify, handleUserIdCheck, handleKakaoPost, handleSubmit
     } = useRegisterForm();
@@ -126,23 +124,15 @@ const Register = () => {
                                                     onChange={handleChange} errorMsg={messages.userNameMsg}
                                                     placeholder="이름을 입력하세요." />
 
-                                        <InputField label="Birth Date" name="birthDate" value={formData.birthDate}
-                                                    readOnly={true} onClick={() => setShowDatePicker(true)}
-                                                    errorMsg={messages.birthDateMsg} placeholder="YYYY-MM-DD">
-                                            {showDatePicker && (
-                                                <RollerDatePicker
-                                                    initialDate={{ year: 2000, month: 1, day: 1 }}
-                                                    onClose={() => setShowDatePicker(false)}
-                                                    onConfirm={(date) => {
-                                                        setFormData(prev => ({
-                                                            ...prev,
-                                                            birthDate: `${date.year}년 ${String(date.month).padStart(2, '0')}월 ${String(date.day).padStart(2, '0')}일`
-                                                        }));
-                                                        setShowDatePicker(false);
+                                        {/* onClick 이벤트를 추가하여 input 클릭 시 달력이 호출되도록 구현했습니다. */}
+                                        <InputField label="Birth Date" name="birthDate" type="date" value={formData.birthDate}
+                                                    onChange={handleChange} errorMsg={messages.birthDateMsg}
+                                                    onClick={(e) => {
+                                                        if (typeof e.target.showPicker === 'function') {
+                                                            e.target.showPicker();
+                                                        }
                                                     }}
-                                                />
-                                            )}
-                                        </InputField>
+                                                    placeholder="YYYY-MM-DD" />
 
                                         <InputField label="Address" name="addr" value={formData.addr} readOnly={true}
                                                     errorMsg={messages.addrMsg}
@@ -165,8 +155,8 @@ const Register = () => {
                     </form>
 
                     {/*<S.LoginBox>*/}
-                    {/*    이미 마음(MAÜM) 회원이신가요?*/}
-                    {/*    <S.LinkLogin to="/account/login">로그인</S.LinkLogin>*/}
+                    {/* 이미 마음(MAÜM) 회원이신가요?*/}
+                    {/* <S.LinkLogin to="/account/login">로그인</S.LinkLogin>*/}
                     {/*</S.LoginBox>*/}
                 </S.RegisterCard>
             </S.Container>

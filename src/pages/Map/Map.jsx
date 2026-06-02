@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Map, MapMarker, CustomOverlayMap } from 'react-kakao-maps-sdk';
+import CustomModal from '../../components/CustomModal';
 import { useMentalMap, CATEGORY_COLORS } from '../../hooks/map/useMap';
 import * as S from '../../style/pages/Map/Map.styles';
 
@@ -13,8 +14,8 @@ const MentalMap = () => {
         visibleInstitutions,
         updateMapBounds,
         categories,
-        selectedCategories,
-        toggleCategory,
+        selectedCategory,
+        handleSelectCategory,
         isFilterOpen,
         setIsFilterOpen,
         loading,
@@ -32,7 +33,9 @@ const MentalMap = () => {
         handleSuggestionClick,
         handleSearch,
         handleMapClick,
-        formatDistance
+        formatDistance,
+        modal,
+        setModal
     } = useMentalMap();
 
     const [toastState, setToastState] = useState({ show: false, message: '' });
@@ -46,7 +49,9 @@ const MentalMap = () => {
                     setToastState({ show: false, message: '' });
                 }, 2500);
             })
-            .catch(() => alert('주소 복사에 실패했습니다.'));
+            .catch(() => {
+                setModal({ show: true, title: '오류', message: '주소 복사에 실패했습니다.', onConfirm: null });
+            });
     };
 
     const memoizedMarkers = useMemo(() => {
@@ -88,71 +93,77 @@ const MentalMap = () => {
     if (error) return <S.LoadingErrorText $isError>지도를 불러오는데 실패했습니다.</S.LoadingErrorText>;
 
     return (
-        <S.Container>
-            <S.MapWrapper>
-                <S.SearchWrapper>
-                    <S.SearchContainer onSubmit={handleSearch}>
-                        <S.SearchInput
-                            type="text"
-                            placeholder="동네, 지하철역, 장소 검색"
-                            value={keyword}
-                            onChange={handleInputChange}
-                        />
-                        <S.SearchButton type="submit">
-                            <i className="fa-solid fa-magnifying-glass"></i>
-                        </S.SearchButton>
-                    </S.SearchContainer>
+        <>
+            <CustomModal
+                isOpen={modal.show}
+                title={modal.title}
+                message={modal.message}
+                isConfirm={false}
+                onCancel={() => setModal({ show: false, title: '', message: '', onConfirm: null })}
+                onConfirm={() => {
+                    setModal({ show: false, title: '', message: '', onConfirm: null });
+                    if (modal.onConfirm) modal.onConfirm();
+                }}
+            />
 
-                    {isDropdownOpen && suggestions.length > 0 && (
-                        <S.DropdownContainer>
-                            {suggestions.map((inst) => (
-                                <S.DropdownItem
-                                    key={inst.id || inst._id}
-                                    onClick={() => handleSuggestionClick(inst)}
-                                >
-                                    <S.DropdownItemHeader>
-                                        <S.DropdownItemName>{inst.name || inst.NAME}</S.DropdownItemName>
-                                        <S.DropdownItemDistance>{formatDistance(inst.distance)}</S.DropdownItemDistance>
-                                    </S.DropdownItemHeader>
-                                    <S.DropdownItemAddress>
-                                        {inst.addr || inst.ADDR || "주소 정보 없음"}
-                                    </S.DropdownItemAddress>
-                                </S.DropdownItem>
-                            ))}
-                        </S.DropdownContainer>
-                    )}
-                </S.SearchWrapper>
+            <S.Container>
+                <S.MapWrapper>
+                    <S.TopUIWrapper>
+                        <S.SearchSection>
+                            <S.SearchContainer onSubmit={handleSearch}>
+                                <S.SearchInput
+                                    type="text"
+                                    placeholder="동네, 지하철역, 장소 검색"
+                                    value={keyword}
+                                    onChange={handleInputChange}
+                                />
+                                <S.SearchButton type="submit">
+                                    <i className="fa-solid fa-magnifying-glass"></i>
+                                </S.SearchButton>
+                            </S.SearchContainer>
 
-                <S.ControlsContainer>
-                    <S.FilterPanel $isOpen={isFilterOpen} onClick={(e) => e.stopPropagation()}>
-                        {categories.map((category, index) => {
-                            const isActive = category === '전체' ? selectedCategories.length === 0 : selectedCategories.includes(category);
-                            const chipColor = CATEGORY_COLORS[category] || CATEGORY_COLORS['기본'];
+                            {isDropdownOpen && suggestions.length > 0 && (
+                                <S.DropdownContainer>
+                                    {suggestions.map((inst) => (
+                                        <S.DropdownItem
+                                            key={inst.id || inst._id}
+                                            onClick={() => handleSuggestionClick(inst)}
+                                        >
+                                            <S.DropdownItemHeader>
+                                                <S.DropdownItemName>{inst.name || inst.NAME}</S.DropdownItemName>
+                                                <S.DropdownItemDistance>{formatDistance(inst.distance)}</S.DropdownItemDistance>
+                                            </S.DropdownItemHeader>
+                                            <S.DropdownItemAddress>
+                                                {inst.addr || inst.ADDR || "주소 정보 없음"}
+                                            </S.DropdownItemAddress>
+                                        </S.DropdownItem>
+                                    ))}
+                                </S.DropdownContainer>
+                            )}
+                        </S.SearchSection>
 
-                            return (
-                                <S.FilterChip
-                                    key={index}
-                                    $isActive={isActive}
-                                    $color={chipColor}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        toggleCategory(category);
-                                        setSelectedInst(null);
-                                    }}
-                                >
-                                    {category}
-                                </S.FilterChip>
-                            );
-                        })}
-                    </S.FilterPanel>
+                        <S.FilterWrapper>
+                            <S.FilterButton onClick={(e) => {
+                                e.stopPropagation();
+                                setIsFilterOpen(!isFilterOpen);
+                            }}>
+                                {selectedCategory} <i className="fa-solid fa-chevron-down"></i>
+                            </S.FilterButton>
 
-                    <S.ButtonsWrapper>
-                        <S.FilterToggleButton onClick={(e) => {
-                            e.stopPropagation();
-                            setIsFilterOpen(!isFilterOpen);
-                        }}>
-                            <i className="fa-solid fa-filter"></i>
-                        </S.FilterToggleButton>
+                            {isFilterOpen && (
+                                <S.FilterDropdown onClick={(e) => e.stopPropagation()}>
+                                    {categories.map((category, index) => (
+                                        <S.FilterItem
+                                            key={index}
+                                            $isActive={selectedCategory === category}
+                                            onClick={() => handleSelectCategory(category)}
+                                        >
+                                            {category}
+                                        </S.FilterItem>
+                                    ))}
+                                </S.FilterDropdown>
+                            )}
+                        </S.FilterWrapper>
 
                         <S.MyLocationButton onClick={(e) => {
                             e.stopPropagation();
@@ -160,96 +171,96 @@ const MentalMap = () => {
                         }}>
                             <i className="fa-solid fa-location-crosshairs"></i>
                         </S.MyLocationButton>
-                    </S.ButtonsWrapper>
-                </S.ControlsContainer>
+                    </S.TopUIWrapper>
 
-                <Map
-                    center={mapCenter}
-                    ref={mapRef}
-                    style={{ width: "100%", height: "100%" }}
-                    level={3}
-                    isPanto={true}
-                    onClick={handleMapClick}
-                    onCreate={updateMapBounds}
-                    onIdle={updateMapBounds}
-                >
-                    {memoizedMarkers}
+                    <Map
+                        center={mapCenter}
+                        ref={mapRef}
+                        style={{ width: "100%", height: "100%" }}
+                        level={3}
+                        isPanto={true}
+                        onClick={handleMapClick}
+                        onCreate={updateMapBounds}
+                        onIdle={updateMapBounds}
+                    >
+                        {memoizedMarkers}
 
-                    {selectedInst && selectedInst.location && (
-                        <CustomOverlayMap
-                            position={{
-                                lat: selectedInst.location.coordinates[1],
-                                lng: selectedInst.location.coordinates[0]
-                            }}
-                            clickable={true}
-                            zIndex={15}
-                        >
-                            <S.OverlayContainer>
-                                <S.OverlayLeftSection>
-                                    <S.OverlayHeader>
-                                        <div>
-                                            <S.OverlayTitle>{selectedInst.name || selectedInst.NAME}</S.OverlayTitle>
-                                        </div>
-                                    </S.OverlayHeader>
-                                    <S.OverlayBody>
-                                        <S.InfoText>
-                                            <S.IconWrapper>
-                                                <i className="fa-solid fa-location-dot"></i>
-                                            </S.IconWrapper>
-                                            <span>{selectedInst.addr || selectedInst.ADDR || "주소 정보 없음"}</span>
-                                            {(selectedInst.addr || selectedInst.ADDR) && (
-                                                <S.CopyButton onClick={() => handleCopyAddress(selectedInst.addr || selectedInst.ADDR)}>
-                                                    <i className="fa-regular fa-copy"></i>
-                                                </S.CopyButton>
-                                            )}
-                                        </S.InfoText>
-
-                                        {(selectedInst.homepage || selectedInst.HOMEPAGE) && (
+                        {selectedInst && selectedInst.location && (
+                            <CustomOverlayMap
+                                position={{
+                                    lat: selectedInst.location.coordinates[1],
+                                    lng: selectedInst.location.coordinates[0]
+                                }}
+                                clickable={true}
+                                zIndex={15}
+                            >
+                                <S.OverlayContainer>
+                                    <S.OverlayLeftSection>
+                                        <S.OverlayHeader>
+                                            <div>
+                                                <S.OverlayTitle>{selectedInst.name || selectedInst.NAME}</S.OverlayTitle>
+                                            </div>
+                                        </S.OverlayHeader>
+                                        <S.OverlayBody>
                                             <S.InfoText>
                                                 <S.IconWrapper>
-                                                    <i className="fa-solid fa-globe"></i>
+                                                    <i className="fa-solid fa-location-dot"></i>
                                                 </S.IconWrapper>
-                                                <a href={selectedInst.homepage || selectedInst.HOMEPAGE} target="_blank"
-                                                   rel="noopener noreferrer">
-                                                    {selectedInst.homepage || selectedInst.HOMEPAGE}
-                                                </a>
+                                                <span>{selectedInst.addr || selectedInst.ADDR || "주소 정보 없음"}</span>
+                                                {(selectedInst.addr || selectedInst.ADDR) && (
+                                                    <S.CopyButton onClick={() => handleCopyAddress(selectedInst.addr || selectedInst.ADDR)}>
+                                                        <i className="fa-regular fa-copy"></i>
+                                                    </S.CopyButton>
+                                                )}
                                             </S.InfoText>
-                                        )}
 
-                                        {(selectedInst.category || selectedInst.CATEGORY) && (
-                                            <S.HashtagText $color={CATEGORY_COLORS[selectedInst.category || selectedInst.CATEGORY] || CATEGORY_COLORS['기본']}>
-                                                #{selectedInst.category || selectedInst.CATEGORY}
-                                            </S.HashtagText>
-                                        )}
-                                    </S.OverlayBody>
-                                </S.OverlayLeftSection>
+                                            {(selectedInst.homepage || selectedInst.HOMEPAGE) && (
+                                                <S.InfoText>
+                                                    <S.IconWrapper>
+                                                        <i className="fa-solid fa-globe"></i>
+                                                    </S.IconWrapper>
+                                                    <a href={selectedInst.homepage || selectedInst.HOMEPAGE} target="_blank"
+                                                       rel="noopener noreferrer">
+                                                        {selectedInst.homepage || selectedInst.HOMEPAGE}
+                                                    </a>
+                                                </S.InfoText>
+                                            )}
 
-                                <S.OverlayRightSection>
-                                    <S.RouteButtonRound
-                                        href={
-                                            myLocation
-                                                ? `https://map.kakao.com/link/from/내위치,${myLocation.lat},${myLocation.lng}/to/${selectedInst.name || selectedInst.NAME},${selectedInst.location.coordinates[1]},${selectedInst.location.coordinates[0]}`
-                                                : `https://map.kakao.com/link/to/${selectedInst.name || selectedInst.NAME},${selectedInst.location.coordinates[1]},${selectedInst.location.coordinates[0]}`
-                                        }
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        $color={CATEGORY_COLORS[selectedInst.category || selectedInst.CATEGORY] || CATEGORY_COLORS['기본']}
-                                    >
-                                        <i className="fa-solid fa-compass"></i>
-                                    </S.RouteButtonRound>
-                                </S.OverlayRightSection>
-                            </S.OverlayContainer>
-                        </CustomOverlayMap>
-                    )}
-                </Map>
-            </S.MapWrapper>
+                                            {(selectedInst.category || selectedInst.CATEGORY) && (
+                                                <S.HashtagText $color={CATEGORY_COLORS[selectedInst.category || selectedInst.CATEGORY] || CATEGORY_COLORS['기본']}>
+                                                    #{selectedInst.category || selectedInst.CATEGORY}
+                                                </S.HashtagText>
+                                            )}
+                                        </S.OverlayBody>
+                                    </S.OverlayLeftSection>
 
-            {toastState.show && (
-                <S.ToastNotification>
-                    {toastState.message}
-                </S.ToastNotification>
-            )}
-        </S.Container>
+                                    <S.OverlayRightSection>
+                                        <S.RouteButtonRound
+                                            href={
+                                                myLocation
+                                                    ? `https://map.kakao.com/link/from/내위치,${myLocation.lat},${myLocation.lng}/to/${selectedInst.name || selectedInst.NAME},${selectedInst.location.coordinates[1]},${selectedInst.location.coordinates[0]}`
+                                                    : `https://map.kakao.com/link/to/${selectedInst.name || selectedInst.NAME},${selectedInst.location.coordinates[1]},${selectedInst.location.coordinates[0]}`
+                                            }
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            $color={CATEGORY_COLORS[selectedInst.category || selectedInst.CATEGORY] || CATEGORY_COLORS['기본']}
+                                        >
+                                            <i className="fa-solid fa-compass"></i>
+                                        </S.RouteButtonRound>
+                                    </S.OverlayRightSection>
+                                </S.OverlayContainer>
+                            </CustomOverlayMap>
+                        )}
+                    </Map>
+                </S.MapWrapper>
+
+                {toastState.show && (
+                    <S.ToastNotification>
+                        {toastState.message}
+                    </S.ToastNotification>
+                )}
+            </S.Container>
+        </>
     );
 };
 

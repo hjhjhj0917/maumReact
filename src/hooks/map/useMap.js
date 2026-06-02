@@ -7,9 +7,9 @@ const getDistance = (lat1, lng1, lat2, lng2) => {
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLng = (lng2 - lng1) * Math.PI / 180;
     const a =
-        Math.sin(dLat/2) * Math.sin(dLat/2) +
-        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLng/2) * Math.sin(dLng/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
 };
 
@@ -18,7 +18,6 @@ const formatDistance = (dist) => {
     return dist.toFixed(1) + 'km';
 };
 
-// 카테고리별 마커 및 버튼 색상 매핑
 export const CATEGORY_COLORS = {
     '공립': '#FFD700',
     '광역정신건강복지센터': '#66CDAA',
@@ -29,14 +28,20 @@ export const CATEGORY_COLORS = {
     '상급종합병원': '#FF3B30',
     '의원': '#FFA500',
     '자살예방센터': '#9E9E9E',
-    '정신요양시설': '#E83E8C', // 임의 추가
-    '정신재활시설': '#20C997', // 임의 추가
-    '종합병원': '#6F42C1',   // 임의 추가
-    '중독관리통합지원센터': '#FD7E14', // 임의 추가
-    '기본': '#FFC130'       // 전체 및 매핑 안 된 경우
+    '정신요양시설': '#E83E8C',
+    '정신재활시설': '#20C997',
+    '종합병원': '#6F42C1',
+    '중독관리통합지원센터': '#FD7E14',
+    '기본': '#FFC130'
 };
 
 export const useMentalMap = () => {
+    const [modal, setModal] = useState({ show: false, title: '', message: '', onConfirm: null });
+
+    const showAlert = (title, message, onConfirm = null) => {
+        setModal({ show: true, title, message, onConfirm });
+    };
+
     const [institutions, setInstitutions] = useState([]);
     const [mapCenter, setMapCenter] = useState({ lat: 37.5665, lng: 126.9780 });
     const [selectedInst, setSelectedInst] = useState(null);
@@ -47,7 +52,7 @@ export const useMentalMap = () => {
     const [suggestions, setSuggestions] = useState([]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-    const [selectedCategories, setSelectedCategories] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState('전체');
     const [isFilterOpen, setIsFilterOpen] = useState(false);
 
     const [mapBounds, setMapBounds] = useState(null);
@@ -118,7 +123,7 @@ export const useMentalMap = () => {
                     }
                 },
                 () => {
-                    if (isManual) alert("위치 권한이 차단되었거나 찾을 수 없습니다.");
+                    if (isManual) showAlert("알림", "위치 권한이 차단되었거나 찾을 수 없습니다.");
                 },
                 { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
             );
@@ -133,26 +138,19 @@ export const useMentalMap = () => {
         fetchMyLocation(true);
     };
 
-    const toggleCategory = (category) => {
-        if (category === '전체') {
-            setSelectedCategories([]);
-            return;
-        }
-
-        setSelectedCategories(prev =>
-            prev.includes(category)
-                ? prev.filter(c => c !== category)
-                : [...prev, category]
-        );
+    const handleSelectCategory = (category) => {
+        setSelectedCategory(category);
+        setIsFilterOpen(false);
+        setSelectedInst(null);
     };
 
     const filteredInstitutions = useMemo(() => {
-        if (selectedCategories.length === 0) return institutions;
+        if (selectedCategory === '전체') return institutions;
         return institutions.filter(inst => {
             const cat = inst.category || inst.CATEGORY || "";
-            return selectedCategories.includes(cat.trim());
+            return cat.trim() === selectedCategory;
         });
-    }, [institutions, selectedCategories]);
+    }, [institutions, selectedCategory]);
 
     const visibleInstitutions = useMemo(() => {
         if (!mapBounds) return [];
@@ -172,10 +170,9 @@ export const useMentalMap = () => {
         });
     }, [filteredInstitutions, mapBounds]);
 
-
     const searchPlace = (searchKeyword) => {
         if (!searchKeyword.trim()) {
-            alert('검색어를 입력해주세요!');
+            showAlert('알림', '검색어를 입력해주세요!');
             return;
         }
 
@@ -213,9 +210,9 @@ export const useMentalMap = () => {
                     mapRef.current.panTo(new window.kakao.maps.LatLng(lat, lng));
                 }
             } else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
-                alert('검색 결과가 존재하지 않습니다.');
+                showAlert('알림', '검색 결과가 존재하지 않습니다.');
             } else if (status === window.kakao.maps.services.Status.ERROR) {
-                alert('검색 결과 중 오류가 발생했습니다.');
+                showAlert('오류', '검색 결과 중 오류가 발생했습니다.');
             }
         });
     };
@@ -235,7 +232,7 @@ export const useMentalMap = () => {
 
         const filtered = filteredInstitutions.filter(inst => {
             const name = inst.name || inst.NAME || "";
-            return name.includes(val);
+            return name.includes(val) && inst.location && inst.location.coordinates;
         }).map(inst => {
             const lat = inst.location.coordinates[1];
             const lng = inst.location.coordinates[0];
@@ -279,8 +276,8 @@ export const useMentalMap = () => {
         visibleInstitutions,
         updateMapBounds,
         categories,
-        selectedCategories,
-        toggleCategory,
+        selectedCategory,
+        handleSelectCategory,
         isFilterOpen,
         setIsFilterOpen,
         loading,
@@ -298,6 +295,8 @@ export const useMentalMap = () => {
         handleSuggestionClick,
         handleSearch,
         handleMapClick,
-        formatDistance
+        formatDistance,
+        modal,
+        setModal
     };
 };

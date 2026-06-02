@@ -1,6 +1,5 @@
 import React, { useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import RollerDatePicker from '../../components/RollerDatePicker';
 import { useDiaryWriteForm } from '../../hooks/diary/useDiaryWriteForm';
 import * as S from '../../style/pages/Diary/DiaryWrite.styles';
 
@@ -9,8 +8,6 @@ const DiaryWrite = () => {
     const {
         title, setTitle,
         content, setContent,
-        showDatePicker, setShowDatePicker,
-        date, setDate,
         formattedDate,
         handleSubmit,
         isLoading
@@ -62,25 +59,9 @@ const DiaryWrite = () => {
                     <S.EntrySection>
                         <S.EntryHeader>
                             <S.DateWrapper>
-                                <S.DateSelector onClick={() => !isLoading && setShowDatePicker(true)}>
+                                <S.DateSelector>
                                     @{formattedDate}
                                 </S.DateSelector>
-
-                                {showDatePicker && !isLoading && (
-                                    <>
-                                        <S.PickerOverlay onClick={() => setShowDatePicker(false)} />
-                                        <S.PickerContainer>
-                                            <RollerDatePicker
-                                                initialDate={date}
-                                                onClose={() => setShowDatePicker(false)}
-                                                onConfirm={(selectedDate) => {
-                                                    setDate(selectedDate);
-                                                    setShowDatePicker(false);
-                                                }}
-                                            />
-                                        </S.PickerContainer>
-                                    </>
-                                )}
                             </S.DateWrapper>
                         </S.EntryHeader>
 

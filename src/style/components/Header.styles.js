@@ -101,6 +101,12 @@ export const UserProfileContainer = styled.div`
     height: 44px;
     padding: 4px 17px 4px 4px;
     width: fit-content;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
 `;
 
 export const ProfileImg = styled.img`
@@ -116,4 +122,90 @@ export const UserName = styled.span`
     font-weight: 500;
     color: #000000;
     margin-left: 10px;
+`;
+
+export const ProfileModalContainer = styled.div`
+    position: absolute;
+    top: 70px;
+    right: 40px;
+    width: 320px;
+    background-color: #202124;
+    border-radius: 24px;
+    padding: 16px 20px 30px 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    color: #ffffff;
+    z-index: 1002;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+
+    @media (max-width: 768px) {
+        top: 80px;
+        right: 50%;
+        transform: translateX(50%);
+        width: 90%;
+        max-width: 340px;
+    }
+`;
+
+export const ModalCloseBtn = styled.button`
+    align-self: flex-end;
+    background: none;
+    border: none;
+    color: #9aa0a6;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 5px;
+    margin-bottom: 5px;
+
+    &:hover {
+        color: #ffffff;
+    }
+`;
+
+export const ModalEmail = styled.div`
+    font-size: 14px;
+    font-weight: 500;
+    color: #e8eaed;
+    margin-bottom: 24px;
+`;
+
+export const ModalLargeImg = styled.img`
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 16px;
+    border: 3px solid #FFE3A2;
+`;
+
+export const ModalGreeting = styled.div`
+    font-size: 22px;
+    font-weight: 400;
+    color: #e8eaed;
+    margin-bottom: 24px;
+`;
+
+export const ModalButtonGroup = styled.div`
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    justify-content: center;
+`;
+
+export const ModalActionBtn = styled.button`
+    background-color: transparent;
+    border: 1px solid #5f6368;
+    color: #8ab4f8;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+        background-color: rgba(138, 180, 248, 0.08);
+    }
 `;

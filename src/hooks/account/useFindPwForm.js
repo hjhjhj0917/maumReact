@@ -168,6 +168,7 @@ export const useFindPwForm = () => {
                 setMessage('codeMsg', '인증번호가 재전송되었습니다.', 'success');
             }
         } catch (error) {
+            console.error("오류 : ", error)
             setMessage('codeMsg', '재전송 중 오류가 발생했습니다.', 'error');
         }
     };

@@ -11,7 +11,6 @@ export const useRegisterForm = () => {
     });
     const [messages, setMessages] = useState({});
     const [flags, setFlags] = useState({ emailVerified: false, userIdChecked: false });
-    const [showDatePicker, setShowDatePicker] = useState(false);
     const [modal, setModal] = useState({ show: false, title: '', message: '', onConfirm: null });
 
     const messageTimers = useRef({});
@@ -276,7 +275,6 @@ export const useRegisterForm = () => {
         step, handleStepClick,
         formData, setFormData, handleChange, handleOtpChange, handleKeyDown, handlePaste,
         messages, flags,
-        showDatePicker, setShowDatePicker,
         modal, setModal, inputRefs,
         handleEmailSend, handleCodeVerify, handleUserIdCheck, handleKakaoPost, handleSubmit
     };

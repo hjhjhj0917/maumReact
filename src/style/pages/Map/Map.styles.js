@@ -47,112 +47,22 @@ export const LoadingErrorText = styled.div`
     color: ${(props) => (props.$isError ? '#d9534f' : '#666')};
 `;
 
-export const ControlsContainer = styled.div`
+export const TopUIWrapper = styled.div`
     position: absolute;
-    bottom: 30px;
-    right: 30px;
-    z-index: 20;
-`;
-
-export const ButtonsWrapper = styled.div`
-    display: flex;
-    gap: 12px;
-    justify-content: flex-end;
-`;
-
-export const MyLocationButton = styled.button`
-    width: 50px;
-    height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 22px;
-    color: #333;
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 50%;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    cursor: pointer;
-    flex-shrink: 0;
-
-    &:hover {
-        background-color: #f0f0f0;
-    }
-`;
-
-export const FilterPanel = styled.div`
-    position: absolute;
-    bottom: 100%;
-    right: 0;
-    margin-bottom: 15px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    align-content: flex-end;
-    gap: 8px;
-    background-color: white;
-    padding: 15px;
-    border-radius: 16px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-    width: max-content;
-    max-width: 320px;
-    opacity: ${(props) => (props.$isOpen ? 1 : 0)};
-    visibility: ${(props) => (props.$isOpen ? 'visible' : 'hidden')};
-    transform: ${(props) => (props.$isOpen ? 'translateY(0)' : 'translateY(15px)')};
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: ${(props) => (props.$isOpen ? 'auto' : 'none')};
-`;
-
-export const FilterToggleButton = styled.button`
-    width: 50px;
-    height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 20px;
-    color: #333;
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 50%;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    cursor: pointer;
-    flex-shrink: 0;
-
-    &:hover {
-        background-color: #f0f0f0;
-    }
-`;
-
-export const FilterChip = styled.button`
-    padding: 8px 14px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: bold;
-    border: 1px solid ${(props) => (props.$isActive ? props.$color : '#e9ecef')};
-    background-color: ${(props) => (props.$isActive ? props.$color : 'white')};
-    color: ${(props) => {
-    if (!props.$isActive) return '#495057';
-    const lightColors = ['#FFD700', '#66CDAA', '#00BFFF', '#FFA500', '#20C997', '#FFC130'];
-    return lightColors.includes(props.$color) ? '#212529' : 'white';
-}};
-    cursor: pointer;
-    transition: all 0.2s;
-    opacity: ${(props) => (props.$isActive ? 1 : 0.8)};
-
-    &:hover {
-        background-color: ${(props) => (props.$isActive ? props.$color : '#f8f9fa')};
-        filter: ${(props) => (props.$isActive ? 'brightness(0.9)' : 'none')};
-    }
-`;
-
-export const SearchWrapper = styled.div`
-    position: absolute;
-    top: 50px;
+    top: 70px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 10;
     width: 90%;
-    max-width: 600px;
+    max-width: 800px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+`;
+
+export const SearchSection = styled.div`
+    flex: 1;
+    position: relative;
     display: flex;
     flex-direction: column;
 `;
@@ -160,8 +70,9 @@ export const SearchWrapper = styled.div`
 export const SearchContainer = styled.form`
     display: flex;
     width: 100%;
+    height: 48px;
     background-color: white;
-    border-radius: 25px;
+    border-radius: 24px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     overflow: hidden;
 `;
@@ -169,8 +80,8 @@ export const SearchContainer = styled.form`
 export const SearchInput = styled.input`
     flex: 1;
     border: none;
-    padding: 15px 20px;
-    font-size: 16px;
+    padding: 0 20px;
+    font-size: 15px;
     outline: none;
     background: transparent;
 `;
@@ -188,16 +99,124 @@ export const SearchButton = styled.button`
     }
 `;
 
+export const FilterWrapper = styled.div`
+    position: relative;
+    display: flex;
+    flex-direction: column;
+`;
+
+export const FilterButton = styled.button`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 48px;
+    padding: 0 20px;
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    transition: background-color 0.2s;
+
+    &:hover {
+        background-color: #f8f9fa;
+    }
+
+    i {
+        font-size: 12px;
+        color: #666;
+    }
+`;
+
+export const FilterDropdown = styled.ul`
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 100%;
+    transform: translateX(-50%);
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    padding: 5px 0;
+    margin: 0;
+    list-style: none;
+    width: max-content;
+    min-width: 180px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 20;
+
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+    &::-webkit-scrollbar-track {
+        background: transparent;
+        border-radius: 12px;
+        margin-top: 12px;
+        margin-bottom: 12px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: #ced4da;
+        border-radius: 12px;
+        border: 2px solid white;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+        background: #adb5bd;
+    }
+`;
+
+export const FilterItem = styled.li`
+    padding: 12px 20px;
+    font-size: 14px;
+    color: ${(props) => (props.$isActive ? '#4A90E2' : '#333')};
+    font-weight: ${(props) => (props.$isActive ? 'bold' : 'normal')};
+    cursor: pointer;
+    background-color: ${(props) => (props.$isActive ? '#f1f8ff' : 'transparent')};
+    transition: background-color 0.2s;
+
+    &:hover {
+        background-color: #f8f9fa;
+    }
+`;
+
+export const MyLocationButton = styled.button`
+    width: 48px;
+    height: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    color: #333;
+    background-color: white;
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    cursor: pointer;
+    flex-shrink: 0;
+
+    &:hover {
+        background-color: #f8f9fa;
+    }
+`;
+
 export const DropdownContainer = styled.ul`
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
     background-color: white;
     border-radius: 20px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    margin-top: 10px;
+    margin: 0;
     padding: 5px;
     list-style: none;
     max-height: 250px;
     overflow-y: auto;
     width: 100%;
+    z-index: 20;
 
     &::-webkit-scrollbar {
         width: 8px;
@@ -394,9 +413,9 @@ export const RouteButtonRound = styled.a`
     border-radius: 50%;
     background-color: ${(props) => props.$color || '#FFC130'};
     color: ${(props) => {
-    const lightColors = ['#FFD700', '#66CDAA', '#00BFFF', '#FFA500', '#20C997', '#FFC130'];
-    return lightColors.includes(props.$color) ? '#212529' : 'white';
-}};
+        const lightColors = ['#FFD700', '#66CDAA', '#00BFFF', '#FFA500', '#20C997', '#FFC130'];
+        return lightColors.includes(props.$color) ? '#212529' : 'white';
+    }};
     text-decoration: none;
     box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     font-size: 34px;

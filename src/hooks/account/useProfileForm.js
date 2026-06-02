@@ -32,6 +32,11 @@ const characters = characterData.map(c => c.url);
 export const useProfile = () => {
     const navigate = useNavigate();
     const { setUser } = useAuth();
+    const [modal, setModal] = useState({ show: false, title: '', message: '', onConfirm: null });
+
+    const showAlert = (title, message, onConfirm = null) => {
+        setModal({ show: true, title, message, onConfirm });
+    };
 
     const [userInfo, setUserInfo] = useState({
         userId: '',
@@ -90,8 +95,9 @@ export const useProfile = () => {
                     });
                 }
             } catch (error) {
-                alert(error.response?.data?.message || "회원 정보를 불러오는데 실패했습니다.");
-                navigate('/');
+                showAlert("오류", error.response?.data?.message || "회원 정보를 불러오는데 실패했습니다.", () => {
+                    navigate('/');
+                });
             }
         };
 
@@ -129,13 +135,13 @@ export const useProfile = () => {
                 setUserInfo(prev => ({ ...prev, profileImgUrl: selectedCharacterUrl }));
                 setUser(prev => ({ ...prev, profileImg: selectedCharacterUrl }));
                 setIsModalOpen(false);
-                alert("프로필 이미지가 변경되었습니다.");
+                showAlert("알림", "프로필 이미지가 변경되었습니다.");
             } else {
-                alert(res?.msg || "프로필 이미지 변경에 실패했습니다.");
+                showAlert("오류", res?.msg || "프로필 이미지 변경에 실패했습니다.");
             }
         } catch (error) {
             console.error("오류:", error);
-            alert("서버 연결에 실패했습니다.");
+            showAlert("오류", "서버 연결에 실패했습니다.");
         }
     };
 
@@ -200,13 +206,13 @@ export const useProfile = () => {
             const res = await verifyCurrentPassword(editForm.currentPassword);
             if (res.data && res.data.result === 1) {
                 setVerifyState(prev => ({ ...prev, isPasswordVerified: true }));
-                alert('비밀번호가 확인되었습니다.');
+                showAlert('알림', '비밀번호가 확인되었습니다.');
             } else {
-                alert(res.data?.msg || '비밀번호가 일치하지 않습니다.');
+                showAlert('오류', res.data?.msg || '비밀번호가 일치하지 않습니다.');
             }
         } catch (error) {
             console.error("오류:", error);
-            alert('인증 중 오류가 발생했습니다.');
+            showAlert('오류', '인증 중 오류가 발생했습니다.');
         }
     };
 
@@ -216,13 +222,13 @@ export const useProfile = () => {
             const res = await checkEmailExists(editForm.newEmail);
             if (res && res.exists === false) {
                 setVerifyState(prev => ({ ...prev, isEmailCodeSent: true }));
-                alert('인증 코드가 발송되었습니다.');
+                showAlert('알림', '인증 코드가 발송되었습니다.');
             } else {
-                alert('이미 사용중인 이메일입니다.');
+                showAlert('오류', '이미 사용중인 이메일입니다.');
             }
         } catch (error) {
             console.error("오류:", error);
-            alert('인증 코드 발송 중 오류가 발생했습니다.');
+            showAlert('오류', '인증 코드 발송 중 오류가 발생했습니다.');
         }
     };
 
@@ -232,13 +238,13 @@ export const useProfile = () => {
             const res = await verifyEmailCode(editForm.newEmail, editForm.emailCode);
             if (res && res.result === 1) {
                 setVerifyState(prev => ({ ...prev, isEmailVerified: true }));
-                alert('이메일 인증이 완료되었습니다.');
+                showAlert('알림', '이메일 인증이 완료되었습니다.');
             } else {
-                alert(res?.msg || '인증 코드가 일치하지 않습니다.');
+                showAlert('오류', res?.msg || '인증 코드가 일치하지 않습니다.');
             }
         } catch (error) {
             console.error("오류:", error);
-            alert('이메일 인증 중 오류가 발생했습니다.');
+            showAlert('오류', '이메일 인증 중 오류가 발생했습니다.');
         }
     };
 
@@ -263,14 +269,15 @@ export const useProfile = () => {
 
             const res = await updateAccount(payload);
             if (res.data && res.data.result === 1) {
-                alert('프로필이 성공적으로 수정되었습니다.');
-                window.location.reload();
+                showAlert('알림', '프로필이 성공적으로 수정되었습니다.', () => {
+                    window.location.reload();
+                });
             } else {
-                alert(res.data?.msg || '수정에 실패했습니다.');
+                showAlert('오류', res.data?.msg || '수정에 실패했습니다.');
             }
         } catch (error) {
             console.error("오류:", error);
-            alert('수정 처리 중 오류가 발생했습니다.');
+            showAlert('오류', '수정 처리 중 오류가 발생했습니다.');
         }
     };
 
@@ -281,11 +288,11 @@ export const useProfile = () => {
             if (res.data && res.data.result === 1) {
                 setWithdrawStep(2);
             } else {
-                alert(res.data?.msg || '비밀번호가 일치하지 않습니다.');
+                showAlert('오류', res.data?.msg || '비밀번호가 일치하지 않습니다.');
             }
         } catch (error) {
             console.error("오류:", error);
-            alert('인증 중 오류가 발생했습니다.');
+            showAlert('오류', '인증 중 오류가 발생했습니다.');
         }
     };
 
@@ -294,13 +301,13 @@ export const useProfile = () => {
             const res = await sendWithdrawEmailCode(userInfo.email);
             if (res.data && res.data.result === 1) {
                 setVerifyState(prev => ({ ...prev, isWithdrawEmailCodeSent: true }));
-                alert('인증 코드가 발송되었습니다.');
+                showAlert('알림', '인증 코드가 발송되었습니다.');
             } else {
-                alert(res.data?.msg || '코드 발송에 실패했습니다.');
+                showAlert('오류', res.data?.msg || '코드 발송에 실패했습니다.');
             }
         } catch (error) {
             console.error("오류:", error);
-            alert('인증 코드 발송 중 오류가 발생했습니다.');
+            showAlert('오류', '인증 코드 발송 중 오류가 발생했습니다.');
         }
     };
 
@@ -310,29 +317,31 @@ export const useProfile = () => {
             const res = await verifyEmailCode(userInfo.email, withdrawForm.emailCode);
             if (res && res.result === 1) {
                 setVerifyState(prev => ({ ...prev, isWithdrawEmailVerified: true }));
-                alert('이메일 인증이 완료되었습니다.');
+                showAlert('알림', '이메일 인증이 완료되었습니다.');
                 setWithdrawStep(3);
             } else {
-                alert(res?.msg || '인증 코드가 일치하지 않습니다.');
+                showAlert('오류', res?.msg || '인증 코드가 일치하지 않습니다.');
             }
         } catch (error) {
             console.error("오류:", error);
-            alert('이메일 인증 중 오류가 발생했습니다.');
+            showAlert('오류', '이메일 인증 중 오류가 발생했습니다.');
         }
     };
 
     const processWithdrawalAction = async () => {
         if (withdrawForm.confirmUserId !== userInfo.userId) {
-            return alert('아이디가 일치하지 않습니다.');
+            showAlert('오류', '아이디가 일치하지 않습니다.');
+            return;
         }
         try {
             await deleteUser();
-            alert('회원 탈퇴가 완료되었습니다.');
-            setUser(null);
-            navigate('/');
+            showAlert('알림', '회원 탈퇴가 완료되었습니다.', () => {
+                setUser(null);
+                navigate('/');
+            });
         } catch (error) {
             console.error("오류:", error);
-            alert('탈퇴 처리에 실패했습니다.');
+            showAlert('오류', '탈퇴 처리에 실패했습니다.');
         }
     };
 
@@ -349,6 +358,8 @@ export const useProfile = () => {
         withdrawForm,
         verifyState,
         isProfileModified,
+        modal,
+        setModal,
         openModal,
         selectCharacter,
         closeModal,
