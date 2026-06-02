@@ -52,11 +52,15 @@ export const NavLinks = styled.nav`
     display: flex;
     gap: 30px;
 
-    a {
-        color: #666666;
+    button {
+        background: none;
+        border: none;
+        color: #666666; 
         text-decoration: none;
         font-size: 15px;
+        cursor: pointer;
         transition: color 0.2s;
+        padding: 0; 
 
         &:hover {
             color: #000000;

@@ -129,5 +129,12 @@ export const useIndex = () => {
         };
     }, []);
 
-    return { isMobile, scrolled, stats, statsRef1, statsRef2 };
+    const scrollToSection = (id) => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    };
+
+    return { isMobile, scrolled, stats, statsRef1, statsRef2, scrollToSection };
 };

@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { GlobalStyle } from './style/GlobalStyle';
 import { AuthProvider } from './context/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { PublicRoute } from './components/PublicRoute';
 import HeaderLayout from './components/HeaderLayout';
 import Layout from './components/Layout';
 import Index from './pages/Index';
@@ -20,12 +21,16 @@ function App() {
             <AuthProvider>
                 <GlobalStyle />
                 <Routes>
-                    <Route path="/" element={<Index />} />
+                    {/* Public Route */}
+                    <Route element={<PublicRoute />}>
+                        <Route path="/" element={<Index />} />
 
-                    <Route element={<HeaderLayout />}>
-                        <Route path="/account/*" element={<AccountRoutes />} />
+                        <Route element={<HeaderLayout />}>
+                            <Route path="/account/*" element={<AccountRoutes />} />
+                        </Route>
                     </Route>
 
+                    {/* Protected Route */}
                     <Route element={<ProtectedRoute />}>
                         <Route element={<Layout />}>
                             <Route path="/diary/write" element={<DiaryWrite />} />
@@ -37,6 +42,7 @@ function App() {
                         </Route>
                     </Route>
 
+                    {/* 404 Not Found */}
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </AuthProvider>

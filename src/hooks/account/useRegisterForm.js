@@ -16,6 +16,16 @@ export const useRegisterForm = () => {
     const messageTimers = useRef({});
     const inputRefs = useRef([]);
 
+    const guideText = {
+        password: "영문, 숫자, 특수문자를 모두 포함하여 8~20자리로 조합해주세요."
+    };
+
+    const patterns = {
+        password: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$/,
+        userName: /^[가-힣a-zA-Z]{2,10}$/,
+        birthDate: /^(19|20)\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/
+    };
+
     useEffect(() => {
         const script = document.createElement('script');
         script.src = "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
@@ -28,6 +38,10 @@ export const useRegisterForm = () => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
         clearMessage(name + 'Msg');
+
+        if (name === 'userId') {
+            setFlags(prev => ({ ...prev, userIdChecked: false }));
+        }
     };
 
     const handleOtpChange = (e, index) => {
@@ -88,6 +102,12 @@ export const useRegisterForm = () => {
 
         if (step === 2 && formData.password && formData.passwordConfirm) {
             if (formData.password === formData.passwordConfirm) {
+                if (!patterns.password.test(formData.password)) {
+                    setTimeout(() => {
+                        setMessage('passwordConfirmMsg', guideText.password, 'error');
+                    }, 0);
+                    return;
+                }
 
                 const checkTimer = setTimeout(() => {
                     if (!flags.userIdChecked) {
@@ -113,11 +133,11 @@ export const useRegisterForm = () => {
         setModal({ show: true, title, message, onConfirm });
     };
 
-    const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const validateEmail = (email) => /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$/.test(email);
 
-    // 이메일 중복 확인 및 인증번호 발송
     const handleEmailSend = async () => {
         if (!formData.email.trim()) return setMessage('emailMsg', '이메일을 입력하세요.', 'error');
+        if (formData.email.length > 255) return setMessage('emailMsg', '이메일은 최대 255글자까지 입력 가능합니다.', 'error');
         if (!validateEmail(formData.email)) return setMessage('emailMsg', '유효한 이메일 형식이 아닙니다.', 'error');
 
         try {
@@ -133,7 +153,6 @@ export const useRegisterForm = () => {
         }
     };
 
-    // 인증번호 확인
     const handleCodeVerify = async () => {
         const code = formData.code?.replace(/\s/g, '');
         if (!code || code.length < 6) return setMessage('codeMsg', '인증번호 6자리를 모두 입력하세요.', 'error');
@@ -149,18 +168,19 @@ export const useRegisterForm = () => {
                 setMessage('codeMsg', res.msg || '잘못된 인증번호입니다.', 'error');
             }
         } catch (error) {
-            console.error("오류:", error);
+            console.error("오류 : ", error)
             setMessage('codeMsg', '서버 통신 중 오류가 발생했습니다.', 'error');
         }
     };
 
-    // 아이디 중복 체크
     const handleUserIdCheck = async () => {
         if (!formData.userId.trim()) return setMessage('userIdMsg', '아이디를 입력하세요.', 'error');
+        if (formData.userId.length < 4 || formData.userId.length > 20) {
+            return setMessage('userIdMsg', '아이디는 4~20자리로 입력해 주세요.', 'error');
+        }
 
         try {
             const res = await checkUserIdExists(formData.userId);
-
             const isExists = res.data && res.data.existsYn === 'Y';
 
             if (isExists) {
@@ -171,7 +191,7 @@ export const useRegisterForm = () => {
                 setFlags(prev => ({ ...prev, userIdChecked: true }));
             }
         } catch (e) {
-            console.error("ID 중복 체크 에러:", e);
+            console.error("오류 : ", e)
             setMessage('userIdMsg', '서버 통신 중 오류가 발생했습니다.', 'error');
         }
     };
@@ -199,17 +219,26 @@ export const useRegisterForm = () => {
 
     const validateStep2 = () => {
         let isValid = true;
+
         if (!formData.userId.trim()) {
             setMessage('userIdMsg', '아이디를 입력하세요.', 'error');
+            isValid = false;
+        } else if (formData.userId.length < 4 || formData.userId.length > 20) {
+            setMessage('userIdMsg', '아이디는 4~20자리로 입력해 주세요.', 'error');
             isValid = false;
         } else if (!flags.userIdChecked) {
             setMessage('userIdMsg', '아이디 중복 체크를 완료해 주세요.', 'error');
             isValid = false;
         }
+
         if (!formData.password.trim()) {
             setMessage('passwordMsg', '비밀번호를 입력하세요.', 'error');
             isValid = false;
+        } else if (!patterns.password.test(formData.password)) {
+            setMessage('passwordMsg', guideText.password, 'error');
+            isValid = false;
         }
+
         if (!formData.passwordConfirm.trim()) {
             setMessage('passwordConfirmMsg', '비밀번호 확인을 입력하세요.', 'error');
             isValid = false;
@@ -222,14 +251,23 @@ export const useRegisterForm = () => {
 
     const validateStep3 = () => {
         let isValid = true;
+
         if (!formData.userName.trim()) {
             setMessage('userNameMsg', '이름을 입력하세요.', 'error');
             isValid = false;
+        } else if (!patterns.userName.test(formData.userName)) {
+            setMessage('userNameMsg', '이름은 2~10자의 한글 또는 영문만 가능합니다.', 'error');
+            isValid = false;
         }
+
         if (!formData.birthDate.trim()) {
             setMessage('birthDateMsg', '생년월일을 입력하세요.', 'error');
             isValid = false;
+        } else if (!patterns.birthDate.test(formData.birthDate)) {
+            setMessage('birthDateMsg', '달력을 이용하여 정확한 생년월일을 선택해 주세요.', 'error');
+            isValid = false;
         }
+
         if (!formData.addr.trim()) {
             setMessage('addrMsg', '주소를 입력하세요.', 'error');
             isValid = false;
@@ -250,18 +288,16 @@ export const useRegisterForm = () => {
         }
     };
 
-    // 회원가입 제출
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!validateStep1() || !validateStep2() || !validateStep3()) return;
 
         try {
             const res = await registerUser(formData);
-
             const responseData = res.data;
 
             if (responseData.result === 1) {
-                showAlert("회원가입 성공", responseData.msg, () => navigate('/account/login'));
+                showAlert("회원가입 성공", responseData.msg, () => navigate('/'));
             } else {
                 showAlert("회원가입 실패", responseData.msg);
             }
@@ -275,7 +311,7 @@ export const useRegisterForm = () => {
         step, handleStepClick,
         formData, setFormData, handleChange, handleOtpChange, handleKeyDown, handlePaste,
         messages, flags,
-        modal, setModal, inputRefs,
+        modal, setModal, inputRefs, guideText,
         handleEmailSend, handleCodeVerify, handleUserIdCheck, handleKakaoPost, handleSubmit
     };
 };

@@ -10,7 +10,6 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         const initAuth = async () => {
-            // 쿠키 여부를 먼저 확인하여 불필요한 API 호출을 줄일 수도 있습니다.
             const loginFlag = document.cookie.includes('isLoggedIn=true');
 
             if (!loginFlag) {

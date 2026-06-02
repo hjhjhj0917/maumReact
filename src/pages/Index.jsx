@@ -28,7 +28,7 @@ const DraggableEmotion = ({ data, index }) => {
 };
 
 const Index = () => {
-    const { scrolled, stats, statsRef1, statsRef2 } = useIndex();
+    const { scrolled, stats, statsRef1, statsRef2, scrollToSection } = useIndex();
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
     const emotionData = [
@@ -50,9 +50,9 @@ const Index = () => {
                     <img src={logoImg} alt="MAUM" />MauM
                 </S.Logo>
                 <S.NavLinks>
-                    <Link to="#features">Features</Link>
-                    <Link to="#technology">Technology</Link>
-                    <Link to="#about">About</Link>
+                    <button onClick={() => scrollToSection('features')}>Features</button>
+                    <button onClick={() => scrollToSection('statistics')}>Stats</button>
+                    <button onClick={() => scrollToSection('community')}>Community</button>
                 </S.NavLinks>
                 <S.AuthButtons>
                     {/* Sign up 버튼: 테두리/배경 없애고 페이지 이동 */}
@@ -137,7 +137,7 @@ const Index = () => {
                 </S.Grid>
             </S.Section>
 
-            <S.Section $center ref={statsRef1}>
+            <S.Section $center id="statistics" ref={statsRef1}>
                 <S.SectionTitle>매일 성장하는<br />MAUM 데이터</S.SectionTitle>
                 <S.StatsGrid>
                     <S.StatBox>
@@ -162,11 +162,11 @@ const Index = () => {
                 {/*</S.EmailForm>*/}
             </S.Section>
 
-            <S.Section $center id="technology" ref={statsRef2}>
+            <S.Section $center id="community" ref={statsRef2}>
                 <S.SectionTitle style={{ fontSize: '64px' }}>함께 나누는<br />마음 공동체</S.SectionTitle>
-                <S.CommunityGrid>
-                    당신의 감정을 컬러로 공유하고 서로 응원하세요.
-                </S.CommunityGrid>
+                {/*<S.CommunityGrid>*/}
+                {/*    당신의 감정을 컬러로 공유하고 서로 응원하세요.*/}
+                {/*</S.CommunityGrid>*/}
 
                 <S.StatsGrid>
                     <S.StatBox>
@@ -184,26 +184,26 @@ const Index = () => {
                 </S.StatsGrid>
             </S.Section>
 
-            <S.Section>
-                <S.SectionHeader>
-                    <S.SectionTitle>MauM은 끊임없이<br />연구합니다.</S.SectionTitle>
-                </S.SectionHeader>
+            {/*<S.Section>*/}
+            {/*    <S.SectionHeader>*/}
+            {/*        <S.SectionTitle>MauM은 끊임없이<br />연구합니다.</S.SectionTitle>*/}
+            {/*    </S.SectionHeader>*/}
 
-                <S.BentoGrid>
-                    <S.Card>
-                        <h3>자연어 처리 연구</h3>
-                        <p>한국어 감정 표현에 최적화된 KoElectra 및 텍스트 마이닝 기술을 적용합니다.</p>
-                    </S.Card>
-                    <S.Card>
-                        <h3>LLM 최적화</h3>
-                        <p>HyperCLOVA X 임베딩을 활용하여 더 깊은 문맥적 공감을 실현합니다.</p>
-                    </S.Card>
-                    <S.Card className="large">
-                        <h3>데이터 분석 기반 케어</h3>
-                        <p>누적된 심리 데이터를 기반으로 사용자에게 가장 필요한 위로의 방식을 제안합니다.</p>
-                    </S.Card>
-                </S.BentoGrid>
-            </S.Section>
+            {/*    <S.BentoGrid>*/}
+            {/*        <S.Card>*/}
+            {/*            <h3>자연어 처리 연구</h3>*/}
+            {/*            <p>한국어 감정 표현에 최적화된 KoElectra 및 텍스트 마이닝 기술을 적용합니다.</p>*/}
+            {/*        </S.Card>*/}
+            {/*        <S.Card>*/}
+            {/*            <h3>LLM 최적화</h3>*/}
+            {/*            <p>HyperCLOVA X 임베딩을 활용하여 더 깊은 문맥적 공감을 실현합니다.</p>*/}
+            {/*        </S.Card>*/}
+            {/*        <S.Card className="large">*/}
+            {/*            <h3>데이터 분석 기반 케어</h3>*/}
+            {/*            <p>누적된 심리 데이터를 기반으로 사용자에게 가장 필요한 위로의 방식을 제안합니다.</p>*/}
+            {/*        </S.Card>*/}
+            {/*    </S.BentoGrid>*/}
+            {/*</S.Section>*/}
 
             <S.Footer>
                 <S.FooterGrid>

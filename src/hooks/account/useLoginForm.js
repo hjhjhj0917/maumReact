@@ -64,7 +64,7 @@ export const useLoginForm = () => {
                     console.error("유저 정보 업데이트 실패:", err);
                 }
 
-                navigate('/diary/write');
+                navigate('/diary/list');
 
             } else {
                 setMessage('userId', msgDto?.msg || "로그인 정보를 확인해주세요.", 'error');
