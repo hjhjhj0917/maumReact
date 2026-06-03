@@ -157,7 +157,6 @@ export const ModalCloseBtn = styled.button`
     font-size: 18px;
     cursor: pointer;
     padding: 5px;
-    margin-bottom: 5px;
 
     &:hover {
         color: #ffffff;
@@ -168,7 +167,7 @@ export const ModalEmail = styled.div`
     font-size: 14px;
     font-weight: 500;
     color: #e8eaed;
-    margin-bottom: 24px;
+    margin-bottom: 10px;
 `;
 
 export const ModalLargeImg = styled.img`
@@ -184,7 +183,7 @@ export const ModalGreeting = styled.div`
     font-size: 22px;
     font-weight: 400;
     color: #333;
-    margin-bottom: 24px;
+    margin-bottom: 42px;
 `;
 
 export const ModalButtonGroup = styled.div`

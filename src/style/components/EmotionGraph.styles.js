@@ -98,7 +98,7 @@ export const Bar = styled.div`
 `;
 
 export const CountText = styled.span`
-    color: ${props => (props.$isInside ? '#ffffff' : '#787774')};
+    color: ${props => (props.$isInside ? '#333' : '#333')};
     font-size: 13px;
     font-weight: 600;
     margin-left: ${props => (props.$isInside ? '0' : '8px')};
