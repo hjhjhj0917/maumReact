@@ -21,7 +21,12 @@ const addRefreshSubscriber = (callback) => {
 };
 
 apiClient.interceptors.response.use(
-    (response) => response.data,
+    (response) => {
+        if (response.data && typeof response.data === 'object' && 'httpStatus' in response.data) {
+            return response.data.data;
+        }
+        return response.data;
+    },
     async (error) => {
         const originalRequest = error.config;
 

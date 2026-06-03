@@ -22,12 +22,12 @@ export const useSidebar = () => {
         try {
             const res = await logoutUser();
 
-            if (res && res.data && res.data.result === 1) {
+            if (res && res.result === 1) {
                 setUser(null);
                 setShowLogoutModal(false);
                 navigate('/');
             } else {
-                console.error("로그아웃 실패:", res.message);
+                console.error("로그아웃 실패:", res?.msg || "알 수 없는 오류");
                 navigate('/');
             }
         } catch (error) {

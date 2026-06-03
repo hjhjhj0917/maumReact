@@ -89,7 +89,6 @@ export const useFindIdForm = () => {
 
     const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-    // Step 1: 아이디 존재 여부 확인 및 인증번호 발송
     const handleStep1Submit = async (e) => {
         e.preventDefault();
         if (!formData.userEmail.trim()) return setMessage('userEmailMsg', '이메일을 입력하세요.', 'error');
@@ -97,7 +96,6 @@ export const useFindIdForm = () => {
         if (!formData.userName.trim()) return setMessage('userNameMsg', '이름을 입력하세요.', 'error');
 
         try {
-            // apiClient 사용으로 인해 .json() 파싱이 필요 없음
             const res = await findUserId(formData.userEmail, formData.userName);
 
             if (res.exists) {
@@ -108,12 +106,11 @@ export const useFindIdForm = () => {
                 setMessage('userEmailMsg', res.msg || '일치하는 회원이 없습니다.', 'error');
             }
         } catch (error) {
-            const errorMsg = error.response?.data?.msg || "서버 통신 중 오류가 발생했습니다.";
+            const errorMsg = error.response?.data?.message || "서버 통신 중 오류가 발생했습니다.";
             showAlert("시스템 오류", errorMsg);
         }
     };
 
-    // Step 2: 인증번호 검증 및 아이디 획득
     const handleStep2Submit = async (e) => {
         e.preventDefault();
         const code = formData.code?.replace(/\s/g, '');
@@ -129,12 +126,11 @@ export const useFindIdForm = () => {
                 setMessage('codeMsg', res.msg || '인증번호가 일치하지 않거나 만료되었습니다.', 'error');
             }
         } catch (error) {
-            const errorMsg = error.response?.data?.msg || "서버 통신 중 오류가 발생했습니다.";
+            const errorMsg = error.response?.data?.message || "서버 통신 중 오류가 발생했습니다.";
             showAlert("시스템 오류", errorMsg);
         }
     };
 
-    // 인증번호 재전송
     const handleResend = async () => {
         try {
             const res = await findUserId(formData.userEmail, formData.userName);

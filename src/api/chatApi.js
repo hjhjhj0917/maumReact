@@ -50,7 +50,6 @@ export const streamChatApi = async (message, onChunk, onError, onComplete) => {
                     if (text === '[DONE]') break;
 
                     if (text) {
-                        // <br>을 마크다운 줄바꿈(공백 2개 + \n)으로 변환하고 <sp>를 공백으로 변환
                         text = text.split('<br>').join('  \n').split('<sp>').join(' ');
                         onChunk(text);
                     }
@@ -62,7 +61,6 @@ export const streamChatApi = async (message, onChunk, onError, onComplete) => {
             let text = buffer.substring(5);
             if (text.startsWith(' ')) text = text.substring(1);
             if (text && text !== '[DONE]') {
-                // <br>을 마크다운 줄바꿈으로 변환하고 <sp>를 공백으로 변환
                 text = text.split('<br>').join('  \n').split('<sp>').join(' ');
                 onChunk(text);
             }

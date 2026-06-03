@@ -1,63 +1,28 @@
 import apiClient from './apiClient';
 
 /* [Diary Management] */
+export const insertDiary = (title, content, createdAt) =>
+    apiClient.post('/diary/diaryInsert', { title, content, createdAt });
 
-export const insertDiary = (title, content, createdAt) => {
-    return apiClient.post('/diary/diaryInsert', {
-        title,
-        content,
-        createdAt
-    });
-};
+export const updateDiary = (diaryNo, title, content) =>
+    apiClient.post('/diary/diaryUpdate', { diaryNo, title, content });
 
-export const updateDiary = (diaryNo, title, content) => {
-    return apiClient.post('/diary/diaryUpdate', {
-        diaryNo,
-        title,
-        content
-    });
-};
-
-export const deleteDiary = (diaryNo) => {
-    return apiClient.post('/diary/diaryDelete', {
-        diaryNo
-    });
-};
+export const deleteDiary = (diaryNo) =>
+    apiClient.post('/diary/diaryDelete', { diaryNo });
 
 
 /* [Diary Retrieval] */
+export const getMonthlyDiaries = (createdAt) =>
+    apiClient.get('/diary/monthly', { params: { createdAt } });
 
-export const getMonthlyDiaries = async (createdAt) => {
-    const response = await apiClient.get('/diary/monthly', {
-        params: { createdAt }
-    });
+export const getDiaryDetail = (diaryNo) =>
+    apiClient.get('/diary/detail', { params: { diaryNo } });
 
-    return response.data;
-};
+export const searchDiaries = (keyword) =>
+    apiClient.get('/diary/search', { params: { keyword } });
 
-export const getDiaryDetail = async (diaryNo) => {
-    const response = await apiClient.get('/diary/detail', {
-        params: { diaryNo }
-    });
+export const filterDiariesByColors = (colors) =>
+    apiClient.get('/diary/filter', { params: { colors: colors.join(',') } });
 
-    return response.data;
-};
-
-export const searchDiaries = async (keyword) => {
-    const response = await apiClient.get('/diary/search', {
-        params: { keyword }
-    });
-    return response.data;
-};
-
-export const filterDiariesByColors = async (colors) => {
-    const response = await apiClient.get('/diary/filter', {
-        params: { colors: colors.join(',') }
-    });
-    return response.data;
-};
-
-export const getRecentDiaries = async () => {
-    const response = await apiClient.get('/diary/recent');
-    return response.data;
-};
+export const getRecentDiaries = () =>
+    apiClient.get('/diary/recent');

@@ -46,18 +46,18 @@ export const useLoginForm = () => {
 
         try {
             const res = await loginRequest(userId, password);
-            const msgDto = res.data;
+            const msgDto = res;
 
             if (msgDto && msgDto.result === 1) {
 
                 try {
                     const statusRes = await getUserStatus();
-                    if (statusRes.data && statusRes.data.userId) {
+                    if (statusRes && statusRes.userId) {
                         setUser({
-                            no: statusRes.data.userNo,
-                            id: statusRes.data.userId,
-                            name: statusRes.data.userName,
-                            profileImg: statusRes.data.profileImgUrl
+                            no: statusRes.userNo,
+                            id: statusRes.userId,
+                            name: statusRes.userName,
+                            profileImg: statusRes.profileImgUrl
                         });
                     }
                 } catch (err) {
@@ -72,9 +72,7 @@ export const useLoginForm = () => {
             }
         } catch (error) {
             console.error("Login Error:", error);
-            const errorMsg = error.response?.data?.data?.msg
-                || error.response?.data?.message
-                || "서버 통신 중 오류가 발생했습니다.";
+            const errorMsg = error.response?.data?.message || "서버 통신 중 오류가 발생했습니다.";
             setMessage('userId', errorMsg, 'error');
             setPassword('');
         }

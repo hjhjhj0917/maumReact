@@ -43,13 +43,13 @@ export const useDiaryWriteForm = () => {
 
             const res = await insertDiary(title, content, apiDate);
 
-            if (res && res.data) {
+            if (res) {
                 showAlert('알림', '일기가 작성되었습니다.', () => {
                     window.dispatchEvent(new CustomEvent('diary-updated'));
-                    navigate(`/diary/${res.data}`);
+                    navigate(`/diary/${res}`);
                 });
             } else {
-                showAlert('오류', res.message || '저장에 실패했습니다.');
+                showAlert('오류', '저장에 실패했습니다.');
                 setIsLoading(false);
             }
         } catch (error) {

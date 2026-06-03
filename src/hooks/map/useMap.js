@@ -93,10 +93,9 @@ export const useMentalMap = () => {
         const fetchInstitutions = async () => {
             try {
                 const response = await getInstitutions();
-                const realData = response?.data?.data || response?.data || response;
 
-                if (Array.isArray(realData)) {
-                    setInstitutions(realData);
+                if (Array.isArray(response)) {
+                    setInstitutions(response);
                 } else {
                     setInstitutions([]);
                 }

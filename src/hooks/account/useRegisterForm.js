@@ -142,13 +142,13 @@ export const useRegisterForm = () => {
 
         try {
             const res = await checkEmailExists(formData.email);
-            if (res.exists) {
+            if (res && res.exists) {
                 setMessage('emailMsg', '이미 가입된 이메일 주소가 존재합니다.', 'error');
             } else {
                 showAlert("인증번호 발송", "이메일로 인증번호가 발송되었습니다.");
             }
         } catch (e) {
-            const errorMsg = e.response?.data?.msg || "서버 통신 중 오류가 발생했습니다.";
+            const errorMsg = e.response?.data?.message || "서버 통신 중 오류가 발생했습니다.";
             showAlert("서버 오류", errorMsg);
         }
     };
@@ -160,16 +160,16 @@ export const useRegisterForm = () => {
         try {
             const res = await verifyEmailCode(formData.email, code);
 
-            if (res.result === 1) {
+            if (res && res.result === 1) {
                 setMessage('codeMsg', '인증번호가 확인되었습니다.', 'success');
                 setFlags(prev => ({ ...prev, emailVerified: true }));
                 setTimeout(() => setStep(2), 800);
             } else {
-                setMessage('codeMsg', res.msg || '잘못된 인증번호입니다.', 'error');
+                setMessage('codeMsg', res?.msg || '잘못된 인증번호입니다.', 'error');
             }
         } catch (error) {
             console.error("오류 : ", error)
-            setMessage('codeMsg', '서버 통신 중 오류가 발생했습니다.', 'error');
+            setMessage('codeMsg', error.response?.data?.message || '서버 통신 중 오류가 발생했습니다.', 'error');
         }
     };
 
@@ -181,7 +181,7 @@ export const useRegisterForm = () => {
 
         try {
             const res = await checkUserIdExists(formData.userId);
-            const isExists = res.data && res.data.existsYn === 'Y';
+            const isExists = res && res.existsYn === 'Y';
 
             if (isExists) {
                 setMessage('userIdMsg', '이미 가입된 아이디가 존재합니다.', 'error');
@@ -192,7 +192,7 @@ export const useRegisterForm = () => {
             }
         } catch (e) {
             console.error("오류 : ", e)
-            setMessage('userIdMsg', '서버 통신 중 오류가 발생했습니다.', 'error');
+            setMessage('userIdMsg', e.response?.data?.message || '서버 통신 중 오류가 발생했습니다.', 'error');
         }
     };
 
@@ -294,15 +294,14 @@ export const useRegisterForm = () => {
 
         try {
             const res = await registerUser(formData);
-            const responseData = res.data;
 
-            if (responseData.result === 1) {
-                showAlert("회원가입 성공", responseData.msg, () => navigate('/'));
+            if (res && res.result === 1) {
+                showAlert("회원가입 성공", res.msg, () => navigate('/'));
             } else {
-                showAlert("회원가입 실패", responseData.msg);
+                showAlert("회원가입 실패", res?.msg || "알 수 없는 오류가 발생했습니다.");
             }
         } catch (err) {
-            const errorMsg = err.response?.data?.msg || "서버 통신 중 오류가 발생했습니다.";
+            const errorMsg = err.response?.data?.message || "서버 통신 중 오류가 발생했습니다.";
             showAlert("서버 오류", errorMsg);
         }
     };

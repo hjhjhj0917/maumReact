@@ -96,8 +96,6 @@ export const useFindPwForm = () => {
 
     const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-    /** * Step 1: 유저 확인 및 인증번호 발송
-     */
     const handleStep1Submit = async (e) => {
         e.preventDefault();
         if (!formData.userId.trim()) return setMessage('userIdMsg', '아이디를 입력하세요.', 'error');
@@ -105,7 +103,6 @@ export const useFindPwForm = () => {
         if (!validateEmail(formData.userEmail)) return setMessage('userEmailMsg', '유효한 이메일 형식이 아닙니다.', 'error');
 
         try {
-            // apiClient 사용으로 자동 파싱됨
             const res = await findUserPw(formData.userEmail, formData.userId);
             if (res.exists) {
                 showAlert("인증번호 발송", "이메일로 인증번호가 발송되었습니다.", () => setStep(2));
@@ -113,13 +110,11 @@ export const useFindPwForm = () => {
                 setMessage('userEmailMsg', res.msg || '정보와 일치하는 회원이 없습니다.', 'error');
             }
         } catch (error) {
-            const errorMsg = error.response?.data?.msg || "서버 통신 중 오류가 발생했습니다.";
+            const errorMsg = error.response?.data?.message || "서버 통신 중 오류가 발생했습니다.";
             showAlert("시스템 오류", errorMsg);
         }
     };
 
-    /** * Step 2: 인증번호 검증
-     */
     const handleStep2Submit = async (e) => {
         e.preventDefault();
         const code = formData.code?.replace(/\s/g, '');
@@ -134,13 +129,11 @@ export const useFindPwForm = () => {
                 setMessage('codeMsg', res.msg || '인증번호가 일치하지 않습니다.', 'error');
             }
         } catch (error) {
-            const errorMsg = error.response?.data?.msg || "서버 통신 중 오류가 발생했습니다.";
+            const errorMsg = error.response?.data?.message || "서버 통신 중 오류가 발생했습니다.";
             showAlert("시스템 오류", errorMsg);
         }
     };
 
-    /** * Step 3: 새 비밀번호 설정
-     */
     const handleStep3Submit = async (e) => {
         e.preventDefault();
         if (!formData.password.trim()) return setMessage('passwordMsg', '새 비밀번호를 입력하세요.', 'error');
@@ -154,13 +147,11 @@ export const useFindPwForm = () => {
                 showAlert("변경 실패", res.msg || "다시 시도해 주세요.");
             }
         } catch (error) {
-            const errorMsg = error.response?.data?.msg || "비밀번호 변경 중 오류가 발생했습니다.";
+            const errorMsg = error.response?.data?.message || "비밀번호 변경 중 오류가 발생했습니다.";
             showAlert("시스템 오류", errorMsg);
         }
     };
 
-    /** * 인증번호 재전송
-     */
     const handleResend = async () => {
         try {
             const res = await findUserPw(formData.userEmail, formData.userId);

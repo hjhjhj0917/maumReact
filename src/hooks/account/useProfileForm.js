@@ -83,15 +83,15 @@ export const useProfile = () => {
         const fetchUserInfo = async () => {
             try {
                 const res = await getUserStatus();
-                if (res && res.data) {
+                if (res) {
                     setUserInfo({
-                        userId: res.data.userId || '',
-                        userName: res.data.userName || '',
-                        email: res.data.email || '',
-                        birthDate: res.data.birthDate || '',
-                        addr: res.data.addr || '',
-                        detailAddr: res.data.detailAddr || '',
-                        profileImgUrl: res.data.profileImgUrl || characters[0]
+                        userId: res.userId || '',
+                        userName: res.userName || '',
+                        email: res.email || '',
+                        birthDate: res.birthDate || '',
+                        addr: res.addr || '',
+                        detailAddr: res.detailAddr || '',
+                        profileImgUrl: res.profileImgUrl || characters[0]
                     });
                 }
             } catch (error) {
@@ -131,7 +131,7 @@ export const useProfile = () => {
     const closeModal = async () => {
         try {
             const res = await updateProfileImg(selectedCharacterUrl);
-            if (res.data && res.data.result === 1) {
+            if (res && res.result === 1) {
                 setUserInfo(prev => ({ ...prev, profileImgUrl: selectedCharacterUrl }));
                 setUser(prev => ({ ...prev, profileImg: selectedCharacterUrl }));
                 setIsModalOpen(false);
@@ -141,7 +141,7 @@ export const useProfile = () => {
             }
         } catch (error) {
             console.error("오류:", error);
-            showAlert("오류", "서버 연결에 실패했습니다.");
+            showAlert("오류", error.response?.data?.message || "서버 연결에 실패했습니다.");
         }
     };
 
@@ -204,15 +204,15 @@ export const useProfile = () => {
         if (!editForm.currentPassword) return;
         try {
             const res = await verifyCurrentPassword(editForm.currentPassword);
-            if (res.data && res.data.result === 1) {
+            if (res && res.result === 1) {
                 setVerifyState(prev => ({ ...prev, isPasswordVerified: true }));
                 showAlert('알림', '비밀번호가 확인되었습니다.');
             } else {
-                showAlert('오류', res.data?.msg || '비밀번호가 일치하지 않습니다.');
+                showAlert('오류', res?.msg || '비밀번호가 일치하지 않습니다.');
             }
         } catch (error) {
             console.error("오류:", error);
-            showAlert('오류', '인증 중 오류가 발생했습니다.');
+            showAlert('오류', error.response?.data?.message || '인증 중 오류가 발생했습니다.');
         }
     };
 
@@ -228,7 +228,7 @@ export const useProfile = () => {
             }
         } catch (error) {
             console.error("오류:", error);
-            showAlert('오류', '인증 코드 발송 중 오류가 발생했습니다.');
+            showAlert('오류', error.response?.data?.message || '인증 코드 발송 중 오류가 발생했습니다.');
         }
     };
 
@@ -244,7 +244,7 @@ export const useProfile = () => {
             }
         } catch (error) {
             console.error("오류:", error);
-            showAlert('오류', '이메일 인증 중 오류가 발생했습니다.');
+            showAlert('오류', error.response?.data?.message || '이메일 인증 중 오류가 발생했습니다.');
         }
     };
 
@@ -268,16 +268,16 @@ export const useProfile = () => {
             };
 
             const res = await updateAccount(payload);
-            if (res.data && res.data.result === 1) {
+            if (res && res.result === 1) {
                 showAlert('알림', '프로필이 성공적으로 수정되었습니다.', () => {
                     window.location.reload();
                 });
             } else {
-                showAlert('오류', res.data?.msg || '수정에 실패했습니다.');
+                showAlert('오류', res?.msg || '수정에 실패했습니다.');
             }
         } catch (error) {
             console.error("오류:", error);
-            showAlert('오류', '수정 처리 중 오류가 발생했습니다.');
+            showAlert('오류', error.response?.data?.message || '수정 처리 중 오류가 발생했습니다.');
         }
     };
 
@@ -285,29 +285,29 @@ export const useProfile = () => {
         if (!withdrawForm.password) return;
         try {
             const res = await verifyCurrentPassword(withdrawForm.password);
-            if (res.data && res.data.result === 1) {
+            if (res && res.result === 1) {
                 setWithdrawStep(2);
             } else {
-                showAlert('오류', res.data?.msg || '비밀번호가 일치하지 않습니다.');
+                showAlert('오류', res?.msg || '비밀번호가 일치하지 않습니다.');
             }
         } catch (error) {
             console.error("오류:", error);
-            showAlert('오류', '인증 중 오류가 발생했습니다.');
+            showAlert('오류', error.response?.data?.message || '인증 중 오류가 발생했습니다.');
         }
     };
 
     const sendWithdrawEmailCodeAction = async () => {
         try {
             const res = await sendWithdrawEmailCode(userInfo.email);
-            if (res.data && res.data.result === 1) {
+            if (res && res.result === 1) {
                 setVerifyState(prev => ({ ...prev, isWithdrawEmailCodeSent: true }));
                 showAlert('알림', '인증 코드가 발송되었습니다.');
             } else {
-                showAlert('오류', res.data?.msg || '코드 발송에 실패했습니다.');
+                showAlert('오류', res?.msg || '코드 발송에 실패했습니다.');
             }
         } catch (error) {
             console.error("오류:", error);
-            showAlert('오류', '인증 코드 발송 중 오류가 발생했습니다.');
+            showAlert('오류', error.response?.data?.message || '인증 코드 발송 중 오류가 발생했습니다.');
         }
     };
 
@@ -324,7 +324,7 @@ export const useProfile = () => {
             }
         } catch (error) {
             console.error("오류:", error);
-            showAlert('오류', '이메일 인증 중 오류가 발생했습니다.');
+            showAlert('오류', error.response?.data?.message || '이메일 인증 중 오류가 발생했습니다.');
         }
     };
 
@@ -341,7 +341,7 @@ export const useProfile = () => {
             });
         } catch (error) {
             console.error("오류:", error);
-            showAlert('오류', '탈퇴 처리에 실패했습니다.');
+            showAlert('오류', error.response?.data?.message || '탈퇴 처리에 실패했습니다.');
         }
     };
 

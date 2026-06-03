@@ -33,10 +33,9 @@ export const useDiaryDetail = () => {
     const fetchDiaryDetail = useCallback(async () => {
         try {
             const data = await getDiaryDetail(diaryNo);
-            const diaryData = data.data || data;
 
-            if (diaryData) {
-                setDiary(diaryData);
+            if (data) {
+                setDiary(data);
             } else {
                 showAlert("오류", "일기 정보를 찾을 수 없습니다.", () => {
                     navigate('/diary/list', { replace: true });
@@ -82,14 +81,14 @@ export const useDiaryDetail = () => {
             setLoading(true);
             const res = await updateDiary(diaryNo, editTitle, editContent);
 
-            if (res && res.data) {
-                showAlert('알림', res.message || "일기가 수정 및 재분석 되었습니다.", async () => {
+            if (res) {
+                showAlert('알림', "일기가 수정 및 재분석 되었습니다.", async () => {
                     setIsEditing(false);
                     window.dispatchEvent(new CustomEvent('diary-updated'));
                     await fetchDiaryDetail();
                 });
             } else {
-                showAlert('오류', res.message || "수정에 실패했습니다.");
+                showAlert('오류', "수정에 실패했습니다.");
                 setLoading(false);
             }
         } catch (error) {
@@ -104,13 +103,13 @@ export const useDiaryDetail = () => {
                 setLoading(true);
                 const res = await deleteDiary(diaryNo);
 
-                if (res && res.data) {
-                    showAlert("알림", res.message || "일기가 삭제되었습니다.", () => {
+                if (res) {
+                    showAlert("알림", "일기가 삭제되었습니다.", () => {
                         window.dispatchEvent(new CustomEvent('diary-updated'));
                         navigate('/diary/list', { replace: true });
                     });
                 } else {
-                    showAlert("오류", res.message || "삭제에 실패했습니다.");
+                    showAlert("오류", "삭제에 실패했습니다.");
                     setLoading(false);
                 }
             } catch (error) {
