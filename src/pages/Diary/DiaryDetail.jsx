@@ -1,12 +1,14 @@
 import React, { useRef, useEffect } from 'react';
 import { useDiaryDetail } from '../../hooks/diary/useDiaryDetail';
+import CustomModal from '../../components/CustomModal';
 import * as S from '../../style/pages/diary/DiaryDetail.styles';
 
 const DiaryDetail = () => {
     const {
         diary, loading, handleGoBack,
         isEditing, editTitle, setEditTitle, editContent, setEditContent,
-        handleEditClick, handleCancelEdit, handleSaveClick, handleDeleteClick
+        handleEditClick, handleCancelEdit, handleSaveClick, handleDeleteClick,
+        modal, setModal
     } = useDiaryDetail();
 
     const textareaRef = useRef(null);
@@ -17,6 +19,23 @@ const DiaryDetail = () => {
             textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
         }
     }, [editContent, isEditing]);
+
+    const closeModal = () => {
+        setModal(prev => ({ ...prev, show: false }));
+    };
+
+    const handleModalConfirm = () => {
+        if (modal.onConfirm) modal.onConfirm();
+        closeModal();
+    };
+
+    const handleModalCancel = () => {
+        if (modal.onCancel) {
+            modal.onCancel();
+        } else {
+            closeModal();
+        }
+    };
 
     if (loading && !diary) {
         return (
@@ -33,6 +52,15 @@ const DiaryDetail = () => {
 
     return (
         <>
+            <CustomModal
+                isOpen={modal.show}
+                title={modal.title}
+                message={modal.message}
+                isConfirm={modal.isConfirm}
+                onConfirm={handleModalConfirm}
+                onCancel={handleModalCancel}
+            />
+
             {loading && (
                 <S.LoadingOverlay>
                     <S.Spinner />

@@ -13,7 +13,6 @@ export const useChatBot = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
-    // 채팅 내역 불러오기
     useEffect(() => {
         const fetchHistory = async () => {
             try {

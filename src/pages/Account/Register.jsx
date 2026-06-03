@@ -124,7 +124,6 @@ const Register = () => {
                                                     onChange={handleChange} errorMsg={messages.userNameMsg}
                                                     placeholder="이름을 입력하세요." />
 
-                                        {/* onClick 이벤트를 추가하여 input 클릭 시 달력이 호출되도록 구현했습니다. */}
                                         <InputField label="Birth Date" name="birthDate" type="date" value={formData.birthDate}
                                                     onChange={handleChange} errorMsg={messages.birthDateMsg}
                                                     onClick={(e) => {

@@ -2,6 +2,8 @@ import React from 'react';
 import * as S from '../../style/pages/Account/Profile.styles';
 import { useProfile } from '../../hooks/account/useProfileForm';
 import logo from '../../assets/images/includes/logo.png';
+import CustomModal from '../../components/CustomModal';
+import EmotionGraph from '../../components/EmotionGraph';
 
 const ProfilePage = () => {
     const {
@@ -9,19 +11,18 @@ const ProfilePage = () => {
         characters,
         isModalOpen,
         selectedCharacterUrl,
-        currentColor,
-        isDropdownOpen,
         activeModalType,
         withdrawStep,
         editForm,
         withdrawForm,
         verifyState,
         isProfileModified,
+        modal,
+        setModal,
         openModal,
         selectCharacter,
         closeModal,
         cancelModal,
-        toggleDropdown,
         openActionModal,
         closeActionModal,
         handleEditChange,
@@ -37,42 +38,66 @@ const ProfilePage = () => {
         processWithdrawalAction
     } = useProfile();
 
+    const handleModalConfirm = () => {
+        if (modal.onConfirm) modal.onConfirm();
+        setModal(prev => ({ ...prev, show: false }));
+    };
+
+    const handleModalCancel = () => {
+        setModal(prev => ({ ...prev, show: false }));
+    };
+
     return (
         <S.PageWrapper>
-            <S.HeaderBanner $themeColor={currentColor}>
-                <S.HeaderContent>
-                    <S.AvatarWrapper onClick={openModal} $themeColor={currentColor}>
+            <CustomModal
+                isOpen={modal.show}
+                title={modal.title}
+                message={modal.message}
+                isConfirm={false}
+                onConfirm={handleModalConfirm}
+                onCancel={handleModalCancel}
+            />
+
+            <S.ProfileContainer>
+                <S.ProfileHeaderSection>
+                    <S.AvatarWrapper onClick={openModal}>
                         <S.AvatarImage src={userInfo.profileImgUrl} alt="Profile" />
                         <S.EditIcon className="fa-solid fa-pencil" />
                     </S.AvatarWrapper>
 
-                    <S.HeaderInfo>
-                        <S.UserName>{userInfo.userName || 'User'}님</S.UserName>
-                        <S.UserId>@{userInfo.userId}</S.UserId>
-                        <S.ContactInfo>
-                            <S.ContactItem>
-                                <span><i className="fa-solid fa-envelope"></i></span> {userInfo.email}
-                            </S.ContactItem>
-                            <S.ContactItem>
-                                <span><i className="fa-solid fa-location-dot"></i></span> {userInfo.addr + (userInfo.detailAddr ? ' ' + ` (${userInfo.detailAddr})` : '') || '등록된 주소가 없습니다'}
-                            </S.ContactItem>
-                        </S.ContactInfo>
-                    </S.HeaderInfo>
+                    <S.RightColumn>
+                        <S.InfoCard>
+                            <S.UserName>{userInfo.userName || 'User'}님</S.UserName>
+                            <S.UserId>@{userInfo.userId}</S.UserId>
 
-                    <S.OptionsWrapper>
-                        <S.EllipsisIcon className="fa-solid fa-ellipsis-vertical" onClick={toggleDropdown} />
-                        {isDropdownOpen && (
-                            <S.DropdownMenu>
-                                <S.DropdownItem onClick={() => openActionModal('edit')}>프로필 수정</S.DropdownItem>
-                                <S.DropdownItem onClick={() => openActionModal('withdraw')}>회원 탈퇴</S.DropdownItem>
-                            </S.DropdownMenu>
-                        )}
-                    </S.OptionsWrapper>
-                </S.HeaderContent>
-            </S.HeaderBanner>
+                            <S.ContactInfo>
+                                <S.ContactItem>
+                                    <span><i className="fa-solid fa-envelope"></i></span> {userInfo.email}
+                                </S.ContactItem>
+                                <S.ContactItem>
+                                    <span><i className="fa-solid fa-location-dot"></i></span> {userInfo.addr + (userInfo.detailAddr ? ' ' + ` (${userInfo.detailAddr})` : '') || '등록된 주소가 없습니다'}
+                                </S.ContactItem>
+                            </S.ContactInfo>
+                        </S.InfoCard>
 
-            <S.MainContent>
-            </S.MainContent>
+                        <S.ActionCard>
+                            <S.CardTitle>Account Options</S.CardTitle>
+                            <S.ActionGrid>
+                                <S.ActionButton onClick={() => openActionModal('edit')}>
+                                    <i className="fa-regular fa-pen-to-square"></i> 프로필 수정
+                                </S.ActionButton>
+                                <S.ActionButton onClick={() => openActionModal('withdraw')}>
+                                     회원 탈퇴
+                                </S.ActionButton>
+                            </S.ActionGrid>
+                        </S.ActionCard>
+                    </S.RightColumn>
+                </S.ProfileHeaderSection>
+
+                <S.MainContent>
+                    <EmotionGraph />
+                </S.MainContent>
+            </S.ProfileContainer>
 
             {isModalOpen && (
                 <S.ModalOverlay onClick={cancelModal}>
@@ -90,7 +115,6 @@ const ProfilePage = () => {
                                 <S.CharacterItem
                                     key={index}
                                     $isSelected={url === selectedCharacterUrl}
-                                    $themeColor={currentColor}
                                     onClick={() => selectCharacter(url)}
                                 >
                                     <img src={url} alt={`Character ${index + 1}`} />
@@ -100,7 +124,7 @@ const ProfilePage = () => {
 
                         <S.ModalFooter>
                             <S.CancelButton onClick={cancelModal}>취소</S.CancelButton>
-                            <S.ConfirmButton onClick={closeModal} $themeColor={currentColor}>완료</S.ConfirmButton>
+                            <S.ConfirmButton onClick={closeModal}>완료</S.ConfirmButton>
                         </S.ModalFooter>
                     </S.ModalContent>
                 </S.ModalOverlay>
@@ -206,7 +230,6 @@ const ProfilePage = () => {
                             <S.CancelButton onClick={closeActionModal}>취소</S.CancelButton>
                             <S.ConfirmButton
                                 onClick={updateAccountAction}
-                                $themeColor={currentColor}
                                 disabled={!isProfileModified}
                             >
                                 수정 완료
@@ -227,15 +250,15 @@ const ProfilePage = () => {
                         <S.StepContainer>
                             <S.StepLine />
                             <S.StepItem>
-                                <S.StepCircle $active={withdrawStep === 1} $completed={withdrawStep > 1} $themeColor={currentColor}>1</S.StepCircle>
+                                <S.StepCircle $active={withdrawStep === 1} $completed={withdrawStep > 1}>1</S.StepCircle>
                                 <S.StepLabel $active={withdrawStep === 1}>비밀번호 확인</S.StepLabel>
                             </S.StepItem>
                             <S.StepItem>
-                                <S.StepCircle $active={withdrawStep === 2} $completed={withdrawStep > 2} $themeColor={currentColor}>2</S.StepCircle>
+                                <S.StepCircle $active={withdrawStep === 2} $completed={withdrawStep > 2}>2</S.StepCircle>
                                 <S.StepLabel $active={withdrawStep === 2}>이메일 인증</S.StepLabel>
                             </S.StepItem>
                             <S.StepItem>
-                                <S.StepCircle $active={withdrawStep === 3} $completed={withdrawStep > 3} $themeColor={currentColor}>3</S.StepCircle>
+                                <S.StepCircle $active={withdrawStep === 3} $completed={withdrawStep > 3}>3</S.StepCircle>
                                 <S.StepLabel $active={withdrawStep === 3}>탈퇴 확인</S.StepLabel>
                             </S.StepItem>
                         </S.StepContainer>
@@ -258,7 +281,7 @@ const ProfilePage = () => {
                                 <S.FormGroup>
                                     <S.FormLabel>이메일 인증을 진행해주세요. ({userInfo.email})</S.FormLabel>
                                     <S.InputRow>
-                                        <S.VerifyButton onClick={sendWithdrawEmailCodeAction} style={{ width: '100%', padding: '12px', borderRadius: '8px' }}>
+                                        <S.VerifyButton onClick={sendWithdrawEmailCodeAction} style={{ width: '100%', padding: '12px', borderRadius: '6px' }}>
                                             인증번호 발송
                                         </S.VerifyButton>
                                     </S.InputRow>
@@ -289,7 +312,7 @@ const ProfilePage = () => {
                                         value={withdrawForm.confirmUserId}
                                         onChange={handleWithdrawChange}
                                     />
-                                    <div style={{ fontSize: '13px', color: '#ff4d4f', marginTop: '12px', lineHeight: '1.5' }}>
+                                    <div style={{ fontSize: '13px', color: '#ff4d4f', marginTop: '12px', lineHeight: '1.4' }}>
                                         탈퇴 시 모든 데이터가 삭제되며 복구할 수 없습니다.
                                     </div>
                                 </S.FormGroup>
@@ -298,7 +321,7 @@ const ProfilePage = () => {
 
                         <S.ModalFooter>
                             <S.CancelButton onClick={closeActionModal}>취소</S.CancelButton>
-                            {withdrawStep === 1 && <S.ConfirmButton onClick={verifyWithdrawPasswordAction} $themeColor={currentColor}>다음</S.ConfirmButton>}
+                            {withdrawStep === 1 && <S.ConfirmButton onClick={verifyWithdrawPasswordAction}>다음</S.ConfirmButton>}
                             {withdrawStep === 3 && <S.ConfirmButton onClick={processWithdrawalAction} style={{ backgroundColor: '#ff4d4f', color: '#fff' }}>탈퇴하기</S.ConfirmButton>}
                         </S.ModalFooter>
                     </S.ModalContent>

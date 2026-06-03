@@ -82,18 +82,23 @@ export const useDiaryDetail = () => {
             const res = await updateDiary(diaryNo, editTitle, editContent);
 
             if (res) {
+                // 💡 로딩 상태를 즉시 해제하여 모달이 정상적으로 클릭/표시되도록 수정
+                setLoading(false);
                 showAlert('알림', "일기가 수정 및 재분석 되었습니다.", async () => {
                     setIsEditing(false);
                     window.dispatchEvent(new CustomEvent('diary-updated'));
+
+                    // 재조회 시 로딩 화면 띄우기
+                    setLoading(true);
                     await fetchDiaryDetail();
                 });
             } else {
-                showAlert('오류', "수정에 실패했습니다.");
                 setLoading(false);
+                showAlert('오류', "수정에 실패했습니다.");
             }
         } catch (error) {
-            showAlert('오류', error.response?.data?.message || "서버 통신 중 오류가 발생했습니다.");
             setLoading(false);
+            showAlert('오류', error.response?.data?.message || "서버 통신 중 오류가 발생했습니다.");
         }
     };
 
@@ -104,17 +109,18 @@ export const useDiaryDetail = () => {
                 const res = await deleteDiary(diaryNo);
 
                 if (res) {
+                    setLoading(false);
                     showAlert("알림", "일기가 삭제되었습니다.", () => {
                         window.dispatchEvent(new CustomEvent('diary-updated'));
                         navigate('/diary/list', { replace: true });
                     });
                 } else {
-                    showAlert("오류", "삭제에 실패했습니다.");
                     setLoading(false);
+                    showAlert("오류", "삭제에 실패했습니다.");
                 }
             } catch (error) {
-                showAlert("오류", error.response?.data?.message || "서버 통신 중 오류가 발생했습니다.");
                 setLoading(false);
+                showAlert("오류", error.response?.data?.message || "서버 통신 중 오류가 발생했습니다.");
             }
         });
     };

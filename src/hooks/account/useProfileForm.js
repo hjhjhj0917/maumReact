@@ -13,18 +13,18 @@ import {
 } from '../../api/authApi';
 
 const characterData = [
-    { url: '/images/account/profile1.png', color: '#D4C4FB' },
-    { url: '/images/account/profile2.png', color: '#B2EBF2' },
-    { url: '/images/account/profile3.png', color: '#B3E5FC' },
-    { url: '/images/account/profile4.png', color: '#FFD1DC' },
-    { url: '/images/account/profile5.png', color: '#C8E6C9' },
-    { url: '/images/account/profile6.png', color: '#E1BEE7' },
-    { url: '/images/account/profile7.png', color: '#FFF9C4' },
-    { url: '/images/account/profile8.png', color: '#FFE0B2' },
-    { url: '/images/account/profile9.png', color: '#BBDEFB' },
-    { url: '/images/account/profile10.png', color: '#F8BBD0' },
-    { url: '/images/account/profile11.png', color: '#BDE0FE' },
-    { url: '/images/account/profile12.png', color: '#B2DFDB' }
+    { url: '/images/account/profile1.png' },
+    { url: '/images/account/profile2.png' },
+    { url: '/images/account/profile3.png' },
+    { url: '/images/account/profile4.png' },
+    { url: '/images/account/profile5.png' },
+    { url: '/images/account/profile6.png' },
+    { url: '/images/account/profile7.png' },
+    { url: '/images/account/profile8.png' },
+    { url: '/images/account/profile9.png' },
+    { url: '/images/account/profile10.png' },
+    { url: '/images/account/profile11.png' },
+    { url: '/images/account/profile12.png' }
 ];
 
 const characters = characterData.map(c => c.url);
@@ -76,8 +76,6 @@ export const useProfile = () => {
         isWithdrawEmailCodeSent: false,
         isWithdrawEmailVerified: false
     });
-
-    const currentColor = characterData.find(c => c.url === userInfo.profileImgUrl)?.color || '#7b83c7';
 
     useEffect(() => {
         const fetchUserInfo = async () => {
@@ -350,7 +348,6 @@ export const useProfile = () => {
         characters,
         isModalOpen,
         selectedCharacterUrl,
-        currentColor,
         isDropdownOpen,
         activeModalType,
         withdrawStep,

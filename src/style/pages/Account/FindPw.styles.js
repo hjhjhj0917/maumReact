@@ -1,11 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
-// const fadeInStep = keyframes`
-//     from { opacity: 0; transform: translateY(10px); }
-//     to { opacity: 1; transform: translateY(0); }
-// `;
-
 export const FindPwWrapper = styled.div`
     display: flex;
     flex-direction: column;
@@ -128,6 +123,33 @@ export const FormStepFieldWrapper = styled.div`
     .input-group { margin-bottom: 10px; }
 `;
 
+// 추가된 패스워드 래퍼
+export const PasswordWrapper = styled.div`
+    position: relative;
+    width: 100%;
+
+    input {
+        padding-right: 40px !important;
+        box-sizing: border-box;
+    }
+`;
+
+// 추가된 토글 아이콘 설정
+export const ToggleIcon = styled.i`
+    position: absolute;
+    right: 10px;
+    bottom: 15px; // InputField 내 input 요소와 수직 정렬을 맞추기 위한 하단 여백 설정
+    cursor: pointer;
+    color: ${props => (props.$active ? '#FFD166' : '#ccc')};
+    transition: color 0.3s;
+    font-size: 1.1rem;
+    z-index: 10;
+
+    &:hover {
+        color: #FFD166;
+    }
+`;
+
 export const VerificationWrapper = styled.div`
     display: flex;
     justify-content: space-between;
@@ -187,7 +209,3 @@ export const AuthLinks = styled.div`
 `;
 
 export const Separator = styled.span` margin: 0 10px; color: #ddd; font-size: 10px; `;
-
-export const SignupBox = styled.div` font-size: 14px; color: #999; line-height: 1.6; text-align: left; margin-top: 20px; `;
-
-export const LinkSignup = styled(Link)` color: #FFD166; text-decoration: none; font-weight: 700; margin-left: 5px; `;

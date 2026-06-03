@@ -44,18 +44,19 @@ export const useDiaryWriteForm = () => {
             const res = await insertDiary(title, content, apiDate);
 
             if (res) {
+                setIsLoading(false);
                 showAlert('알림', '일기가 작성되었습니다.', () => {
                     window.dispatchEvent(new CustomEvent('diary-updated'));
                     navigate(`/diary/${res}`);
                 });
             } else {
-                showAlert('오류', '저장에 실패했습니다.');
                 setIsLoading(false);
+                showAlert('오류', '저장에 실패했습니다.');
             }
         } catch (error) {
+            setIsLoading(false);
             const errorMsg = error.response?.data?.message || "서버 통신 중 오류가 발생했습니다.";
             showAlert('오류', errorMsg);
-            setIsLoading(false);
         }
     };
 

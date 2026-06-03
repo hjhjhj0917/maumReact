@@ -21,6 +21,10 @@ export const useFindPwForm = () => {
         onConfirm: null
     });
 
+    // 비밀번호 숨김/표시 상태 추가
+    const [showPassword, setShowPassword] = useState(false);
+    const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+
     const messageTimers = useRef({});
     const inputRefs = useRef([]);
 
@@ -167,6 +171,8 @@ export const useFindPwForm = () => {
     return {
         step, formData, handleChange, handleOtpChange, handleKeyDown, handlePaste,
         messages, modal, inputRefs, handleModalConfirm, handleModalCancel,
-        handleStep1Submit, handleStep2Submit, handleStep3Submit, handleResend, navigate
+        handleStep1Submit, handleStep2Submit, handleStep3Submit, handleResend, navigate,
+        showPassword, setShowPassword,
+        showPasswordConfirm, setShowPasswordConfirm
     };
 };

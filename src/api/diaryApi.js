@@ -26,3 +26,6 @@ export const filterDiariesByColors = (colors) =>
 
 export const getRecentDiaries = () =>
     apiClient.get('/diary/recent');
+
+export const getEmotionStats = () =>
+    apiClient.get('/diary/emotions/stats');

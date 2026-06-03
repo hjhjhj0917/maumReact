@@ -22,6 +22,10 @@ const FindPw = () => {
         handleStep2Submit,
         handleStep3Submit,
         handleResend,
+        showPassword,
+        setShowPassword,
+        showPasswordConfirm,
+        setShowPasswordConfirm
         // navigate
     } = useFindPwForm();
 
@@ -113,12 +117,39 @@ const FindPw = () => {
                                 <S.StepSubTitle>보안을 위해 새로운 비밀번호를 설정해 주세요.</S.StepSubTitle>
                                 <form onSubmit={handleStep3Submit}>
                                     <S.FormStepFieldWrapper $hasMessage={!!messages.passwordMsg || !!messages.passwordConfirmMsg}>
-                                        <InputField label="New Password" name="password" type="password" value={formData.password}
-                                                    onChange={handleChange} errorMsg={messages.passwordMsg}
-                                                    placeholder="새 비밀번호를 입력하세요." />
-                                        <InputField label="Confirm Password" name="passwordConfirm" type="password" value={formData.passwordConfirm}
-                                                    onChange={handleChange} errorMsg={messages.passwordConfirmMsg}
-                                                    placeholder="비밀번호를 한 번 더 입력하세요." />
+                                        <S.PasswordWrapper>
+                                            <InputField
+                                                label="New Password"
+                                                name="password"
+                                                type={showPassword ? "text" : "password"}
+                                                value={formData.password}
+                                                onChange={handleChange}
+                                                errorMsg={messages.passwordMsg}
+                                                placeholder="새 비밀번호를 입력하세요."
+                                            />
+                                            <S.ToggleIcon
+                                                className={`fa-regular ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}
+                                                $active={showPassword}
+                                                onClick={() => setShowPassword(!showPassword)}
+                                            />
+                                        </S.PasswordWrapper>
+
+                                        <S.PasswordWrapper>
+                                            <InputField
+                                                label="Confirm Password"
+                                                name="passwordConfirm"
+                                                type={showPasswordConfirm ? "text" : "password"}
+                                                value={formData.passwordConfirm}
+                                                onChange={handleChange}
+                                                errorMsg={messages.passwordConfirmMsg}
+                                                placeholder="비밀번호를 한 번 더 입력하세요."
+                                            />
+                                            <S.ToggleIcon
+                                                className={`fa-regular ${showPasswordConfirm ? 'fa-eye-slash' : 'fa-eye'}`}
+                                                $active={showPasswordConfirm}
+                                                onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
+                                            />
+                                        </S.PasswordWrapper>
                                     </S.FormStepFieldWrapper>
                                     <S.BtnConfirm type="submit">비밀번호 변경</S.BtnConfirm>
                                 </form>
@@ -131,11 +162,6 @@ const FindPw = () => {
                         <S.Separator>|</S.Separator>
                         <Link to="/account/findId">아이디 찾기</Link>
                     </S.AuthLinks>
-
-                    {/*<S.SignupBox>*/}
-                    {/*    아직 회원이 아니시라면, 지금 바로 마음을 시작해 보세요.*/}
-                    {/*    <S.LinkSignup to="/account/register">가입하기</S.LinkSignup>*/}
-                    {/*</S.SignupBox>*/}
                 </S.FindPwCard>
             </S.Container>
         </S.FindPwWrapper>

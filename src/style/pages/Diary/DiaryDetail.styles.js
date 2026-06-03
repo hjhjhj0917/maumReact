@@ -205,6 +205,7 @@ export const CalloutText = styled.div`
     font-size: 14px;
     color: #37352f;
     line-height: 1.5;
+    white-space: pre-wrap;
 `;
 
 export const EntrySection = styled.div`

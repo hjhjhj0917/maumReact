@@ -17,11 +17,7 @@ export const EMOTION_GROUPS = {
 export const useDiaryList = () => {
     const navigate = useNavigate();
 
-    // 1. 상태의 초기값을 sessionStorage에서 가져오도록 변경 (없으면 기본값)
-    const [currentDate, setCurrentDate] = useState(() => {
-        const savedDate = sessionStorage.getItem('diary-currentDate');
-        return savedDate ? new Date(savedDate) : new Date();
-    });
+    const [currentDate, setCurrentDate] = useState(new Date());
 
     const [keyword, setKeyword] = useState(() => {
         return sessionStorage.getItem('diary-keyword') || '';
@@ -36,11 +32,6 @@ export const useDiaryList = () => {
     const [searchResults, setSearchResults] = useState([]);
     const [filterResults, setFilterResults] = useState([]);
 
-    // 2. 상태가 변경될 때마다 sessionStorage에 실시간으로 업데이트
-    useEffect(() => {
-        sessionStorage.setItem('diary-currentDate', currentDate.toISOString());
-    }, [currentDate]);
-
     useEffect(() => {
         sessionStorage.setItem('diary-keyword', keyword);
     }, [keyword]);
@@ -48,7 +39,6 @@ export const useDiaryList = () => {
     useEffect(() => {
         sessionStorage.setItem('diary-colors', JSON.stringify(selectedColors));
     }, [selectedColors]);
-
 
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth() + 1;
@@ -67,6 +57,25 @@ export const useDiaryList = () => {
             }));
     };
 
+    // 1. Keyword 상태 변경과 동시에 검색 결과 초기화 처리
+    const handleSetKeyword = (value) => {
+        setKeyword(value);
+        if (!value.trim()) {
+            setSearchResults([]); // useEffect가 아닌 핸들러에서 동기화
+        }
+    };
+
+    // 2. Color 필터 상태 변경과 동시에 필터 결과 초기화 처리
+    const toggleColorFilter = (color) => {
+        setSelectedColors(prev => {
+            const newColors = prev.includes(color) ? prev.filter(c => c !== color) : [...prev, color];
+            if (newColors.length === 0) {
+                setFilterResults([]); // useEffect가 아닌 핸들러에서 동기화
+            }
+            return newColors;
+        });
+    };
+
     useEffect(() => {
         if (!keyword.trim() && selectedColors.length === 0) {
             const fetchDiaries = async () => {
@@ -74,6 +83,7 @@ export const useDiaryList = () => {
                     const data = await getMonthlyDiaries(dateQuery);
                     setDiaries(data || []);
                 } catch (error) {
+                    console.error("오류 : ", error)
                     setDiaries([]);
                 }
             };
@@ -88,13 +98,13 @@ export const useDiaryList = () => {
                     const data = await searchDiaries(keyword);
                     setSearchResults(processDiaryData(data));
                 } catch (error) {
+                    console.error("오류 : ", error)
                     setSearchResults([]);
                 }
             }, 300);
             return () => clearTimeout(delayDebounceFn);
-        } else {
-            setSearchResults([]);
         }
+        // 에러를 유발하던 else 구문 제거
     }, [keyword]);
 
     useEffect(() => {
@@ -104,13 +114,13 @@ export const useDiaryList = () => {
                     const data = await filterDiariesByColors(selectedColors);
                     setFilterResults(processDiaryData(data));
                 } catch (error) {
+                    console.error("오류 : ", error)
                     setFilterResults([]);
                 }
             };
             fetchFilterResults();
-        } else {
-            setFilterResults([]);
         }
+        // 에러를 유발하던 else 구문 제거
     }, [selectedColors]);
 
     const daysInMonth = new Date(year, month, 0).getDate();
@@ -148,16 +158,10 @@ export const useDiaryList = () => {
         navigate(`/diary/${diaryNo}`);
     };
 
-    const toggleColorFilter = (color) => {
-        setSelectedColors(prev =>
-            prev.includes(color) ? prev.filter(c => c !== color) : [...prev, color]
-        );
-    };
-
     return {
         year, month, daysList,
         handlePrevMonth, handleNextMonth, handleDayClick,
-        keyword, setKeyword, searchResults, handleResultClick,
+        keyword, setKeyword: handleSetKeyword, searchResults, handleResultClick, // setKeyword를 래핑한 함수로 교체
         selectedColors, toggleColorFilter, filterResults
     };
 };

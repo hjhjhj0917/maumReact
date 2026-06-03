@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDiaryWriteForm } from '../../hooks/diary/useDiaryWriteForm';
+import CustomModal from '../../components/CustomModal';
 import * as S from '../../style/pages/Diary/DiaryWrite.styles';
 
 const DiaryWrite = () => {
@@ -10,7 +11,8 @@ const DiaryWrite = () => {
         content, setContent,
         formattedDate,
         handleSubmit,
-        isLoading
+        isLoading,
+        modal, setModal
     } = useDiaryWriteForm();
 
     const textareaRef = useRef(null);
@@ -22,8 +24,25 @@ const DiaryWrite = () => {
         }
     }, [content]);
 
+    const closeModal = () => {
+        setModal(prev => ({ ...prev, show: false }));
+    };
+
+    const handleModalConfirm = () => {
+        if (modal.onConfirm) modal.onConfirm();
+        closeModal();
+    };
+
     return (
         <>
+            <CustomModal
+                isOpen={modal.show}
+                title={modal.title}
+                message={modal.message}
+                onConfirm={handleModalConfirm}
+                onCancel={closeModal}
+            />
+
             {isLoading && (
                 <S.LoadingOverlay>
                     <S.Spinner />

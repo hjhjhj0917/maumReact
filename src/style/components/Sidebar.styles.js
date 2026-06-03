@@ -9,7 +9,6 @@ export const SidebarWrapper = styled.aside`
     flex-shrink: 0;
     transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 100;
-    //border-radius: 0 10px 10px 0;
 `;
 
 export const TopSection = styled.div`
@@ -17,6 +16,7 @@ export const TopSection = styled.div`
     display: flex;
     flex-direction: column;
     gap: 20px;
+    flex-shrink: 0;
 `;
 
 export const IconButton = styled.button`
@@ -72,6 +72,21 @@ export const NavSection = styled.nav`
     display: flex;
     flex-direction: column;
     gap: 4px;
+    overflow-y: auto;
+    min-height: 0;
+
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #555;
+        border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
 `;
 
 export const NavItem = styled.div`
@@ -92,6 +107,7 @@ export const NavItem = styled.div`
     white-space: nowrap;
     overflow: hidden;
     transition: color 0.2s;
+    flex-shrink: 0;
 
     &:hover {
         color: #FFD166;
@@ -117,11 +133,13 @@ export const NavItem = styled.div`
 
 export const BottomSection = styled.div`
     padding: 12px;
+    flex-shrink: 0;
 `;
 
 export const RecentDiarySection = styled.div`
     padding: 12px 4px;
     margin-top: 30px;
+    flex-shrink: 0;
 `;
 
 export const RecentDiaryTitle = styled.div`
@@ -143,6 +161,7 @@ export const RecentDiaryItem = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
     transition: color 0.2s;
+    flex-shrink: 0;
 
     &:hover {
         color: #FFD166;
