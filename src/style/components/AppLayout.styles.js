@@ -5,7 +5,7 @@ export const LayoutWrapper = styled.div`
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background-color: #f4f7f9;
+    background: #fff;
 `;
 
 export const MainWrapper = styled.div`
@@ -15,7 +15,7 @@ export const MainWrapper = styled.div`
     height: 100%;
     min-width: 0;
     position: relative;
-    background-color: #f4f7f9;
+    background: transparent;
 `;
 
 export const LayoutContent = styled.main`

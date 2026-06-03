@@ -129,7 +129,7 @@ export const ProfileModalContainer = styled.div`
     top: 70px;
     right: 40px;
     width: 320px;
-    background-color: #202124;
+    background-color: #f4f7f9;
     border-radius: 24px;
     padding: 16px 20px 30px 20px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
@@ -183,7 +183,7 @@ export const ModalLargeImg = styled.img`
 export const ModalGreeting = styled.div`
     font-size: 22px;
     font-weight: 400;
-    color: #e8eaed;
+    color: #333;
     margin-bottom: 24px;
 `;
 
@@ -195,9 +195,9 @@ export const ModalButtonGroup = styled.div`
 `;
 
 export const ModalActionBtn = styled.button`
-    background-color: transparent;
+    background-color: #5f6368;
     border: 1px solid #5f6368;
-    color: #8ab4f8;
+    color: #fff;
     padding: 8px 18px;
     border-radius: 20px;
     font-size: 14px;
@@ -206,6 +206,6 @@ export const ModalActionBtn = styled.button`
     transition: background-color 0.2s ease;
 
     &:hover {
-        background-color: rgba(138, 180, 248, 0.08);
+        background-color: #333;
     }
 `;

@@ -77,6 +77,8 @@ export const useProfile = () => {
         isWithdrawEmailVerified: false
     });
 
+    const validateEmail = (email) => /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$/.test(email);
+
     useEffect(() => {
         const fetchUserInfo = async () => {
             try {
@@ -216,6 +218,12 @@ export const useProfile = () => {
 
     const sendEmailCodeAction = async () => {
         if (!editForm.newEmail) return;
+
+        if (!validateEmail(editForm.newEmail)) {
+            showAlert('오류', '유효한 이메일 형식이 아닙니다.');
+            return;
+        }
+
         try {
             const res = await checkEmailExists(editForm.newEmail);
             if (res && res.exists === false) {

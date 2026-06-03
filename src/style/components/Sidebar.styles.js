@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const SidebarWrapper = styled.aside`
     width: ${props => (props.$isOpen ? '240px' : '68px')};
     height: 100vh;
-    background-color: #333;
+    background-color: #f4f7f9;
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
@@ -24,7 +24,7 @@ export const IconButton = styled.button`
     height: 44px;
     border: none;
     background: transparent;
-    color: #ffffff;
+    color: #333;
     border-radius: 50%;
     cursor: pointer;
     font-size: 20px;
@@ -35,7 +35,7 @@ export const IconButton = styled.button`
     transition: color 0.2s;
 
     &:hover {
-        color: #FFD166;
+        color: #FFC700;
     }
 `;
 
@@ -50,8 +50,8 @@ export const NewPostBtn = styled.button`
     margin: ${props => props.$isOpen ? '0' : '0 auto'};
     border-radius: ${props => props.$isOpen ? '22px' : '50%'};
     border: none;
-    background-color: #FFD166;
-    color: #333;
+    background-color: #FFC700;
+    color: #fff;
     font-weight: 600;
     cursor: ${props => props.$isOpen ? 'pointer' : 'default'};
     pointer-events: ${props => props.$isOpen ? 'auto' : 'none'};
@@ -61,8 +61,8 @@ export const NewPostBtn = styled.button`
     transition: all 0.2s ease;
 
     &:hover {
-        background-color: #e5bc5c;
-        color: #111;
+        background-color: #E5B300;
+        color: #fff;
     }
 `;
 
@@ -102,7 +102,7 @@ export const NavItem = styled.div`
     box-sizing: border-box;
     cursor: ${props => props.$isOpen ? 'pointer' : 'default'};
     pointer-events: ${props => props.$isOpen ? 'auto' : 'none'};
-    color: ${props => props.$active ? '#FFD166' : '#ffffff'};
+    color: ${props => props.$active ? '#FFC700' : '#333'};
     background-color: transparent;
     white-space: nowrap;
     overflow: hidden;
@@ -110,20 +110,20 @@ export const NavItem = styled.div`
     flex-shrink: 0;
 
     &:hover {
-        color: #FFD166;
+        color: #FFC700;
         span, i {
-            color: #FFD166;
+            color: #FFC700;
         }
     }
 
     span {
-        color: ${props => props.$active ? '#FFD166' : '#ffffff'};
+        color: ${props => props.$active ? '#FFC700' : '#333'};
         font-size: 15px;
         transition: color 0.2s;
     }
 
     i {
-        color: ${props => props.$active ? '#FFD166' : '#ffffff'};
+        color: ${props => props.$active ? '#FFC700' : '#333'};
         font-size: 15px;
         min-width: 20px;
         text-align: center;
@@ -155,7 +155,7 @@ export const RecentDiaryItem = styled.div`
     padding: 10px 12px;
     margin: 2px 0;
     font-size: 13.5px;
-    color: #ffffff;
+    color: #333;
     border-radius: 24px;
     white-space: nowrap;
     overflow: hidden;
@@ -164,6 +164,6 @@ export const RecentDiaryItem = styled.div`
     flex-shrink: 0;
 
     &:hover {
-        color: #FFD166;
+        color: #FFC700;
     }
 `;

@@ -30,10 +30,10 @@ export const ChatContainer = styled.div`
         right: 0;
         height: 120px;
         background: linear-gradient(to bottom,
-        rgba(244, 247, 249, 1) 0%,
-        rgba(244, 247, 249, 1) 60px,
-        rgba(244, 247, 249, 0.8) 90px,
-        rgba(244, 247, 249, 0) 100%
+        rgba(255, 255, 255, 1) 0%,
+        rgba(255, 255, 255, 1) 60px,
+        rgba(255, 255, 255, 0.8) 90px,
+        rgba(255, 255, 255, 0) 100%
         );
         pointer-events: none;
         z-index: 10;
