@@ -55,12 +55,12 @@ export const NavLinks = styled.nav`
     button {
         background: none;
         border: none;
-        color: #666666; 
+        color: #666666;
         text-decoration: none;
         font-size: 15px;
         cursor: pointer;
         transition: color 0.2s;
-        padding: 0; 
+        padding: 0;
 
         &:hover {
             color: #000000;
@@ -153,19 +153,21 @@ export const HeroContent = styled.div`
 `;
 
 export const Title = styled.h1`
-    font-size: clamp(40px, 8vw, 85px);
+    font-size: clamp(32px, 8vw, 85px);
     font-weight: 600;
-    line-height: 1.1;
+    line-height: 1.3;
     letter-spacing: -2px;
     margin-bottom: 24px;
+    word-break: keep-all;
 `;
 
 export const Subtitle = styled.p`
-    font-size: clamp(16px, 2vw, 20px);
+    font-size: clamp(15px, 2vw, 20px);
     color: #666666;
     line-height: 1.6;
     max-width: 650px;
     margin: 0 auto 40px;
+    word-break: keep-all;
 `;
 
 export const LogoTicker = styled.div`
@@ -174,9 +176,17 @@ export const LogoTicker = styled.div`
     margin-top: 80px;
     opacity: 0.4;
     justify-content: center;
+    flex-wrap: wrap;
+
+    @media (max-width: 768px) {
+        gap: 24px;
+    }
 
     i {
         font-size: 28px;
+        @media (max-width: 768px) {
+            font-size: 24px;
+        }
     }
 `;
 
@@ -341,6 +351,13 @@ export const FooterGrid = styled.div`
 
     @media (max-width: 768px) {
         grid-template-columns: repeat(2, 1fr);
+        gap: 40px 20px;
+    }
+
+    & > div:nth-child(1) {
+        @media (max-width: 768px) {
+            grid-column: span 2;
+        }
     }
 
     h4 {
@@ -352,6 +369,7 @@ export const FooterGrid = styled.div`
     ul {
         list-style: none;
         padding: 0;
+        margin: 0;
 
         li {
             margin-bottom: 15px;

@@ -40,22 +40,6 @@ export const LogoImage = styled.img`
     margin-right: 8px;
 `;
 
-export const MenuToggle = styled.div`
-    display: none;
-    flex-direction: column;
-    cursor: pointer;
-    gap: 5px;
-    z-index: 1001;
-    @media (max-width: 768px) { display: flex; }
-`;
-
-export const Bar = styled.span`
-    width: 25px;
-    height: 3px;
-    background-color: #333333;
-    border-radius: 3px;
-`;
-
 export const NavMenu = styled.ul`
     display: flex;
     list-style: none;
@@ -65,24 +49,13 @@ export const NavMenu = styled.ul`
     padding: 0;
 
     @media (max-width: 768px) {
-        display: ${props => props.$isOpen ? 'flex' : 'none'};
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        flex-direction: column;
-        background-color: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        padding: 20px;
         gap: 15px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
 `;
 
 export const NavItem = styled.li`
     display: flex;
     align-items: center;
-    @media (max-width: 768px) { width: 100%; }
 `;
 
 export const NavLink = styled(Link)`
@@ -91,7 +64,10 @@ export const NavLink = styled(Link)`
     font-weight: 500;
     font-size: 14px;
     transition: color 0.3s;
-    &:hover { color: #c37975; }
+
+    &:hover {
+        color: #c37975;
+    }
 `;
 
 export const UserProfileContainer = styled.div`
@@ -106,6 +82,10 @@ export const UserProfileContainer = styled.div`
 
     &:hover {
         background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    @media (max-width: 768px) {
+        padding: 4px;
     }
 `;
 
@@ -122,6 +102,10 @@ export const UserName = styled.span`
     font-weight: 500;
     color: #000000;
     margin-left: 10px;
+
+    @media (max-width: 768px) {
+        display: none;
+    }
 `;
 
 export const ProfileModalContainer = styled.div`
@@ -133,7 +117,7 @@ export const ProfileModalContainer = styled.div`
     border-radius: 24px;
     padding: 16px 20px 30px 20px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    color: #ffffff;
+    color: #333;
     z-index: 1002;
     display: flex;
     flex-direction: column;
@@ -141,11 +125,9 @@ export const ProfileModalContainer = styled.div`
     box-sizing: border-box;
 
     @media (max-width: 768px) {
-        top: 80px;
-        right: 50%;
-        transform: translateX(50%);
-        width: 90%;
-        max-width: 340px;
+        top: 70px;
+        right: 20px;
+        width: 280px;
     }
 `;
 
@@ -159,14 +141,14 @@ export const ModalCloseBtn = styled.button`
     padding: 5px;
 
     &:hover {
-        color: #ffffff;
+        color: #333;
     }
 `;
 
 export const ModalEmail = styled.div`
     font-size: 14px;
     font-weight: 500;
-    color: #e8eaed;
+    color: #666;
     margin-bottom: 10px;
 `;
 

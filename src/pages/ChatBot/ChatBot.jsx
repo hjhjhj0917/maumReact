@@ -51,86 +51,82 @@ const ChatBot = () => {
         <S.ChatContainer>
             {isEmptyState ? (
                 <S.EmptyStateContainer>
-                    <S.CenterInputArea>
-                        {renderInputArea()}
-                        <S.SuggestionContainer>
-                            {suggestions.map((item, idx) => (
-                                <S.SuggestionButton
-                                    key={idx}
-                                    onClick={() => setInput(item.text)}
-                                    disabled={isStreaming}
-                                >
-                                    <i className={item.icon}></i>
-                                    {item.text}
-                                </S.SuggestionButton>
-                            ))}
-                        </S.SuggestionContainer>
-                    </S.CenterInputArea>
+                    <S.SuggestionContainer>
+                        {suggestions.map((item, idx) => (
+                            <S.SuggestionButton
+                                key={idx}
+                                onClick={() => setInput(item.text)}
+                                disabled={isStreaming}
+                            >
+                                <i className={item.icon}></i>
+                                {item.text}
+                            </S.SuggestionButton>
+                        ))}
+                    </S.SuggestionContainer>
                 </S.EmptyStateContainer>
             ) : (
-                <>
-                    <S.MessageList>
-                        {messages.map((msg, index) => {
-                            const cleanContent = msg.content.replace(/<think>[\s\S]*?(?:<\/think>|$)/gi, '');
-                            const isThinking = msg.role === 'bot' && msg.content.includes('<think>') && cleanContent.trim() === '';
+                <S.MessageList>
+                    {messages.map((msg, index) => {
+                        const cleanContent = msg.content.replace(/<think>[\s\S]*?(?:<\/think>|$)/gi, '');
+                        const isThinking = msg.role === 'bot' && msg.content.includes('<think>') && cleanContent.trim() === '';
 
-                            let thinkingText = '';
-                            if (msg.content.includes('<think>')) {
-                                const match = msg.content.match(/<think>([\s\S]*?)(?:<\/think>|$)/i);
-                                if (match) thinkingText = match[1];
-                            }
+                        let thinkingText = '';
+                        if (msg.content.includes('<think>')) {
+                            const match = msg.content.match(/<think>([\s\S]*?)(?:<\/think>|$)/i);
+                            if (match) thinkingText = match[1];
+                        }
 
-                            const textToCopy = msg.role === 'user' ? msg.content : cleanContent;
+                        const textToCopy = msg.role === 'user' ? msg.content : cleanContent;
 
-                            return (
-                                <S.MessageWrapper key={index} $isUser={msg.role === 'user'}>
-                                    <S.Bubble $isUser={msg.role === 'user'}>
-                                        {isThinking && (
-                                            <S.ThinkingIndicator>
-                                                <i className="fa-solid fa-circle-notch fa-spin"></i>
-                                                {thinkingText || '생각하는 중...'}
-                                            </S.ThinkingIndicator>
-                                        )}
-                                        {msg.role === 'user' ? (
-                                            msg.content
-                                        ) : (
-                                            cleanContent ? (
-                                                <ReactMarkdown>
-                                                    {cleanContent + (isStreaming && index === messages.length - 1 ? ' ▌' : '')}
-                                                </ReactMarkdown>
-                                            ) : (
-                                                !isThinking && isStreaming && index === messages.length - 1 ? ' ▌' : null
-                                            )
-                                        )}
-                                    </S.Bubble>
-
-                                    {textToCopy.trim().length > 0 && (
-                                        <S.MessageActions $isUser={msg.role === 'user'}>
-                                            <S.ActionIcon onClick={() => handleCopy(textToCopy)}>
-                                                <i className="fa-regular fa-copy"></i>
-                                            </S.ActionIcon>
-                                        </S.MessageActions>
+                        return (
+                            <S.MessageWrapper key={index} $isUser={msg.role === 'user'}>
+                                <S.Bubble $isUser={msg.role === 'user'}>
+                                    {isThinking && (
+                                        <S.ThinkingIndicator>
+                                            <i className="fa-solid fa-circle-notch fa-spin"></i>
+                                            {thinkingText || '생각하는 중...'}
+                                        </S.ThinkingIndicator>
                                     )}
-                                </S.MessageWrapper>
-                            );
-                        })}
-                        {isStreaming && isWaiting && (
-                            <S.MessageWrapper $isUser={false}>
-                                <S.Bubble $isUser={false}>
-                                    <S.ThinkingIndicator>
-                                        <i className="fa-solid fa-circle-notch fa-spin"></i>
-                                        마음이 답변을 생성하고 있습니다...
-                                    </S.ThinkingIndicator>
+                                    {msg.role === 'user' ? (
+                                        msg.content
+                                    ) : (
+                                        cleanContent ? (
+                                            <ReactMarkdown>
+                                                {cleanContent + (isStreaming && index === messages.length - 1 ? ' ▌' : '')}
+                                            </ReactMarkdown>
+                                        ) : (
+                                            !isThinking && isStreaming && index === messages.length - 1 ? ' ▌' : null
+                                        )
+                                    )}
                                 </S.Bubble>
+
+                                {textToCopy.trim().length > 0 && (
+                                    <S.MessageActions $isUser={msg.role === 'user'}>
+                                        <S.ActionIcon onClick={() => handleCopy(textToCopy)}>
+                                            <i className="fa-regular fa-copy"></i>
+                                        </S.ActionIcon>
+                                    </S.MessageActions>
+                                )}
                             </S.MessageWrapper>
-                        )}
-                        <div ref={messagesEndRef} />
-                    </S.MessageList>
-                    <S.BottomInputArea>
-                        {renderInputArea()}
-                    </S.BottomInputArea>
-                </>
+                        );
+                    })}
+                    {isStreaming && isWaiting && (
+                        <S.MessageWrapper $isUser={false}>
+                            <S.Bubble $isUser={false}>
+                                <S.ThinkingIndicator>
+                                    <i className="fa-solid fa-circle-notch fa-spin"></i>
+                                    마음이 답변을 생성하고 있습니다...
+                                </S.ThinkingIndicator>
+                            </S.Bubble>
+                        </S.MessageWrapper>
+                    )}
+                    <div ref={messagesEndRef} />
+                </S.MessageList>
             )}
+
+            <S.BottomInputArea>
+                {renderInputArea()}
+            </S.BottomInputArea>
 
             {toastState.show && (
                 <S.ToastNotification>

@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 
 export const ModalOverlay = styled.div`
         position: fixed;
@@ -21,11 +20,16 @@ export const ModalContainer = styled.div`
         max-width: 90vw;
         height: 600px;
         max-height: 90vh;
-        background-color: #f0f2f5;
+        background-color: #ffffff;
         border-radius: 20px;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
         overflow: hidden;
         display: flex;
+
+        @media (max-width: 768px) {
+                height: 80vh;
+                flex-direction: column;
+        }
 `;
 
 export const CloseButton = styled.button`
@@ -47,79 +51,57 @@ export const CloseButton = styled.button`
 
 export const Container = styled.div`
         display: flex;
-        flex: 1;
+        flex-direction: row;
         width: 100%;
+        height: 100%;
 
         @media (max-width: 768px) {
                 flex-direction: column;
         }
 `;
 
-export const FindLinks = styled.div`
-        text-align: center;
-        font-size: 0.9rem;
-        color: #888;
-        margin-top: 25px;
-`;
-
-export const SignupBox = styled.div`
-        font-size: 0.9rem;
-        color: #888;
-        line-height: 1.5;
-        text-align: left !important;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        padding: 100px 40px 0;
-        box-sizing: border-box;
-        white-space: normal;
-`;
-
 export const LoginSection = styled.div`
-        flex: 1.2;
+        flex: 1.5;
         display: flex;
         justify-content: center;
         align-items: center;
         background-color: #ffffff;
         position: relative;
         z-index: 3;
+        height: 100%;
 
         @media (max-width: 768px) {
-                flex: auto;
-                padding: 50px 20px;
+                flex: 1;
+                height: auto;
+                align-items: flex-start;
+                padding: 40px 20px 30px;
                 background-color: #fff;
                 border-top-left-radius: 30px;
                 border-top-right-radius: 30px;
-                margin-top: -30px;
+                margin-top: -40px;
                 box-shadow: 0 -10px 20px rgba(0, 0, 0, 0.05);
-
-                ${FindLinks} {
-                        margin-top: 25px;
-                }
-
-                ${SignupBox} {
-                        position: static;
-                        text-align: center;
-                        margin-top: 20px;
-                }
+                overflow-y: auto;
         }
 `;
 
 export const LoginCard = styled.div`
         width: 100%;
-        max-width: 410px;
-        position: relative;
-        padding: 40px 40px 30px;
+        max-width: 400px;
+        padding: 0 40px;
 
         @media (max-width: 768px) {
-                padding-bottom: 40px;
+                padding: 0 10px;
+                max-width: 100%;
         }
 `;
 
 export const InputGroup = styled.div`
         margin-bottom: 30px;
         text-align: left;
+
+        @media (max-width: 768px) {
+                margin-bottom: 35px;
+        }
 `;
 
 export const LabelRow = styled.div`
@@ -127,11 +109,6 @@ export const LabelRow = styled.div`
         align-items: center;
         gap: 12px;
         margin-bottom: 5px;
-
-        @media (max-width: 768px) {
-                flex-direction: row;
-                align-items: center;
-        }
 
         label {
                 font-size: 14px;
@@ -149,12 +126,6 @@ export const FieldMessage = styled.span`
         transition: opacity 0.25s ease-in-out;
         pointer-events: none;
         color: ${props => (props.$type === 'error' ? '#ef4444' : props.$type === 'success' ? '#22c55e' : 'inherit')};
-
-        @media (max-width: 768px) {
-                width: auto;
-                text-align: left;
-                white-space: nowrap;
-        }
 `;
 
 export const PasswordWrapper = styled.div`
@@ -221,6 +192,17 @@ export const BtnLogin = styled.button`
         }
 `;
 
+export const FindLinks = styled.div`
+        text-align: center;
+        font-size: 0.9rem;
+        color: #888;
+        margin-top: 25px;
+
+        @media (max-width: 768px) {
+                margin-top: 35px;
+        }
+`;
+
 export const FindRow = styled.div`
         a {
                 color: #888;
@@ -237,18 +219,4 @@ export const FindRow = styled.div`
 export const Separator = styled.span`
         margin: 0 8px;
         color: #ddd;
-`;
-
-export const LinkSignup = styled(Link)`
-        color: #FFD166;
-        text-decoration: none;
-        font-weight: bold;
-        margin-left: 5px;
-        transition: color 0.2s;
-        display: inline-block;
-
-        &:hover {
-                color: #E0B34A;
-                text-decoration: underline;
-        }
 `;

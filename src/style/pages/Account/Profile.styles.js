@@ -11,6 +11,14 @@ export const PageWrapper = styled.div`
     padding: 100px 20px 40px;
     box-sizing: border-box;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+
+    @media (max-width: 768px) {
+        height: auto;
+        min-height: 100vh;
+        overflow-y: auto;
+        padding-top: 80px;
+        padding-bottom: 120px;
+    }
 `;
 
 export const ProfileContainer = styled.div`
@@ -20,6 +28,10 @@ export const ProfileContainer = styled.div`
     display: flex;
     flex-direction: column;
     gap: 24px;
+
+    @media (max-width: 768px) {
+        height: auto;
+    }
 `;
 
 export const PageTitle = styled.h1`
@@ -196,6 +208,11 @@ export const MainContent = styled.div`
     display: flex;
     flex-direction: column;
     overflow: hidden;
+
+    @media (max-width: 768px) {
+        flex: none;
+        min-height: 500px;
+    }
 `;
 
 export const MainTitle = styled.h2`
@@ -249,6 +266,11 @@ export const ModalContent = styled.div`
     border: 1px solid #ededeb;
     position: relative;
     box-sizing: border-box;
+
+    @media (max-width: 768px) {
+        max-width: 90%;
+        padding: 24px 20px;
+    }
 `;
 
 export const ModalHeader = styled.div`
@@ -290,6 +312,10 @@ export const CharacterGrid = styled.div`
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 12px;
+
+    @media (max-width: 768px) {
+        grid-template-columns: repeat(3, 1fr);
+    }
 `;
 
 export const CharacterItem = styled.div`

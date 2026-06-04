@@ -5,7 +5,6 @@ import * as S from '../style/pages/Index.styles';
 import logoImg from '../assets/images/includes/logo.png';
 import Login from './Account/Login';
 
-// 💡 핵심 해결책: 에러가 나지 않도록 useDraggable을 별도의 컴포넌트로 완전히 분리했습니다.
 const DraggableEmotion = ({ data, index }) => {
     const draggable = useDraggable(data.x, data.y);
 
@@ -43,6 +42,11 @@ const Index = () => {
         { label: "분노", color: "#FF3B30", x: 630, y: 240 },
     ];
 
+    const handleServiceClick = (e) => {
+        e.preventDefault();
+        setIsLoginModalOpen(true);
+    };
+
     return (
         <S.PageWrapper>
             <S.Header $scrolled={scrolled}>
@@ -55,7 +59,6 @@ const Index = () => {
                     <button onClick={() => scrollToSection('community')}>Community</button>
                 </S.NavLinks>
                 <S.AuthButtons>
-                    {/* Sign up 버튼: 테두리/배경 없애고 페이지 이동 */}
                     <S.Button
                         as={Link}
                         to="/account/register"
@@ -94,7 +97,6 @@ const Index = () => {
                 </S.HeroContent>
 
                 <S.InteractiveCanvas>
-                    {/* 분리된 안전한 컴포넌트를 호출하여 렌더링합니다 */}
                     {emotionData.map((data, index) => (
                         <DraggableEmotion key={index} data={data} index={index} />
                     ))}
@@ -132,7 +134,7 @@ const Index = () => {
                     </S.Card>
                     <S.Card>
                         <h3>지능형 벡터 검색</h3>
-                        <p>MongoDB Atlas Vector Search를 통해 문맥에 맞는 대화와 검색을 지원합니다.</p>
+                        <p>문맥에 맞는 대화와 검색을 지원하여 더 깊은 감정적 교감을 나눕니다.</p>
                     </S.Card>
                 </S.Grid>
             </S.Section>
@@ -153,20 +155,10 @@ const Index = () => {
                         <div className="label">위로의 대화</div>
                     </S.StatBox>
                 </S.StatsGrid>
-
-                {/*<S.SectionTitle style={{ fontSize: '32px', marginTop: '60px' }}>오늘 당신의 마음은 어떤가요?</S.SectionTitle>*/}
-                {/*<S.Subtitle style={{ margin: '0 auto' }}>이메일을 등록하시면 MauM의 새로운 소식과 마음 건강 가이드를 보내드립니다.</S.Subtitle>*/}
-                {/*<S.EmailForm>*/}
-                {/*    <input type="email" placeholder="이메일 주소" />*/}
-                {/*    <button>구독하기</button>*/}
-                {/*</S.EmailForm>*/}
             </S.Section>
 
             <S.Section $center id="community" ref={statsRef2}>
                 <S.SectionTitle style={{ fontSize: '64px' }}>함께 나누는<br />마음 공동체</S.SectionTitle>
-                {/*<S.CommunityGrid>*/}
-                {/*    당신의 감정을 컬러로 공유하고 서로 응원하세요.*/}
-                {/*</S.CommunityGrid>*/}
 
                 <S.StatsGrid>
                     <S.StatBox>
@@ -184,27 +176,6 @@ const Index = () => {
                 </S.StatsGrid>
             </S.Section>
 
-            {/*<S.Section>*/}
-            {/*    <S.SectionHeader>*/}
-            {/*        <S.SectionTitle>MauM은 끊임없이<br />연구합니다.</S.SectionTitle>*/}
-            {/*    </S.SectionHeader>*/}
-
-            {/*    <S.BentoGrid>*/}
-            {/*        <S.Card>*/}
-            {/*            <h3>자연어 처리 연구</h3>*/}
-            {/*            <p>한국어 감정 표현에 최적화된 KoElectra 및 텍스트 마이닝 기술을 적용합니다.</p>*/}
-            {/*        </S.Card>*/}
-            {/*        <S.Card>*/}
-            {/*            <h3>LLM 최적화</h3>*/}
-            {/*            <p>HyperCLOVA X 임베딩을 활용하여 더 깊은 문맥적 공감을 실현합니다.</p>*/}
-            {/*        </S.Card>*/}
-            {/*        <S.Card className="large">*/}
-            {/*            <h3>데이터 분석 기반 케어</h3>*/}
-            {/*            <p>누적된 심리 데이터를 기반으로 사용자에게 가장 필요한 위로의 방식을 제안합니다.</p>*/}
-            {/*        </S.Card>*/}
-            {/*    </S.BentoGrid>*/}
-            {/*</S.Section>*/}
-
             <S.Footer>
                 <S.FooterGrid>
                     <div>
@@ -216,23 +187,22 @@ const Index = () => {
                     <div>
                         <h4>Service</h4>
                         <ul>
-                            <li><Link to="#">감정 일기</Link></li>
-                            <li><Link to="#">AI 챗봇</Link></li>
-                            <li><Link to="#">마음 리포트</Link></li>
+                            <li><Link to="#" onClick={handleServiceClick}>감정 일기</Link></li>
+                            <li><Link to="#" onClick={handleServiceClick}>AI 챗봇</Link></li>
+                            <li><Link to="#" onClick={handleServiceClick}>주변 상담소</Link></li>
                         </ul>
                     </div>
                     <div>
                         <h4>Technology</h4>
                         <ul>
-                            <li><Link to="https://clova.ai/">HyperCLOVA X</Link></li>
-                            <li><Link to="#">NLP Models</Link></li>
-                            <li><Link to="#">RAG Architecture</Link></li>
+                            <li><Link to="https://clova.ai/hyperclova" target="_blank" rel="noopener noreferrer">HyperCLOVA X</Link></li>
+                            <li><Link to="https://github.com/monologg/KoELECTRA" target="_blank" rel="noopener noreferrer">KoELECTRA</Link></li>
+                            <li><Link to="https://www.aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&&srchDataRealmCode=REALM006&aihubDataSe=data&dataSetSn=71806" target="_blank" rel="noopener noreferrer">AI Hub Data</Link></li>
                         </ul>
                     </div>
                 </S.FooterGrid>
             </S.Footer>
 
-            {/* 로그인 모달 렌더링 */}
             {isLoginModalOpen && (
                 <Login onClose={() => setIsLoginModalOpen(false)} />
             )}

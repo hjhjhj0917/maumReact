@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Map, MapMarker, CustomOverlayMap } from 'react-kakao-maps-sdk';
 import CustomModal from '../../components/CustomModal';
 import { useMentalMap, CATEGORY_COLORS } from '../../hooks/map/useMap';
@@ -39,6 +39,13 @@ const MentalMap = () => {
     } = useMentalMap();
 
     const [toastState, setToastState] = useState({ show: false, message: '' });
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const handleCopyAddress = (address) => {
         if (!address) return;
@@ -164,20 +171,20 @@ const MentalMap = () => {
                                 </S.FilterDropdown>
                             )}
                         </S.FilterWrapper>
-
-                        <S.MyLocationButton onClick={(e) => {
-                            e.stopPropagation();
-                            handleFindMyLocation();
-                        }}>
-                            <i className="fa-solid fa-location-crosshairs"></i>
-                        </S.MyLocationButton>
                     </S.TopUIWrapper>
+
+                    <S.MyLocationButton onClick={(e) => {
+                        e.stopPropagation();
+                        handleFindMyLocation();
+                    }}>
+                        <i className="fa-solid fa-location-crosshairs"></i>
+                    </S.MyLocationButton>
 
                     <Map
                         center={mapCenter}
                         ref={mapRef}
                         style={{ width: "100%", height: "100%" }}
-                        level={3}
+                        level={isMobile ? 5 : 3}
                         isPanto={true}
                         onClick={handleMapClick}
                         onCreate={updateMapBounds}

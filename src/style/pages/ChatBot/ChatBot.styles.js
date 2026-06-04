@@ -52,14 +52,58 @@ export const EmptyStateContainer = styled.div`
     justify-content: center;
     padding: 20px;
     width: 100%;
+    margin-top: 40px;
 `;
 
-export const CenterInputArea = styled.div`
+export const SuggestionContainer = styled.div`
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
     width: 100%;
     max-width: 760px;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+`;
+
+export const SuggestionButton = styled.button`
     display: flex;
-    flex-direction: column;
     align-items: center;
+    gap: 8px;
+    background-color: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-radius: 20px;
+    padding: 12px 18px;
+    font-size: 13px;
+    color: #444;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    line-height: 1.4;
+
+    &:hover {
+        background-color: #f9f9f9;
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    i {
+        font-size: 14px;
+        color: #666;
+        flex-shrink: 0;
+    }
+
+    @media (max-width: 768px) {
+        width: 100%;
+        max-width: 340px;
+        text-align: left;
+    }
 `;
 
 export const BottomInputArea = styled.div`
@@ -67,7 +111,12 @@ export const BottomInputArea = styled.div`
     padding: 20px;
     background-color: transparent;
     max-width: 800px;
-    margin-bottom: 60px;
+    margin: 0 auto 60px;
+
+    @media (max-width: 768px) {
+        margin-bottom: calc(95px + env(safe-area-inset-bottom, 0px));
+        padding: 10px 15px;
+    }
 `;
 
 export const MessageList = styled.div`
@@ -77,6 +126,11 @@ export const MessageList = styled.div`
     display: flex;
     flex-direction: column;
     gap: 40px;
+
+    @media (max-width: 768px) {
+        padding: 100px 15px 20px;
+        gap: 24px;
+    }
 `;
 
 export const MessageWrapper = styled.div`
@@ -127,43 +181,6 @@ export const ActionIcon = styled.button`
 
     &:hover {
         color: #333333;
-    }
-`;
-
-export const SuggestionContainer = styled.div`
-    display: flex;
-    gap: 12px;
-    margin-top: 20px;
-    justify-content: center;
-    flex-wrap: wrap;
-    width: 100%;
-`;
-
-export const SuggestionButton = styled.button`
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background-color: #ffffff;
-    border: 1px solid #e5e5e5;
-    border-radius: 20px;
-    padding: 10px 16px;
-    font-size: 13px;
-    color: #444;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-
-    &:hover {
-        background-color: #f9f9f9;
-    }
-
-    &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-
-    i {
-        font-size: 14px;
-        color: #666;
     }
 `;
 

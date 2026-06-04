@@ -10,6 +10,20 @@ export const SidebarWrapper = styled.aside`
     box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
     transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 100;
+
+    @media (max-width: 768px) {
+        width: 100%;
+        height: calc(75px + env(safe-area-inset-bottom, 0px));
+        padding: 0 10px env(safe-area-inset-bottom, 0px);
+        flex-direction: row;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        background-color: #EEF4F8;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+        border-radius: 24px 24px 0 0;
+        z-index: 9999;
+    }
 `;
 
 export const TopSection = styled.div`
@@ -18,6 +32,10 @@ export const TopSection = styled.div`
     flex-direction: column;
     gap: 20px;
     flex-shrink: 0;
+
+    @media (max-width: 768px) {
+        display: none;
+    }
 `;
 
 export const IconButton = styled.button`
@@ -52,7 +70,7 @@ export const NewPostBtn = styled.button`
     border-radius: ${props => props.$isOpen ? '22px' : '50%'};
     border: none;
     background-color: #FFC700;
-    color: #fff;
+    color: #333;
     font-weight: 600;
     cursor: ${props => props.$isOpen ? 'pointer' : 'default'};
     pointer-events: ${props => props.$isOpen ? 'auto' : 'none'};
@@ -63,7 +81,11 @@ export const NewPostBtn = styled.button`
 
     &:hover {
         background-color: #E5B300;
-        color: #fff;
+        color: #333;
+    }
+
+    span {
+        display: ${props => props.$isOpen ? 'inline' : 'none'};
     }
 `;
 
@@ -88,6 +110,16 @@ export const NavSection = styled.nav`
     &::-webkit-scrollbar-track {
         background: transparent;
     }
+
+    @media (max-width: 768px) {
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        overflow: visible;
+        padding: 0;
+        width: 100%;
+        gap: 0;
+    }
 `;
 
 export const NavItem = styled.div`
@@ -107,7 +139,7 @@ export const NavItem = styled.div`
     background-color: transparent;
     white-space: nowrap;
     overflow: hidden;
-    transition: color 0.2s;
+    transition: all 0.2s;
     flex-shrink: 0;
 
     &:hover {
@@ -121,6 +153,7 @@ export const NavItem = styled.div`
         color: ${props => props.$active ? '#FFC700' : '#333'};
         font-size: 15px;
         transition: color 0.2s;
+        display: ${props => props.$isOpen ? 'inline' : 'none'};
     }
 
     i {
@@ -130,17 +163,57 @@ export const NavItem = styled.div`
         text-align: center;
         transition: color 0.2s;
     }
+
+    @media (max-width: 768px) {
+        width: 70px;
+        height: 60px;
+        flex-direction: column;
+        justify-content: center;
+        gap: 6px;
+        padding: 0;
+        border-radius: 16px;
+        pointer-events: auto;
+        cursor: pointer;
+        background-color: transparent;
+
+        span {
+            display: block;
+            font-size: 11px;
+            font-weight: ${props => props.$active ? '600' : '500'};
+        }
+
+        i {
+            font-size: 20px;
+        }
+    }
+`;
+
+export const MobileOnlyItem = styled(NavItem)`
+    display: none;
+
+    @media (max-width: 768px) {
+        display: flex;
+    }
 `;
 
 export const BottomSection = styled.div`
     padding: 12px;
     flex-shrink: 0;
+
+    @media (max-width: 768px) {
+        display: none;
+    }
 `;
 
 export const RecentDiarySection = styled.div`
     padding: 12px 4px;
     margin-top: 30px;
     flex-shrink: 0;
+    display: ${props => props.$show ? 'block' : 'none'};
+
+    @media (max-width: 768px) {
+        display: none !important;
+    }
 `;
 
 export const RecentDiaryTitle = styled.div`

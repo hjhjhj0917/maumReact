@@ -9,6 +9,11 @@ export const PageContainer = styled.div`
     color: #37352f;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
     padding-top: 80px;
+
+    @media (max-width: 768px) {
+        padding-top: 60px;
+        padding-bottom: 80px;
+    }
 `;
 
 export const ContentWrapper = styled.div`
@@ -17,6 +22,10 @@ export const ContentWrapper = styled.div`
     padding: 0 40px;
     display: flex;
     flex-direction: column;
+
+    @media (max-width: 768px) {
+        padding: 0 20px;
+    }
 `;
 
 export const StickyHeaderContainer = styled.div`
@@ -25,6 +34,11 @@ export const StickyHeaderContainer = styled.div`
     z-index: 10;
     padding-top: 40px;
     padding-bottom: 12px;
+
+    @media (max-width: 768px) {
+        top: 60px;
+        padding-top: 20px;
+    }
 `;
 
 export const PageHeader = styled.div`
@@ -32,6 +46,13 @@ export const PageHeader = styled.div`
     justify-content: space-between;
     align-items: flex-end;
     margin-bottom: 40px;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+        margin-bottom: 24px;
+    }
 `;
 
 export const PageTitle = styled.h1`
@@ -39,12 +60,21 @@ export const PageTitle = styled.h1`
     font-weight: 700;
     margin: 0;
     letter-spacing: -0.02em;
+
+    @media (max-width: 768px) {
+        font-size: 32px;
+    }
 `;
 
 export const MonthNav = styled.div`
     display: flex;
     align-items: center;
     gap: 12px;
+
+    @media (max-width: 768px) {
+        width: 100%;
+        justify-content: space-between;
+    }
 `;
 
 export const MonthText = styled.span`
@@ -103,7 +133,7 @@ export const SearchInputWrapper = styled.div`
     gap: 8px;
     background: #f7f7f5;
     border-radius: 6px;
-    padding: 6px 12px;
+    padding: 8px 14px;
     width: 100%;
     max-width: 400px;
     border: 1px solid transparent;
@@ -131,12 +161,16 @@ export const SearchInputWrapper = styled.div`
             color: #9a9a97;
         }
     }
+
+    @media (max-width: 768px) {
+        max-width: 100%;
+    }
 `;
 
 export const Tabs = styled.div`
     display: flex;
     flex-wrap: wrap;
-    gap: 4px;
+    gap: 6px;
 `;
 
 export const Tab = styled.button`
@@ -145,8 +179,8 @@ export const Tab = styled.button`
     gap: 6px;
     background: ${props => props.$active ? '#efefef' : 'transparent'};
     border: none;
-    padding: 4px 10px;
-    border-radius: 4px;
+    padding: 6px 12px;
+    border-radius: 6px;
     font-size: 14px;
     color: ${props => props.$active ? '#37352f' : '#787774'};
     cursor: pointer;
@@ -173,6 +207,11 @@ export const GridContainer = styled.div`
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 16px;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
 `;
 
 export const DayCard = styled.div`
@@ -192,6 +231,11 @@ export const DayCard = styled.div`
 
     &:active {
         transform: scale(0.99);
+    }
+
+    @media (max-width: 768px) {
+        height: 130px;
+        padding: 14px;
     }
 `;
 
@@ -247,10 +291,11 @@ export const EmotionTag = styled.div`
     align-items: center;
     gap: 6px;
     background: #f7f7f5;
-    padding: 2px 8px;
-    border-radius: 4px;
+    padding: 4px 10px;
+    border-radius: 6px;
     font-size: 12px;
     color: #50504b;
+    white-space: nowrap;
 `;
 
 export const ColorDot = styled.div`
@@ -258,25 +303,41 @@ export const ColorDot = styled.div`
     height: 8px;
     border-radius: 50%;
     background-color: ${props => props.$color};
+    flex-shrink: 0;
 `;
 
 export const ListContainer = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 8px;
 `;
 
 export const ListItem = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 8px;
-    border-radius: 6px;
+    padding: 14px 16px;
+    border-radius: 8px;
     cursor: pointer;
     transition: background 0.2s;
+    border: 1px solid transparent;
+    border-bottom: 1px solid #f0f0f0;
 
     &:hover {
         background: #f7f7f5;
+    }
+
+    @media (max-width: 768px) {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 16px;
+        border: 1px solid #ededeb;
+        border-radius: 12px;
+        margin-bottom: 8px;
+        width: 100%;
+        box-sizing: border-box;
     }
 `;
 
@@ -284,33 +345,63 @@ export const ItemLeft = styled.div`
     display: flex;
     align-items: center;
     gap: 12px;
+    flex: 1;
+    min-width: 0;
 
     i {
         color: #787774;
         font-size: 14px;
+        flex-shrink: 0;
+    }
+
+    @media (max-width: 768px) {
+        width: 100%;
+        align-items: flex-start;
     }
 `;
 
 export const ItemTitle = styled.span`
-    font-size: 14px;
+    font-size: 15px;
     color: #37352f;
     font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    width: 100%;
+
+    @media (max-width: 768px) {
+        white-space: normal;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        line-height: 1.4;
+    }
 `;
 
 export const ItemRight = styled.div`
     display: flex;
     align-items: center;
     gap: 20px;
+    flex-shrink: 0;
+
+    @media (max-width: 768px) {
+        width: 100%;
+        justify-content: flex-start;
+        gap: 10px;
+        margin-top: 2px;
+    }
 `;
 
 export const ItemDate = styled.span`
     font-size: 13px;
     color: #787774;
+    white-space: nowrap;
 `;
 
 export const EmptyState = styled.div`
-    padding: 40px 0;
+    padding: 60px 0;
     text-align: center;
     color: #9a9a97;
-    font-size: 14px;
+    font-size: 15px;
 `;

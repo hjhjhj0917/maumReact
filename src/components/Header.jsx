@@ -6,12 +6,10 @@ import * as S from '../style/components/Header.styles';
 
 const Header = () => {
     const {
-        isMobileMenuOpen,
         isProfileModalOpen,
         showLogoutModal,
         setShowLogoutModal,
         user,
-        toggleMobileMenu,
         toggleProfileModal,
         goToMyPage,
         handleLogoutClick,
@@ -31,14 +29,8 @@ const Header = () => {
                     </S.LogoContainer>
                 )}
 
-                <S.MenuToggle onClick={toggleMobileMenu}>
-                    <S.Bar />
-                    <S.Bar />
-                    <S.Bar />
-                </S.MenuToggle>
-
-                <S.NavMenu $isOpen={isMobileMenuOpen}>
-                    {!user ? "" : (
+                <S.NavMenu>
+                    {user && (
                         <S.NavItem>
                             <S.UserProfileContainer onClick={toggleProfileModal}>
                                 <S.ProfileImg src={user.profileImg} alt="프로필" />

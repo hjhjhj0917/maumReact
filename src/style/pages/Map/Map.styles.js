@@ -15,6 +15,14 @@ export const Container = styled.div`
     display: flex;
     flex-direction: column;
     padding: 20px;
+    position: relative;
+
+    @media (max-width: 768px) {
+        padding-top: 10px;
+        padding-bottom: 95px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
 `;
 
 export const MapWrapper = styled.div`
@@ -31,7 +39,7 @@ export const MapWrapper = styled.div`
         top: 0;
         left: 0;
         width: 100%;
-        height: 80px;
+        height: 100px;
         background: linear-gradient(to bottom, rgba(248, 249, 250, 1) 0%, rgba(248, 249, 250, 0) 100%);
         pointer-events: none;
         z-index: 2;
@@ -53,18 +61,32 @@ export const TopUIWrapper = styled.div`
     left: 50%;
     transform: translateX(-50%);
     z-index: 10;
-    width: 90%;
-    max-width: 800px;
     display: flex;
+    flex-direction: row;
     gap: 10px;
     align-items: flex-start;
+    width: fit-content;
+
+    @media (max-width: 768px) {
+        top: 60px;
+        left: 10px;
+        right: 10px;
+        transform: none;
+        width: auto;
+    }
 `;
 
 export const SearchSection = styled.div`
-    flex: 1;
+    width: 450px;
     position: relative;
     display: flex;
     flex-direction: column;
+    min-width: 0;
+
+    @media (max-width: 768px) {
+        width: auto;
+        flex: 1;
+    }
 `;
 
 export const SearchContainer = styled.form`
@@ -84,6 +106,7 @@ export const SearchInput = styled.input`
     font-size: 15px;
     outline: none;
     background: transparent;
+    min-width: 0;
 `;
 
 export const SearchButton = styled.button`
@@ -103,6 +126,7 @@ export const FilterWrapper = styled.div`
     position: relative;
     display: flex;
     flex-direction: column;
+    flex-shrink: 0;
 `;
 
 export const FilterButton = styled.button`
@@ -120,16 +144,16 @@ export const FilterButton = styled.button`
     color: #333;
     cursor: pointer;
     white-space: nowrap;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     transition: background-color 0.2s;
 
     &:hover {
         background-color: #f8f9fa;
     }
 
-    i {
-        font-size: 12px;
-        color: #666;
+    @media (max-width: 768px) {
+        padding: 0 16px;
+        font-size: 13px;
     }
 `;
 
@@ -167,6 +191,12 @@ export const FilterDropdown = styled.ul`
     &::-webkit-scrollbar-thumb:hover {
         background: #adb5bd;
     }
+
+    @media (max-width: 768px) {
+        left: auto;
+        right: 115%;
+        transform: translateX(50%);
+    }
 `;
 
 export const FilterItem = styled.li`
@@ -178,12 +208,21 @@ export const FilterItem = styled.li`
     background-color: ${(props) => (props.$isActive ? '#f1f8ff' : 'transparent')};
     transition: background-color 0.2s;
 
-    &:hover {
-        background-color: #f8f9fa;
+    &:first-child {
+        padding-top: 16px;
     }
+
+    &:last-child {
+        padding-bottom: 16px;
+    }
+
+    &:hover { background-color: #f8f9fa; }
 `;
 
 export const MyLocationButton = styled.button`
+    position: absolute;
+    bottom: 30px;
+    right: 20px;
     width: 48px;
     height: 48px;
     display: flex;
@@ -196,10 +235,13 @@ export const MyLocationButton = styled.button`
     border-radius: 50%;
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     cursor: pointer;
-    flex-shrink: 0;
+    z-index: 10;
 
-    &:hover {
-        background-color: #f8f9fa;
+    &:hover { background-color: #f8f9fa; }
+
+    @media (max-width: 768px) {
+        bottom: 20px;
+        right: 15px;
     }
 `;
 
@@ -244,14 +286,19 @@ export const DropdownItem = styled.li`
     display: flex;
     flex-direction: column;
     gap: 4px;
+    background-color: transparent;
+    transition: background-color 0.2s;
+
+    &:first-child {
+        padding-top: 16px;
+    }
 
     &:last-child {
+        padding-bottom: 16px;
         border-bottom: none;
     }
 
-    &:hover {
-        background-color: #f8f9fa;
-    }
+    &:hover { background-color: #f8f9fa; }
 `;
 
 export const DropdownItemHeader = styled.div`
@@ -301,6 +348,12 @@ export const OverlayContainer = styled.div`
     flex-direction: row;
     align-items: center;
     gap: 20px;
+
+    @media (max-width: 768px) {
+        min-width: 240px;
+        padding: 16px 16px 16px 20px;
+        border-radius: 30px;
+    }
 `;
 
 export const OverlayLeftSection = styled.div`
@@ -327,7 +380,6 @@ export const OverlayTitle = styled.h3`
     color: #333;
     line-height: 1.4;
     word-break: break-word;
-    white-space: normal;
 `;
 
 export const OverlayBody = styled.div`
@@ -345,20 +397,10 @@ export const InfoText = styled.div`
     font-size: 12px;
     color: #555;
     line-height: 1.4;
-    word-break: break-word;
-    white-space: normal;
 
-    span, a {
-        flex: 1;
-        margin-top: 1px;
-    }
+    span, a { flex: 1; margin-top: 1px; }
 
-    a {
-        color: #4A90E2;
-        text-decoration: none;
-        word-break: break-all;
-        &:hover { text-decoration: underline; }
-    }
+    a { color: #4A90E2; text-decoration: none; word-break: break-all; &:hover { text-decoration: underline; } }
 `;
 
 export const IconWrapper = styled.div`
@@ -375,15 +417,10 @@ export const CopyButton = styled.button`
     cursor: pointer;
     font-size: 14px;
     padding: 0 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     transition: color 0.2s;
     margin-top: 1px;
 
-    &:hover {
-        color: #495057;
-    }
+    &:hover { color: #495057; }
 `;
 
 export const HashtagText = styled.div`
@@ -421,9 +458,12 @@ export const RouteButtonRound = styled.a`
     font-size: 34px;
     transition: all 0.2s;
 
-    &:hover {
-        filter: brightness(0.9);
-        box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    &:hover { filter: brightness(0.9); }
+
+    @media (max-width: 768px) {
+        width: 60px;
+        height: 60px;
+        font-size: 28px;
     }
 `;
 

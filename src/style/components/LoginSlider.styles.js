@@ -24,10 +24,10 @@ export const SliderSection = styled.div`
     transition: flex 0.5s ease-in-out;
 
     @media (max-width: 768px) {
-        flex: auto;
-        transition: none;
-        padding: 40px 30px;
-        min-height: 300px;
+        flex: none;
+        height: 280px;
+        padding: 30px 20px;
+        justify-content: flex-start;
     }
 `;
 
@@ -72,7 +72,11 @@ export const Slide = styled.div`
     display: ${props => (props.$active ? 'block' : 'none')};
     animation: ${fadeText} 1s ease-out;
     margin-top: 50px;
-    
+
+    @media (max-width: 768px) {
+        margin-top: 30px;
+    }
+
     h2 {
         font-size: 2.5rem;
         margin-bottom: 20px;
@@ -81,8 +85,8 @@ export const Slide = styled.div`
         text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 
         @media (max-width: 768px) {
-            font-size: 2.5rem;
-            white-space: normal;
+            font-size: 2.2rem;
+            margin-bottom: 0;
         }
     }
 
@@ -93,7 +97,7 @@ export const Slide = styled.div`
         text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 
         @media (max-width: 768px) {
-            white-space: normal;
+            display: none;
         }
     }
 `;
@@ -105,6 +109,10 @@ export const DotsContainer = styled.div`
     display: flex;
     gap: 12px;
     z-index: 2;
+
+    @media (max-width: 768px) {
+        display: none;
+    }
 `;
 
 export const Dot = styled.span`
