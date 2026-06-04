@@ -24,11 +24,6 @@ const EmotionGraph = () => {
 
     return (
         <S.GraphContainer>
-            <S.Header>
-                <h3>
-                    나의 감정 통계
-                </h3>
-            </S.Header>
 
             {stats.length === 0 ? (
                 <S.EmptyState>

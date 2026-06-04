@@ -18,15 +18,25 @@ const InputField = ({
             </S.LabelRow>
 
             <S.InputWrapper>
-                <S.StyledInput
-                    type={inputType}
-                    name={name}
-                    value={value}
-                    onChange={onChange}
-                    placeholder={placeholder}
-                    readOnly={readOnly}
-                    onClick={onClick}
-                />
+                <S.InputInner>
+                    <S.StyledInput
+                        type={inputType}
+                        name={name}
+                        value={value}
+                        onChange={onChange}
+                        placeholder={placeholder}
+                        readOnly={readOnly}
+                        onClick={onClick}
+                        $hasIcon={isPassword}
+                    />
+                    {isPassword && (
+                        <S.ToggleIcon
+                            className={`fa-regular ${showPw ? 'fa-eye-slash' : 'fa-eye'}`}
+                            $active={showPw}
+                            onClick={() => setShowPw(!showPw)}
+                        />
+                    )}
+                </S.InputInner>
                 {actionBtn && (
                     <S.ActionButton
                         type="button"
@@ -35,13 +45,6 @@ const InputField = ({
                     >
                         {actionBtn.text}
                     </S.ActionButton>
-                )}
-                {isPassword && (
-                    <S.ToggleIcon
-                        className={`fa-regular ${showPw ? 'fa-eye-slash' : 'fa-eye'}`}
-                        $active={showPw}
-                        onClick={() => setShowPw(!showPw)}
-                    />
                 )}
             </S.InputWrapper>
             {children}

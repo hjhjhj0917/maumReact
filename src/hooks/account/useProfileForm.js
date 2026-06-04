@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
@@ -77,6 +77,9 @@ export const useProfile = () => {
         isWithdrawEmailVerified: false
     });
 
+    const [messages, setMessages] = useState({});
+    const messageTimers = useRef({});
+
     const validateEmail = (email) => /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$/.test(email);
 
     useEffect(() => {
@@ -119,6 +122,21 @@ export const useProfile = () => {
         ((editForm.newAddr || '').trim() !== (userInfo.addr || '').trim()) ||
         ((editForm.newDetailAddr || '').trim() !== (userInfo.detailAddr || '').trim());
 
+    const setMessage = (id, message, type) => {
+        if (messageTimers.current[id]) clearTimeout(messageTimers.current[id]);
+        setMessages(prev => ({ ...prev, [id]: { text: message, type } }));
+        messageTimers.current[id] = setTimeout(() => clearMessage(id), 3000);
+    };
+
+    const clearMessage = (id) => {
+        if (messageTimers.current[id]) clearTimeout(messageTimers.current[id]);
+        setMessages(prev => {
+            const newMsgs = { ...prev };
+            delete newMsgs[id];
+            return newMsgs;
+        });
+    };
+
     const openModal = () => {
         setSelectedCharacterUrl(userInfo.profileImgUrl);
         setIsModalOpen(true);
@@ -154,6 +172,7 @@ export const useProfile = () => {
     };
 
     const openActionModal = (type) => {
+        setMessages({});
         if (type === 'edit') {
             setEditForm({
                 currentPassword: '',
@@ -193,34 +212,42 @@ export const useProfile = () => {
     const handleEditChange = (e) => {
         const { name, value } = e.target;
         setEditForm(prev => ({ ...prev, [name]: value }));
+        clearMessage(name + 'Msg');
     };
 
     const handleWithdrawChange = (e) => {
         const { name, value } = e.target;
         setWithdrawForm(prev => ({ ...prev, [name]: value }));
+        clearMessage('withdraw' + name.charAt(0).toUpperCase() + name.slice(1) + 'Msg');
     };
 
     const verifyCurrentPasswordAction = async () => {
-        if (!editForm.currentPassword) return;
+        if (!editForm.currentPassword) {
+            setMessage('currentPasswordMsg', '현재 비밀번호를 입력하세요.', 'error');
+            return;
+        }
         try {
             const res = await verifyCurrentPassword(editForm.currentPassword);
             if (res && res.result === 1) {
                 setVerifyState(prev => ({ ...prev, isPasswordVerified: true }));
-                showAlert('알림', '비밀번호가 확인되었습니다.');
+                setMessage('currentPasswordMsg', '비밀번호가 확인되었습니다.', 'success');
             } else {
-                showAlert('오류', res?.msg || '비밀번호가 일치하지 않습니다.');
+                setMessage('currentPasswordMsg', res?.msg || '비밀번호가 일치하지 않습니다.', 'error');
             }
         } catch (error) {
             console.error("오류:", error);
-            showAlert('오류', error.response?.data?.message || '인증 중 오류가 발생했습니다.');
+            setMessage('currentPasswordMsg', error.response?.data?.message || '인증 중 오류가 발생했습니다.', 'error');
         }
     };
 
     const sendEmailCodeAction = async () => {
-        if (!editForm.newEmail) return;
+        if (!editForm.newEmail) {
+            setMessage('newEmailMsg', '새 이메일을 입력하세요.', 'error');
+            return;
+        }
 
         if (!validateEmail(editForm.newEmail)) {
-            showAlert('오류', '유효한 이메일 형식이 아닙니다.');
+            setMessage('newEmailMsg', '유효한 이메일 형식이 아닙니다.', 'error');
             return;
         }
 
@@ -228,29 +255,32 @@ export const useProfile = () => {
             const res = await checkEmailExists(editForm.newEmail);
             if (res && res.exists === false) {
                 setVerifyState(prev => ({ ...prev, isEmailCodeSent: true }));
-                showAlert('알림', '인증 코드가 발송되었습니다.');
+                setMessage('newEmailMsg', '인증 코드가 발송되었습니다.', 'success');
             } else {
-                showAlert('오류', '이미 사용중인 이메일입니다.');
+                setMessage('newEmailMsg', '이미 사용중인 이메일입니다.', 'error');
             }
         } catch (error) {
             console.error("오류:", error);
-            showAlert('오류', error.response?.data?.message || '인증 코드 발송 중 오류가 발생했습니다.');
+            setMessage('newEmailMsg', error.response?.data?.message || '인증 코드 발송 중 오류가 발생했습니다.', 'error');
         }
     };
 
     const verifyEmailCodeAction = async () => {
-        if (!editForm.emailCode) return;
+        if (!editForm.emailCode) {
+            setMessage('emailCodeMsg', '인증번호를 입력하세요.', 'error');
+            return;
+        }
         try {
             const res = await verifyEmailCode(editForm.newEmail, editForm.emailCode);
             if (res && res.result === 1) {
                 setVerifyState(prev => ({ ...prev, isEmailVerified: true }));
-                showAlert('알림', '이메일 인증이 완료되었습니다.');
+                setMessage('emailCodeMsg', '이메일 인증이 완료되었습니다.', 'success');
             } else {
-                showAlert('오류', res?.msg || '인증 코드가 일치하지 않습니다.');
+                setMessage('emailCodeMsg', res?.msg || '인증 코드가 일치하지 않습니다.', 'error');
             }
         } catch (error) {
             console.error("오류:", error);
-            showAlert('오류', error.response?.data?.message || '이메일 인증 중 오류가 발생했습니다.');
+            setMessage('emailCodeMsg', error.response?.data?.message || '이메일 인증 중 오류가 발생했습니다.', 'error');
         }
     };
 
@@ -259,6 +289,7 @@ export const useProfile = () => {
             new window.daum.Postcode({
                 oncomplete: function (data) {
                     setEditForm(prev => ({ ...prev, newAddr: data.address }));
+                    clearMessage('newAddrMsg');
                 }
             }).open();
         }
@@ -288,17 +319,20 @@ export const useProfile = () => {
     };
 
     const verifyWithdrawPasswordAction = async () => {
-        if (!withdrawForm.password) return;
+        if (!withdrawForm.password) {
+            setMessage('withdrawPasswordMsg', '비밀번호를 입력하세요.', 'error');
+            return;
+        }
         try {
             const res = await verifyCurrentPassword(withdrawForm.password);
             if (res && res.result === 1) {
                 setWithdrawStep(2);
             } else {
-                showAlert('오류', res?.msg || '비밀번호가 일치하지 않습니다.');
+                setMessage('withdrawPasswordMsg', res?.msg || '비밀번호가 일치하지 않습니다.', 'error');
             }
         } catch (error) {
             console.error("오류:", error);
-            showAlert('오류', error.response?.data?.message || '인증 중 오류가 발생했습니다.');
+            setMessage('withdrawPasswordMsg', error.response?.data?.message || '인증 중 오류가 발생했습니다.', 'error');
         }
     };
 
@@ -307,36 +341,38 @@ export const useProfile = () => {
             const res = await sendWithdrawEmailCode(userInfo.email);
             if (res && res.result === 1) {
                 setVerifyState(prev => ({ ...prev, isWithdrawEmailCodeSent: true }));
-                showAlert('알림', '인증 코드가 발송되었습니다.');
+                setMessage('withdrawEmailMsg', '인증 코드가 발송되었습니다.', 'success');
             } else {
-                showAlert('오류', res?.msg || '코드 발송에 실패했습니다.');
+                setMessage('withdrawEmailMsg', res?.msg || '코드 발송에 실패했습니다.', 'error');
             }
         } catch (error) {
             console.error("오류:", error);
-            showAlert('오류', error.response?.data?.message || '인증 코드 발송 중 오류가 발생했습니다.');
+            setMessage('withdrawEmailMsg', error.response?.data?.message || '인증 코드 발송 중 오류가 발생했습니다.', 'error');
         }
     };
 
     const verifyWithdrawEmailCodeAction = async () => {
-        if (!withdrawForm.emailCode) return;
+        if (!withdrawForm.emailCode) {
+            setMessage('withdrawEmailCodeMsg', '인증번호를 입력하세요.', 'error');
+            return;
+        }
         try {
             const res = await verifyEmailCode(userInfo.email, withdrawForm.emailCode);
             if (res && res.result === 1) {
                 setVerifyState(prev => ({ ...prev, isWithdrawEmailVerified: true }));
-                showAlert('알림', '이메일 인증이 완료되었습니다.');
                 setWithdrawStep(3);
             } else {
-                showAlert('오류', res?.msg || '인증 코드가 일치하지 않습니다.');
+                setMessage('withdrawEmailCodeMsg', res?.msg || '인증 코드가 일치하지 않습니다.', 'error');
             }
         } catch (error) {
             console.error("오류:", error);
-            showAlert('오류', error.response?.data?.message || '이메일 인증 중 오류가 발생했습니다.');
+            setMessage('withdrawEmailCodeMsg', error.response?.data?.message || '이메일 인증 중 오류가 발생했습니다.', 'error');
         }
     };
 
     const processWithdrawalAction = async () => {
         if (withdrawForm.confirmUserId !== userInfo.userId) {
-            showAlert('오류', '아이디가 일치하지 않습니다.');
+            setMessage('withdrawConfirmUserIdMsg', '아이디가 일치하지 않습니다.', 'error');
             return;
         }
         try {
@@ -364,6 +400,7 @@ export const useProfile = () => {
         verifyState,
         isProfileModified,
         modal,
+        messages,
         setModal,
         openModal,
         selectCharacter,

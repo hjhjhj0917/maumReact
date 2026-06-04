@@ -7,7 +7,6 @@ const fillBar = keyframes`
 export const GraphContainer = styled.div`
     width: 100%;
     background: #ffffff;
-    border: 1px solid #ededeb;
     border-radius: 8px;
     padding: 24px;
 `;

@@ -3,10 +3,11 @@ import styled from 'styled-components';
 export const SidebarWrapper = styled.aside`
     width: ${props => (props.$isOpen ? '240px' : '68px')};
     height: 100vh;
-    background-color: #f4f7f9;
+    background-color: #EEF4F8;
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
+    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
     transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 100;
 `;

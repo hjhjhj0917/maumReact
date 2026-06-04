@@ -32,13 +32,20 @@ export const FieldMessage = styled.span`
 
 export const InputWrapper = styled.div`
     display: flex;
+    align-items: center;
     gap: 10px;
+    width: 100%;
+`;
+
+export const InputInner = styled.div`
     position: relative;
+    flex: 1;
 `;
 
 export const StyledInput = styled.input`
     width: 100%;
     padding: 10px 0;
+    padding-right: ${props => (props.$hasIcon ? '30px' : '0')};
     border: none;
     border-bottom: 2px solid #eee;
     outline: none;
@@ -47,6 +54,7 @@ export const StyledInput = styled.input`
     color: #333;
     transition: border-color 0.3s;
     background-color: transparent;
+    box-sizing: border-box;
 
     &:focus {
         border-bottom-color: #FFD166;
@@ -79,6 +87,6 @@ export const ToggleIcon = styled.i`
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    right: 15px;
+    right: 5px;
     cursor: pointer;
 `;
