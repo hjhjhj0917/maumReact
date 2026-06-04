@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { useDiaryDetail } from '../../hooks/diary/useDiaryDetail';
 import CustomModal from '../../components/CustomModal';
-import * as S from '../../style/pages/diary/DiaryDetail.styles';
+import * as S from '../../style/pages/Diary/DiaryDetail.styles';
 
 const DiaryDetail = () => {
     const {

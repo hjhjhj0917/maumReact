@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDiaryList, EMOTION_GROUPS } from '../../hooks/diary/useDiaryList';
-import * as S from '../../style/pages/diary/DiaryList.styles';
+import * as S from '../../style/pages/Diary/DiaryList.styles';
 
 const getEmotionName = (color) => {
     const entry = Object.entries(EMOTION_GROUPS).find((item) => item[1] === color);
