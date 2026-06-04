@@ -17,17 +17,29 @@ export const ChatContainer = styled.div`
     display: flex;
     flex-direction: column;
     height: 100vh;
-    max-width: 800px;
+    width: 100%; /* max-width 800px를 해제하여 좌우 빈 공간에서도 스크롤 이벤트를 잡습니다. */
     margin: 0 auto;
     background-color: transparent;
     position: relative;
 
+    /* 최상단 부모 요소에 스크롤 부여 */
+    overflow-y: auto;
+
+    /* 스크롤바 완전 숨김 처리 */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
     &::before {
         content: '';
-        position: absolute;
+        position: fixed;
         top: 0;
-        left: 0;
-        right: 0;
+        left: 50%; /* fixed 요소이므로 화면 중앙에 고정되도록 추가 */
+        transform: translateX(-50%);
+        width: 100%;
+        max-width: 800px;
         height: 120px;
         background: linear-gradient(to bottom,
         rgba(255, 255, 255, 1) 0%,
@@ -37,10 +49,6 @@ export const ChatContainer = styled.div`
         );
         pointer-events: none;
         z-index: 10;
-    }
-
-    ::-webkit-scrollbar {
-        display: none;
     }
 `;
 
@@ -109,23 +117,31 @@ export const SuggestionButton = styled.button`
 export const BottomInputArea = styled.div`
     width: 100%;
     padding: 20px;
-    background-color: transparent;
     max-width: 800px;
-    margin: 0 auto 60px;
+    margin: 0 auto;
+    position: sticky;
+    bottom: 0;
+    padding-bottom: 60px;
+    background: linear-gradient(to top, rgba(255,255,255,1) 80%, rgba(255,255,255,0) 100%);
+    z-index: 20;
 
     @media (max-width: 768px) {
-        margin-bottom: calc(95px + env(safe-area-inset-bottom, 0px));
+        padding-bottom: calc(95px + env(safe-area-inset-bottom, 0px));
         padding: 10px 15px;
     }
 `;
 
 export const MessageList = styled.div`
     flex-grow: 1;
-    overflow-y: auto;
+    width: 100%;
+    max-width: 800px; /* 해제했던 800px 너비 제한을 내용물 영역인 여기서 잡아줍니다. */
+    margin: 0 auto;   /* 메시지 리스트를 화면 정중앙에 배치 */
     padding: 120px 20px 40px;
     display: flex;
     flex-direction: column;
     gap: 40px;
+
+    /* 하위 컴포넌트의 독자적인 스크롤 기능을 모두 제거했습니다. */
 
     @media (max-width: 768px) {
         padding: 100px 15px 20px;
@@ -150,7 +166,7 @@ export const Bubble = styled.div`
     word-break: break-word;
     background-color: ${({ $isUser }) => ($isUser ? '#ffffff' : 'transparent')};
     color: #0d0d0d;
-    box-shadow: ${({ $isUser }) => ($isUser ? '0 2px 8px rgba(0, 0, 0, 0.04)' : 'none')};
+    box-shadow: ${({ $isUser }) => ($isUser ? '0 2px 8px rgba(0, 0, 0, 0.15)' : 'none')};
 
     p { margin: 0 0 12px 0; }
     p:last-child { margin: 0; }

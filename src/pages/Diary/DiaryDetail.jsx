@@ -130,8 +130,8 @@ const DiaryDetail = () => {
                                 </S.CalloutRow>
                                 {diary.depLvl != null && (
                                     <S.CalloutRow>
-                                        <S.CalloutLabel>상태 지수</S.CalloutLabel>
-                                        <S.CalloutText>Level {diary.depLvl}</S.CalloutText>
+                                        <S.CalloutLabel>우울증상</S.CalloutLabel>
+                                        <S.CalloutText>{diary.depLvl === 1 ? "Y" : "N"}</S.CalloutText>
                                     </S.CalloutRow>
                                 )}
                             </S.CalloutContent>
