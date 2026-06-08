@@ -17,17 +17,14 @@ export const ChatContainer = styled.div`
     display: flex;
     flex-direction: column;
     height: 100vh;
-    width: 100%; /* max-width 800px를 해제하여 좌우 빈 공간에서도 스크롤 이벤트를 잡습니다. */
+    width: 100%;
     margin: 0 auto;
     background-color: transparent;
     position: relative;
-
-    /* 최상단 부모 요소에 스크롤 부여 */
     overflow-y: auto;
-
-    /* 스크롤바 완전 숨김 처리 */
     -ms-overflow-style: none;
     scrollbar-width: none;
+
     &::-webkit-scrollbar {
         display: none;
     }
@@ -36,15 +33,14 @@ export const ChatContainer = styled.div`
         content: '';
         position: fixed;
         top: 0;
-        left: 50%; /* fixed 요소이므로 화면 중앙에 고정되도록 추가 */
+        left: 50%;
         transform: translateX(-50%);
         width: 100%;
         max-width: 800px;
-        height: 120px;
+        height: 160px;
         background: linear-gradient(to bottom,
         rgba(255, 255, 255, 1) 0%,
-        rgba(255, 255, 255, 1) 60px,
-        rgba(255, 255, 255, 0.8) 90px,
+        rgba(255, 255, 255, 1) 90px,
         rgba(255, 255, 255, 0) 100%
         );
         pointer-events: none;
@@ -126,25 +122,23 @@ export const BottomInputArea = styled.div`
     z-index: 20;
 
     @media (max-width: 768px) {
-        padding-bottom: calc(95px + env(safe-area-inset-bottom, 0px));
         padding: 10px 15px;
+        padding-bottom: calc(95px + env(safe-area-inset-bottom, 0px));
     }
 `;
 
 export const MessageList = styled.div`
     flex-grow: 1;
     width: 100%;
-    max-width: 800px; /* 해제했던 800px 너비 제한을 내용물 영역인 여기서 잡아줍니다. */
-    margin: 0 auto;   /* 메시지 리스트를 화면 정중앙에 배치 */
-    padding: 120px 20px 40px;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 140px 20px 40px;
     display: flex;
     flex-direction: column;
     gap: 40px;
 
-    /* 하위 컴포넌트의 독자적인 스크롤 기능을 모두 제거했습니다. */
-
     @media (max-width: 768px) {
-        padding: 100px 15px 20px;
+        padding: 120px 15px 20px;
         gap: 24px;
     }
 `;
@@ -259,8 +253,8 @@ export const StyledTextarea = styled.textarea`
     border: none;
     background: transparent;
     resize: none;
-    max-height: 200px;
-    min-height: 28px;
+    max-height: 84px;
+    min-height: 24px;
     padding: 6px 12px 6px 0;
     margin-bottom: 2px;
     font-size: 16px;
@@ -268,9 +262,19 @@ export const StyledTextarea = styled.textarea`
     outline: none;
     color: #0d0d0d;
     width: 100%;
+    overflow-y: auto;
 
     &::placeholder {
         color: #8e8e8e;
+    }
+
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #cccccc;
+        border-radius: 10px;
     }
 `;
 

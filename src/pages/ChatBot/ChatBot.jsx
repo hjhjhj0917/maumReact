@@ -4,7 +4,10 @@ import { useChatBot } from '../../hooks/chatbot/useChatBot';
 import * as S from '../../style/pages/ChatBot/ChatBot.styles';
 
 const ChatBot = () => {
-    const { messages, input, setInput, isStreaming, isWaiting, messagesEndRef, sendMessage, handleKeyDown } = useChatBot();
+    const {
+        messages, input, setInput, isStreaming, isWaiting,
+        messagesEndRef, textareaRef, sendMessage, handleKeyDown, handleInputResize
+    } = useChatBot();
     const [toastState, setToastState] = useState({ show: false, message: '' });
 
     const suggestions = [
@@ -25,17 +28,19 @@ const ChatBot = () => {
                 setToastState({ show: false, message: '' });
             }, 2500);
         } catch (err) {
-            console.error("복사 실패:", err);
+            console.error(err);
         }
     };
 
     const renderInputArea = () => (
         <S.InputWrapper>
             <S.StyledTextarea
+                ref={textareaRef}
                 rows={1}
                 placeholder="대화 내용을 입력해주세요."
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
+                onInput={handleInputResize}
                 onKeyDown={handleKeyDown}
                 disabled={isStreaming}
             />

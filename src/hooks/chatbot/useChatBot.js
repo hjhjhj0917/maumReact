@@ -8,10 +8,23 @@ export const useChatBot = () => {
     const [isWaiting, setIsWaiting] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const messagesEndRef = useRef(null);
+    const textareaRef = useRef(null);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
+
+    const handleInputResize = () => {
+        const textarea = textareaRef.current;
+        if (textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = `${Math.min(textarea.scrollHeight, 84)}px`;
+        }
+    };
+
+    useEffect(() => {
+        handleInputResize();
+    }, [input]);
 
     useEffect(() => {
         const fetchHistory = async () => {
@@ -20,14 +33,14 @@ export const useChatBot = () => {
                 if (history && history.length > 0) {
                     const formattedHistory = history.map(msg => ({
                         ...msg,
-                        content: msg.role === 'bot' 
+                        content: msg.role === 'bot'
                             ? msg.content.split('<br>').join('  \n').split('<sp>').join(' ')
                             : msg.content
                     }));
                     setMessages(formattedHistory);
                 }
             } catch (error) {
-                console.error("채팅 내역 불러오기 실패:", error);
+                console.error(error);
             } finally {
                 setIsLoading(false);
             }
@@ -86,5 +99,8 @@ export const useChatBot = () => {
         }
     };
 
-    return { messages, input, setInput, isStreaming, isWaiting, isLoading, messagesEndRef, sendMessage, handleKeyDown };
+    return {
+        messages, input, setInput, isStreaming, isWaiting, isLoading,
+        messagesEndRef, textareaRef, sendMessage, handleKeyDown, handleInputResize
+    };
 };
