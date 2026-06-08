@@ -11,6 +11,11 @@ export const RegisterWrapper = styled.div`
     flex-direction: column;
     min-height: 100vh;
     background-color: #ffffff;
+    justify-content: center;
+
+    @media (max-width: 768px) {
+        justify-content: flex-start;
+    }
 
     .input-group {
         margin-bottom: 30px;
@@ -231,19 +236,23 @@ export const RegisterWrapper = styled.div`
 `;
 
 export const Container = styled.div`
-    flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    padding: 40px 20px;
+    padding: 20px 20px;
     box-sizing: border-box;
+
+    @media (max-width: 768px) {
+        margin-top: 65px;
+        padding: 40px 40px;
+        align-items: flex-start;
+    }
 `;
 
 export const RegisterCard = styled.div`
     width: 100%;
     max-width: 475px;
-    padding-top: 40px;
 
     @media (max-width: 560px) {
         max-width: 100%;

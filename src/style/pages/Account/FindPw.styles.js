@@ -1,20 +1,31 @@
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 export const FindPwWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    min-height: calc(100vh - 60px);
     background-color: #ffffff;
+    justify-content: center;
+
+    @media (max-width: 768px) {
+        justify-content: flex-start;
+    }
 `;
 
 export const Container = styled.div`
-    flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    padding: 40px 20px;
+    padding: 20px 20px;
+    box-sizing: border-box;
+
+    @media (max-width: 768px) {
+        margin-top: 50px;
+        padding: 40px 40px;
+        align-items: flex-start;
+    }
 `;
 
 export const FindPwCard = styled.div`
@@ -54,7 +65,9 @@ export const StepperItem = styled.div`
         font-size: 14px;
         transition: all 0.3s ease;
 
-        i { color: ${props => (props.$active || props.$completed ? '#333' : '#ddd')}; }
+        i {
+            color: ${props => (props.$active || props.$completed ? '#333' : '#ddd')};
+        }
     }
 
     .step-label {
@@ -92,7 +105,11 @@ export const StepSubTitle = styled.p`
     margin-bottom: 10px;
     text-align: left;
     min-height: 48px;
-    span { color: #333; font-weight: 600; }
+
+    span {
+        color: #333;
+        font-weight: 600;
+    }
 `;
 
 export const SlideViewport = styled.div`
@@ -120,10 +137,11 @@ export const FormStep = styled.div`
 `;
 
 export const FormStepFieldWrapper = styled.div`
-    .input-group { margin-bottom: 10px; }
+    .input-group {
+        margin-bottom: 10px;
+    }
 `;
 
-// 추가된 패스워드 래퍼
 export const PasswordWrapper = styled.div`
     position: relative;
     width: 100%;
@@ -134,7 +152,6 @@ export const PasswordWrapper = styled.div`
     }
 `;
 
-// 추가된 토글 아이콘 설정
 export const ToggleIcon = styled.i`
     position: absolute;
     right: 10px;
@@ -189,23 +206,58 @@ export const FieldMessage = styled.span`
 `;
 
 export const ResendText = styled.div`
-    text-align: left; font-size: 14px; color: #888; margin-bottom: 20px;
+    text-align: left;
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 20px;
+
     button {
-        background: none; border: none; color: #FFD166; text-decoration: underline;
-        cursor: pointer; font-weight: 500; margin-left: 6px; padding: 0;
+        background: none;
+        border: none;
+        color: #FFD166;
+        text-decoration: underline;
+        cursor: pointer;
+        font-weight: 500;
+        margin-left: 6px;
+        padding: 0;
     }
 `;
 
 export const BtnConfirm = styled.button`
-    width: 100%; padding: 16px; background-color: #333; color: #fff;
-    border: none; border-radius: 12px; font-size: 16px; font-weight: 700;
-    cursor: pointer; margin-top: 10px; margin-bottom: 40px;
-    &:hover { background-color: #000; }
+    width: 100%;
+    padding: 16px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-bottom: 40px;
+
+    &:hover {
+        background-color: #000;
+    }
 `;
 
 export const AuthLinks = styled.div`
-    font-size: 13px; color: #888; margin-bottom: 40px; text-align: center;
-    a { color: #888; text-decoration: none; &:hover { color: #333; font-weight: 600; } }
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 40px;
+    text-align: center;
+
+    a {
+        color: #888;
+        text-decoration: none;
+
+        &:hover {
+            color: #333;
+            font-weight: 600;
+        }
+    }
 `;
 
-export const Separator = styled.span` margin: 0 10px; color: #ddd; font-size: 10px; `;
+export const Separator = styled.span` margin: 0 10px;
+    color: #ddd;
+    font-size: 10px; `;

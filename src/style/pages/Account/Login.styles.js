@@ -15,21 +15,23 @@ export const ModalOverlay = styled.div`
 `;
 
 export const ModalContainer = styled.div`
-        position: relative;
-        width: 1000px;
-        max-width: 90vw;
-        height: 600px;
-        max-height: 90vh;
-        background-color: #ffffff;
-        border-radius: 20px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-        overflow: hidden;
-        display: flex;
+    position: relative;
+    width: 1000px;
+    max-width: 90vw;
+    height: 600px;
+    max-height: 90vh;
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    display: flex;
 
-        @media (max-width: 768px) {
-                height: 80vh;
-                flex-direction: column;
-        }
+    @media (max-width: 768px) {
+        height: auto;       
+        min-height: 85vh; 
+        max-height: 95vh;     
+        flex-direction: column;
+    }
 `;
 
 export const CloseButton = styled.button`
