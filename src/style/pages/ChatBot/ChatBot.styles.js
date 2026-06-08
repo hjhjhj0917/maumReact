@@ -21,26 +21,28 @@ export const ChatContainer = styled.div`
     margin: 0 auto;
     background-color: transparent;
     position: relative;
+
     overflow-y: auto;
     -ms-overflow-style: none;
     scrollbar-width: none;
-
     &::-webkit-scrollbar {
         display: none;
     }
 
     &::before {
         content: '';
-        position: fixed;
+        position: sticky;
         top: 0;
-        left: 50%;
-        transform: translateX(-50%);
+        display: block;
         width: 100%;
-        max-width: 800px;
         height: 160px;
+
+        margin-bottom: -160px;
+        flex-shrink: 0;
+
         background: linear-gradient(to bottom,
         rgba(255, 255, 255, 1) 0%,
-        rgba(255, 255, 255, 1) 90px,
+        rgba(255, 255, 255, 1) 80px,
         rgba(255, 255, 255, 0) 100%
         );
         pointer-events: none;
