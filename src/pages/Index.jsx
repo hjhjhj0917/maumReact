@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useIndex, useDraggable } from '../hooks/useIndex.js';
 import * as S from '../style/pages/Index.styles';
-import logoImg from '../assets/images/includes/logo.png';
+import logoImg from '../assets/images/includes/logo.webp';
 import Login from './Account/Login';
 
 const DraggableEmotion = ({ data, index }) => {

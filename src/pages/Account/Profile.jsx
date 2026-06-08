@@ -1,7 +1,7 @@
 import React from 'react';
 import * as S from '../../style/pages/Account/Profile.styles';
 import { useProfile } from '../../hooks/account/useProfileForm';
-import logo from '../../assets/images/includes/logo.png';
+import logo from '../../assets/images/includes/logo.webp';
 import CustomModal from '../../components/CustomModal';
 import EmotionGraph from '../../components/EmotionGraph';
 import InputField from '../../components/InputField';

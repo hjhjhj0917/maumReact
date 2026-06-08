@@ -13,18 +13,18 @@ import {
 } from '../../api/authApi';
 
 const characterData = [
-    { url: '/images/account/profile1.png' },
-    { url: '/images/account/profile2.png' },
-    { url: '/images/account/profile3.png' },
-    { url: '/images/account/profile4.png' },
-    { url: '/images/account/profile5.png' },
-    { url: '/images/account/profile6.png' },
-    { url: '/images/account/profile7.png' },
-    { url: '/images/account/profile8.png' },
-    { url: '/images/account/profile9.png' },
-    { url: '/images/account/profile10.png' },
-    { url: '/images/account/profile11.png' },
-    { url: '/images/account/profile12.png' }
+    { url: '/images/account/profile1.webp' },
+    { url: '/images/account/profile2.webp' },
+    { url: '/images/account/profile3.webp' },
+    { url: '/images/account/profile4.webp' },
+    { url: '/images/account/profile5.webp' },
+    { url: '/images/account/profile6.webp' },
+    { url: '/images/account/profile7.webp' },
+    { url: '/images/account/profile8.webp' },
+    { url: '/images/account/profile9.webp' },
+    { url: '/images/account/profile10.webp' },
+    { url: '/images/account/profile11.webp' },
+    { url: '/images/account/profile12.webp' }
 ];
 
 const characters = characterData.map(c => c.url);

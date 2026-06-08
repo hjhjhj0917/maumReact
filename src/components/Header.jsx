@@ -1,6 +1,6 @@
 import React from 'react';
 import { useHeader } from '../hooks/useHeader';
-import logoImg from '../assets/images/includes/logo.png';
+import logoImg from '../assets/images/includes/logo.webp';
 import CustomModal from './CustomModal';
 import * as S from '../style/components/Header.styles';
 

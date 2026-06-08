@@ -12,7 +12,7 @@ export const registerUser = (formData) => {
     delete userData.code;
     delete userData.passwordConfirm;
 
-    userData.profileImgUrl = "/images/account/profile1.png";
+    userData.profileImgUrl = "/images/account/profile1.webp";
 
     if (userData.birthDate) {
         userData.birthDate = userData.birthDate
