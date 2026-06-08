@@ -112,18 +112,17 @@ export const SuggestionButton = styled.button`
 
 export const BottomInputArea = styled.div`
     width: 100%;
-    padding: 20px;
     max-width: 800px;
     margin: 0 auto;
     position: sticky;
     bottom: 0;
-    padding-bottom: 60px;
-    background: linear-gradient(to top, rgba(255,255,255,1) 80%, rgba(255,255,255,0) 100%);
+
+    padding: 20px 20px 40px 20px;
+    background: linear-gradient(to top, rgba(255,255,255,1) 70%, rgba(255,255,255,0) 100%);
     z-index: 20;
 
     @media (max-width: 768px) {
-        padding: 10px 15px;
-        padding-bottom: calc(95px + env(safe-area-inset-bottom, 0px));
+        padding: 10px 15px 90px 15px;
     }
 `;
 
@@ -132,17 +131,17 @@ export const MessageList = styled.div`
     width: 100%;
     max-width: 800px;
     margin: 0 auto;
-    padding: 140px 20px 40px;
+
+    padding: 140px 20px 160px 20px;
     display: flex;
     flex-direction: column;
     gap: 40px;
 
     @media (max-width: 768px) {
-        padding: 120px 15px 20px;
+        padding: 120px 15px 220px 15px;
         gap: 24px;
     }
 `;
-
 export const MessageWrapper = styled.div`
     display: flex;
     flex-direction: column;
