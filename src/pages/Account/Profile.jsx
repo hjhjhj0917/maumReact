@@ -111,7 +111,7 @@ const ProfilePage = () => {
             </S.ProfileContainer>
 
             {isModalOpen && (
-                <S.ModalOverlay onClick={cancelModal}>
+                <S.ModalOverlay>
                     <S.ModalContent onClick={e => e.stopPropagation()}>
                         <S.ModalHeader>
                             <h2>
@@ -142,7 +142,7 @@ const ProfilePage = () => {
             )}
 
             {activeModalType === 'edit' && (
-                <S.ModalOverlay onClick={closeActionModal}>
+                <S.ModalOverlay>
                     <S.ModalContent onClick={e => e.stopPropagation()}>
                         <S.CloseIcon
                             style={{ position: 'absolute', top: '24px', right: '24px', zIndex: 10 }}
@@ -250,7 +250,7 @@ const ProfilePage = () => {
             )}
 
             {activeModalType === 'withdraw' && (
-                <S.ModalOverlay onClick={closeActionModal}>
+                <S.ModalOverlay>
                     <S.ModalContent onClick={e => e.stopPropagation()}>
                         <S.CloseIcon
                             style={{ position: 'absolute', top: '24px', right: '24px', zIndex: 10 }}
