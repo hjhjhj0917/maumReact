@@ -26,7 +26,7 @@ export const registerUser = (formData) => {
             let zodiacNum = ((birthYear - 4) % 12) + 1;
             if (zodiacNum < 1) zodiacNum += 12;
 
-            userData.profileImgUrl = `/images/account/profile${zodiacNum}.png`;
+            userData.profileImgUrl = `/images/account/profile${zodiacNum}.webp`;
         }
     }
 
