@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
+    useEffect(() => { /* 로그인 상태를 전역으로 관리하기 위함 */
         const initAuth = async () => {
             const loginFlag = document.cookie.includes('isLoggedIn=true');
 
