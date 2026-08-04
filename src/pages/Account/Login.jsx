@@ -1,10 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import LoginSlider from '../../components/LoginSlider';
-import { useLoginForm } from '../../hooks/account/useLoginForm';
+import {useLoginForm} from '../../hooks/account/useLoginForm';
 import * as S from '../../style/pages/Account/Login.styles';
 
-const Login = ({ onClose }) => {
+const Login = ({onClose}) => {
     const {
         userId, setUserId,
         password, setPassword,
@@ -15,7 +15,8 @@ const Login = ({ onClose }) => {
 
     const handleOverlayClick = (e) => {
         if (e.target === e.currentTarget) {
-            onClose();        }
+            onClose();
+        }
     };
 
     return (
@@ -25,7 +26,7 @@ const Login = ({ onClose }) => {
                     <i className="fa-solid fa-xmark"></i>
                 </S.CloseButton>
                 <S.Container>
-                    <LoginSlider />
+                    <LoginSlider/>
                     <S.LoginSection>
                         <S.LoginCard>
                             <form id="loginForm" onSubmit={handleLogin} noValidate>
