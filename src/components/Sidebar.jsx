@@ -33,6 +33,11 @@ const Sidebar = ({
                         <span>마이페이지</span>
                     </S.MobileOnlyItem>
 
+                    <S.NavItem $isOpen={isOpen} $active={isActive('/diary/list')}
+                               onClick={() => navigate('/diary/list')}>
+                        <i className="fa-solid fa-bars-staggered"></i>
+                        <span>일기 목록</span>
+                    </S.NavItem>
                     <S.NavItem $isOpen={isOpen} $active={isActive('/chatbot')}
                                onClick={() => navigate('/chatbot')}>
                         <i className="fa-solid fa-robot"></i>
@@ -42,11 +47,6 @@ const Sidebar = ({
                                onClick={() => navigate('/map')}>
                         <i className="fa-solid fa-map-location-dot"></i>
                         <span>주변 상담소</span>
-                    </S.NavItem>
-                    <S.NavItem $isOpen={isOpen} $active={isActive('/diary/list')}
-                               onClick={() => navigate('/diary/list')}>
-                        <i className="fa-solid fa-bars-staggered"></i>
-                        <span>일기 목록</span>
                     </S.NavItem>
 
                     <S.RecentDiarySection $show={isOpen && recentDiaries.length > 0}>
