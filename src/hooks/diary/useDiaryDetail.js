@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getDiaryDetail, updateDiary, deleteDiary } from '../../api/diaryApi.js';
+import { getDiaryDetail, updateDiary, deleteDiary, updateFavorite } from '../../api/diaryApi.js';
 
 export const useDiaryDetail = () => {
     const { diaryNo } = useParams();
@@ -82,13 +82,11 @@ export const useDiaryDetail = () => {
             const res = await updateDiary(diaryNo, editTitle, editContent);
 
             if (res) {
-                // 💡 로딩 상태를 즉시 해제하여 모달이 정상적으로 클릭/표시되도록 수정
                 setLoading(false);
                 showAlert('알림', "일기가 수정 및 재분석 되었습니다.", async () => {
                     setIsEditing(false);
                     window.dispatchEvent(new CustomEvent('diary-updated'));
 
-                    // 재조회 시 로딩 화면 띄우기
                     setLoading(true);
                     await fetchDiaryDetail();
                 });
@@ -125,6 +123,25 @@ export const useDiaryDetail = () => {
         });
     };
 
+    const handleToggleFavorite = async () => {
+        if (!diary) return;
+
+        const newStatus = diary.isFavorite === 1 ? 0 : 1;
+
+        try {
+            await updateFavorite(diaryNo, newStatus);
+
+            setDiary(prev => ({
+                ...prev,
+                isFavorite: newStatus
+            }));
+
+            window.dispatchEvent(new CustomEvent('diary-updated'));
+        } catch (error) {
+            showAlert("오류", "즐겨찾기 상태 변경에 실패했습니다.");
+        }
+    };
+
     return {
         diary,
         loading,
@@ -136,6 +153,7 @@ export const useDiaryDetail = () => {
         handleCancelEdit,
         handleSaveClick,
         handleDeleteClick,
+        handleToggleFavorite,
         modal, setModal
     };
 };

@@ -7,7 +7,7 @@ const DiaryDetail = () => {
     const {
         diary, loading, handleGoBack,
         isEditing, editTitle, setEditTitle, editContent, setEditContent,
-        handleEditClick, handleCancelEdit, handleSaveClick, handleDeleteClick,
+        handleEditClick, handleCancelEdit, handleSaveClick, handleDeleteClick, handleToggleFavorite,
         modal, setModal
     } = useDiaryDetail();
 
@@ -100,16 +100,28 @@ const DiaryDetail = () => {
                 </S.TopBar>
 
                 <S.ContentWrapper>
-                    {isEditing ? (
-                        <S.TitleInput
-                            value={editTitle}
-                            onChange={(e) => setEditTitle(e.target.value)}
-                            placeholder="제목을 입력하세요"
-                            disabled={loading}
-                        />
-                    ) : (
-                        <S.PageTitle>{diary.title}</S.PageTitle>
-                    )}
+                    <S.TitleContainer>
+                        {isEditing ? (
+                            <S.TitleInput
+                                value={editTitle}
+                                onChange={(e) => setEditTitle(e.target.value)}
+                                placeholder="제목을 입력하세요"
+                                disabled={loading}
+                            />
+                        ) : (
+                            <S.PageTitle>{diary.title}</S.PageTitle>
+                        )}
+
+                        {!isEditing && (
+                            <S.FavoriteButton
+                                $isFavorite={diary.isFavorite === 1}
+                                onClick={handleToggleFavorite}
+                                disabled={loading}
+                            >
+                                <i className={diary.isFavorite === 1 ? "fa-solid fa-star" : "fa-regular fa-star"}></i>
+                            </S.FavoriteButton>
+                        )}
+                    </S.TitleContainer>
 
                     {!isEditing && diary.summary && (
                         <S.AICallout>

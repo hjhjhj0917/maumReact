@@ -115,20 +115,29 @@ export const ContentWrapper = styled.div`
     box-sizing: border-box;
 `;
 
+export const TitleContainer = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 0 30px 0;
+    gap: 16px;
+`;
+
 export const PageTitle = styled.h1`
     font-size: 40px;
     font-weight: 700;
     color: #37352f;
-    margin: 0 0 30px 0;
+    margin: 0;
     letter-spacing: -0.02em;
     word-break: keep-all;
+    flex: 1;
 `;
 
 export const TitleInput = styled.input`
     font-size: 40px;
     font-weight: 700;
     color: #37352f;
-    margin: 0 0 30px 0;
+    margin: 0;
     letter-spacing: -0.02em;
     width: 100%;
     border: none;
@@ -136,9 +145,33 @@ export const TitleInput = styled.input`
     background: transparent;
     font-family: inherit;
     padding: 0;
+    flex: 1;
 
     &::placeholder {
         color: #e2e2e0;
+    }
+`;
+
+export const FavoriteButton = styled.button`
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: ${props => props.$isFavorite ? '#fadb14' : '#d3d3d1'};
+    font-size: 28px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, color 0.2s ease;
+    flex-shrink: 0;
+
+    &:hover:not(:disabled) {
+        transform: scale(1.15);
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
     }
 `;
 
