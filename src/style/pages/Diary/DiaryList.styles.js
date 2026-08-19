@@ -242,10 +242,16 @@ export const DayCard = styled.div`
 export const CardHeader = styled.div`
     display: flex;
     align-items: center;
-    gap: 6px;
+    justify-content: space-between;
     color: #787774;
     font-size: 12px;
     margin-bottom: 8px;
+`;
+
+export const DateWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 6px;
 
     i {
         font-size: 11px;
@@ -404,4 +410,21 @@ export const EmptyState = styled.div`
     text-align: center;
     color: #9a9a97;
     font-size: 15px;
+`;
+
+export const FavoriteButton = styled.button`
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: ${props => props.$isFavorite ? '#fadb14' : '#d3d3d1'}; 
+    font-size: 16px;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, color 0.2s ease;
+
+    &:hover {
+        transform: scale(1.15);
+    }
 `;

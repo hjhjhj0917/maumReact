@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getMonthlyDiaries, searchDiaries, filterDiariesByColors } from '../../api/diaryApi.js';
+import { getMonthlyDiaries, searchDiaries, filterDiariesByColors, updateFavorite } from '../../api/diaryApi.js';
 
 export const EMOTION_GROUPS = {
     "기쁨": "#FFD700",
@@ -57,20 +57,18 @@ export const useDiaryList = () => {
             }));
     };
 
-    // 1. Keyword 상태 변경과 동시에 검색 결과 초기화 처리
     const handleSetKeyword = (value) => {
         setKeyword(value);
         if (!value.trim()) {
-            setSearchResults([]); // useEffect가 아닌 핸들러에서 동기화
+            setSearchResults([]);
         }
     };
 
-    // 2. Color 필터 상태 변경과 동시에 필터 결과 초기화 처리
     const toggleColorFilter = (color) => {
         setSelectedColors(prev => {
             const newColors = prev.includes(color) ? prev.filter(c => c !== color) : [...prev, color];
             if (newColors.length === 0) {
-                setFilterResults([]); // useEffect가 아닌 핸들러에서 동기화
+                setFilterResults([]);
             }
             return newColors;
         });
@@ -104,7 +102,6 @@ export const useDiaryList = () => {
             }, 300);
             return () => clearTimeout(delayDebounceFn);
         }
-        // 에러를 유발하던 else 구문 제거
     }, [keyword]);
 
     useEffect(() => {
@@ -120,7 +117,6 @@ export const useDiaryList = () => {
             };
             fetchFilterResults();
         }
-        // 에러를 유발하던 else 구문 제거
     }, [selectedColors]);
 
     const daysInMonth = new Date(year, month, 0).getDate();
@@ -158,10 +154,36 @@ export const useDiaryList = () => {
         navigate(`/diary/${diaryNo}`);
     };
 
+    const handleToggleFavorite = async (e, diaryNo, currentStatus) => {
+        e.stopPropagation();
+
+        const newStatus = currentStatus === 1 ? 0 : 1;
+
+        try {
+            await updateFavorite(diaryNo, newStatus);
+
+            const updateList = (list) =>
+                list.map(diary =>
+                    diary.diaryNo === diaryNo
+                        ? { ...diary, isFavorite: newStatus }
+                        : diary
+                );
+
+            setDiaries(prev => updateList(prev));
+            setSearchResults(prev => updateList(prev));
+            setFilterResults(prev => updateList(prev));
+
+        } catch (error) {
+            console.error("즐겨찾기 상태 변경 실패:", error);
+            alert("즐겨찾기 상태 변경에 실패했습니다.");
+        }
+    };
+
     return {
         year, month, daysList,
         handlePrevMonth, handleNextMonth, handleDayClick,
-        keyword, setKeyword: handleSetKeyword, searchResults, handleResultClick, // setKeyword를 래핑한 함수로 교체
-        selectedColors, toggleColorFilter, filterResults
+        keyword, setKeyword: handleSetKeyword, searchResults, handleResultClick,
+        selectedColors, toggleColorFilter, filterResults,
+        handleToggleFavorite
     };
 };

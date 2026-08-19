@@ -10,6 +10,9 @@ export const updateDiary = (diaryNo, title, content) =>
 export const deleteDiary = (diaryNo) =>
     apiClient.post('/diary/diaryDelete', { diaryNo });
 
+export const updateFavorite = (diaryNo, isFavorite) =>
+    apiClient.post('/diary/favorite', { diaryNo, isFavorite });
+
 
 /* [Diary Retrieval] */
 export const getMonthlyDiaries = (createdAt) =>

@@ -12,7 +12,8 @@ const DiaryList = () => {
         year, month, daysList,
         handlePrevMonth, handleNextMonth, handleDayClick,
         keyword, setKeyword, searchResults, handleResultClick,
-        selectedColors, toggleColorFilter, filterResults
+        selectedColors, toggleColorFilter, filterResults,
+        handleToggleFavorite
     } = useDiaryList();
 
     const isSearchingOrFiltering = keyword.trim() || selectedColors.length > 0;
@@ -82,8 +83,21 @@ const DiaryList = () => {
                             {daysList.map((item) => (
                                 <S.DayCard key={item.day} onClick={() => handleDayClick(item)}>
                                     <S.CardHeader>
-                                        <i className="fa-regular fa-calendar"></i>
-                                        <span>@{year}년 {month}월 {item.day}일</span>
+                                        {/* 수정된 부분 시작: DateWrapper로 날짜 묶기 및 즐겨찾기 버튼 조건부 렌더링 */}
+                                        <S.DateWrapper>
+                                            <i className="fa-regular fa-calendar"></i>
+                                            <span>@{year}년 {month}월 {item.day}일</span>
+                                        </S.DateWrapper>
+
+                                        {item.diary && (
+                                            <S.FavoriteButton
+                                                $isFavorite={item.diary.isFavorite === 1}
+                                                onClick={(e) => handleToggleFavorite(e, item.diary.diaryNo, item.diary.isFavorite)}
+                                            >
+                                                <i className={item.diary.isFavorite === 1 ? "fa-solid fa-star" : "fa-regular fa-star"}></i>
+                                            </S.FavoriteButton>
+                                        )}
+                                        {/* 수정된 부분 끝 */}
                                     </S.CardHeader>
                                     <S.CardBody $isEmpty={!item.diary}>
                                         {item.diary ? (
@@ -121,6 +135,12 @@ const DiaryList = () => {
                                                     <S.ColorDot $color={result.emotionColor || '#e0e0e0'} />
                                                     {getEmotionName(result.emotionColor)}
                                                 </S.EmotionTag>
+                                                <S.FavoriteButton
+                                                    $isFavorite={result.isFavorite === 1}
+                                                    onClick={(e) => handleToggleFavorite(e, result.diaryNo, result.isFavorite)}
+                                                >
+                                                    <i className={result.isFavorite === 1 ? "fa-solid fa-star" : "fa-regular fa-star"}></i>
+                                                </S.FavoriteButton>
                                             </S.ItemRight>
                                         </S.ListItem>
                                     ))
@@ -140,6 +160,12 @@ const DiaryList = () => {
                                                 <S.ColorDot $color={result.emotionColor || '#e0e0e0'} />
                                                 {getEmotionName(result.emotionColor)}
                                             </S.EmotionTag>
+                                            <S.FavoriteButton
+                                                $isFavorite={result.isFavorite === 1}
+                                                onClick={(e) => handleToggleFavorite(e, result.diaryNo, result.isFavorite)}
+                                            >
+                                                <i className={result.isFavorite === 1 ? "fa-solid fa-star" : "fa-regular fa-star"}></i>
+                                            </S.FavoriteButton>
                                         </S.ItemRight>
                                     </S.ListItem>
                                 ))
