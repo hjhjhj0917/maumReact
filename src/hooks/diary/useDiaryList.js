@@ -28,6 +28,11 @@ export const useDiaryList = () => {
         return savedColors ? JSON.parse(savedColors) : [];
     });
 
+    const [showFavorites, setShowFavorites] = useState(() => {
+        const savedFavorites = sessionStorage.getItem('diary-favorites');
+        return savedFavorites ? JSON.parse(savedFavorites) : false;
+    });
+
     const [diaries, setDiaries] = useState([]);
     const [searchResults, setSearchResults] = useState([]);
     const [filterResults, setFilterResults] = useState([]);
@@ -39,6 +44,10 @@ export const useDiaryList = () => {
     useEffect(() => {
         sessionStorage.setItem('diary-colors', JSON.stringify(selectedColors));
     }, [selectedColors]);
+
+    useEffect(() => {
+        sessionStorage.setItem('diary-favorites', JSON.stringify(showFavorites));
+    }, [showFavorites]);
 
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth() + 1;
@@ -74,6 +83,12 @@ export const useDiaryList = () => {
         });
     };
 
+    const clearFilters = () => {
+        setSelectedColors([]);
+        setFilterResults([]);
+        setShowFavorites(false);
+    };
+
     useEffect(() => {
         if (!keyword.trim() && selectedColors.length === 0) {
             const fetchDiaries = async () => {
@@ -81,7 +96,6 @@ export const useDiaryList = () => {
                     const data = await getMonthlyDiaries(dateQuery);
                     setDiaries(data || []);
                 } catch (error) {
-                    console.error("오류 : ", error)
                     setDiaries([]);
                 }
             };
@@ -96,7 +110,6 @@ export const useDiaryList = () => {
                     const data = await searchDiaries(keyword);
                     setSearchResults(processDiaryData(data));
                 } catch (error) {
-                    console.error("오류 : ", error)
                     setSearchResults([]);
                 }
             }, 300);
@@ -111,7 +124,6 @@ export const useDiaryList = () => {
                     const data = await filterDiariesByColors(selectedColors);
                     setFilterResults(processDiaryData(data));
                 } catch (error) {
-                    console.error("오류 : ", error)
                     setFilterResults([]);
                 }
             };
@@ -138,6 +150,30 @@ export const useDiaryList = () => {
             };
         });
     }, [diaries, daysInMonth, dateQuery]);
+
+    const finalList = useMemo(() => {
+        let list = [];
+        if (keyword.trim()) {
+            list = searchResults;
+        } else if (selectedColors.length > 0) {
+            list = filterResults;
+        } else {
+            list = processDiaryData(diaries);
+        }
+
+        if (showFavorites) {
+            list = list.filter(diary => diary.isFavorite === 1);
+        }
+        return list;
+    }, [keyword, searchResults, selectedColors, filterResults, diaries, showFavorites]);
+
+    const emptyMessage = useMemo(() => {
+        if (keyword.trim()) return "검색 결과가 없습니다.";
+        if (selectedColors.length > 0 && showFavorites) return "해당 감정이면서 즐겨찾기한 일기가 없습니다.";
+        if (selectedColors.length > 0) return "해당 감정의 일기가 없습니다.";
+        if (showFavorites) return "즐겨찾기한 일기가 없습니다.";
+        return "일기가 없습니다.";
+    }, [keyword, selectedColors, showFavorites]);
 
     const handlePrevMonth = () => setCurrentDate(new Date(year, month - 2, 1));
     const handleNextMonth = () => setCurrentDate(new Date(year, month, 1));
@@ -174,7 +210,6 @@ export const useDiaryList = () => {
             setFilterResults(prev => updateList(prev));
 
         } catch (error) {
-            console.error("즐겨찾기 상태 변경 실패:", error);
             alert("즐겨찾기 상태 변경에 실패했습니다.");
         }
     };
@@ -182,8 +217,9 @@ export const useDiaryList = () => {
     return {
         year, month, daysList,
         handlePrevMonth, handleNextMonth, handleDayClick,
-        keyword, setKeyword: handleSetKeyword, searchResults, handleResultClick,
-        selectedColors, toggleColorFilter, filterResults,
-        handleToggleFavorite
+        keyword, setKeyword: handleSetKeyword, handleResultClick,
+        selectedColors, toggleColorFilter, clearFilters,
+        showFavorites, setShowFavorites,
+        handleToggleFavorite, finalList, emptyMessage
     };
 };

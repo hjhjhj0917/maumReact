@@ -11,12 +11,13 @@ const DiaryList = () => {
     const {
         year, month, daysList,
         handlePrevMonth, handleNextMonth, handleDayClick,
-        keyword, setKeyword, searchResults, handleResultClick,
-        selectedColors, toggleColorFilter, filterResults,
-        handleToggleFavorite
+        keyword, setKeyword, handleResultClick,
+        selectedColors, toggleColorFilter, clearFilters,
+        showFavorites, setShowFavorites,
+        handleToggleFavorite, finalList, emptyMessage
     } = useDiaryList();
 
-    const isSearchingOrFiltering = keyword.trim() || selectedColors.length > 0;
+    const isSearchingOrFiltering = keyword.trim() || selectedColors.length > 0 || showFavorites;
 
     return (
         <S.PageContainer>
@@ -58,8 +59,8 @@ const DiaryList = () => {
                         {!keyword && (
                             <S.Tabs>
                                 <S.Tab
-                                    $active={selectedColors.length === 0}
-                                    onClick={() => selectedColors.forEach(c => toggleColorFilter(c))}
+                                    $active={selectedColors.length === 0 && !showFavorites}
+                                    onClick={clearFilters}
                                 >
                                     <i className="fa-regular fa-calendar-check"></i> All
                                 </S.Tab>
@@ -72,6 +73,12 @@ const DiaryList = () => {
                                         <S.ColorDot $color={color} /> {name}
                                     </S.Tab>
                                 ))}
+                                <S.Tab
+                                    $active={showFavorites}
+                                    onClick={() => setShowFavorites(prev => !prev)}
+                                >
+                                    <i className="fa-solid fa-star" style={{ color: showFavorites ? '#fadb14' : 'inherit' }}></i> 즐겨찾기
+                                </S.Tab>
                             </S.Tabs>
                         )}
                     </S.FilterContainer>
@@ -83,7 +90,6 @@ const DiaryList = () => {
                             {daysList.map((item) => (
                                 <S.DayCard key={item.day} onClick={() => handleDayClick(item)}>
                                     <S.CardHeader>
-                                        {/* 수정된 부분 시작: DateWrapper로 날짜 묶기 및 즐겨찾기 버튼 조건부 렌더링 */}
                                         <S.DateWrapper>
                                             <i className="fa-regular fa-calendar"></i>
                                             <span>@{year}년 {month}월 {item.day}일</span>
@@ -97,7 +103,6 @@ const DiaryList = () => {
                                                 <i className={item.diary.isFavorite === 1 ? "fa-solid fa-star" : "fa-regular fa-star"}></i>
                                             </S.FavoriteButton>
                                         )}
-                                        {/* 수정된 부분 끝 */}
                                     </S.CardHeader>
                                     <S.CardBody $isEmpty={!item.diary}>
                                         {item.diary ? (
@@ -121,34 +126,8 @@ const DiaryList = () => {
                         </S.GridContainer>
                     ) : (
                         <S.ListContainer>
-                            {keyword.trim() ? (
-                                searchResults.length > 0 ? (
-                                    searchResults.map((result) => (
-                                        <S.ListItem key={result.diaryNo} onClick={() => handleResultClick(result.diaryNo)}>
-                                            <S.ItemLeft>
-                                                <i className="fa-regular fa-clock"></i>
-                                                <S.ItemTitle>{result.title}</S.ItemTitle>
-                                            </S.ItemLeft>
-                                            <S.ItemRight>
-                                                <S.ItemDate>@{result.displayDate}</S.ItemDate>
-                                                <S.EmotionTag>
-                                                    <S.ColorDot $color={result.emotionColor || '#e0e0e0'} />
-                                                    {getEmotionName(result.emotionColor)}
-                                                </S.EmotionTag>
-                                                <S.FavoriteButton
-                                                    $isFavorite={result.isFavorite === 1}
-                                                    onClick={(e) => handleToggleFavorite(e, result.diaryNo, result.isFavorite)}
-                                                >
-                                                    <i className={result.isFavorite === 1 ? "fa-solid fa-star" : "fa-regular fa-star"}></i>
-                                                </S.FavoriteButton>
-                                            </S.ItemRight>
-                                        </S.ListItem>
-                                    ))
-                                ) : (
-                                    <S.EmptyState>검색 결과가 없습니다.</S.EmptyState>
-                                )
-                            ) : filterResults.length > 0 ? (
-                                filterResults.map((result) => (
+                            {finalList.length > 0 ? (
+                                finalList.map((result) => (
                                     <S.ListItem key={result.diaryNo} onClick={() => handleResultClick(result.diaryNo)}>
                                         <S.ItemLeft>
                                             <i className="fa-regular fa-clock"></i>
@@ -170,7 +149,7 @@ const DiaryList = () => {
                                     </S.ListItem>
                                 ))
                             ) : (
-                                <S.EmptyState>해당 감정의 일기가 없습니다.</S.EmptyState>
+                                <S.EmptyState>{emptyMessage}</S.EmptyState>
                             )}
                         </S.ListContainer>
                     )}
