@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getMonthlyDiaries, searchDiaries, filterDiariesByColors, updateFavorite } from '../../api/diaryApi.js';
+import { getMonthlyDiaries, searchDiaries, filterDiariesByColors, updateFavorite, getFavoriteDiaries } from '../../api/diaryApi.js';
 
 export const EMOTION_GROUPS = {
     "기쁨": "#FFD700",
@@ -36,6 +36,7 @@ export const useDiaryList = () => {
     const [diaries, setDiaries] = useState([]);
     const [searchResults, setSearchResults] = useState([]);
     const [filterResults, setFilterResults] = useState([]);
+    const [favoriteResults, setFavoriteResults] = useState([]);
 
     useEffect(() => {
         sessionStorage.setItem('diary-keyword', keyword);
@@ -134,6 +135,22 @@ export const useDiaryList = () => {
         }
     }, [selectedColors]);
 
+    // 키워드/색상 필터 없이 "즐겨찾기만" 켜진 경우, 월과 무관하게 전체 즐겨찾기 목록을 서버에서 가져온다.
+    useEffect(() => {
+        if (showFavorites && !keyword.trim() && selectedColors.length === 0) {
+            const fetchFavoriteDiaries = async () => {
+                try {
+                    const data = await getFavoriteDiaries();
+                    setFavoriteResults(processDiaryData(data));
+                } catch (error) {
+                    console.error(error)
+                    setFavoriteResults([]);
+                }
+            };
+            fetchFavoriteDiaries();
+        }
+    }, [showFavorites, keyword, selectedColors]);
+
     const daysInMonth = new Date(year, month, 0).getDate();
 
     const daysList = useMemo(() => {
@@ -158,17 +175,23 @@ export const useDiaryList = () => {
         let list = [];
         if (keyword.trim()) {
             list = searchResults;
+            if (showFavorites) {
+                list = list.filter(diary => diary.isFavorite === 1);
+            }
         } else if (selectedColors.length > 0) {
             list = filterResults;
+            if (showFavorites) {
+                list = list.filter(diary => diary.isFavorite === 1);
+            }
+        } else if (showFavorites) {
+            // 즐겨찾기만 켜진 경우: 현재 달(diaries)이 아니라 서버에서 받아온 전체 즐겨찾기 목록을 사용
+            list = favoriteResults;
         } else {
             list = processDiaryData(diaries);
         }
 
-        if (showFavorites) {
-            list = list.filter(diary => diary.isFavorite === 1);
-        }
         return list;
-    }, [keyword, searchResults, selectedColors, filterResults, diaries, showFavorites, processDiaryData]);
+    }, [keyword, searchResults, selectedColors, filterResults, diaries, showFavorites, favoriteResults, processDiaryData]);
 
     const emptyMessage = useMemo(() => {
         if (keyword.trim()) return "검색 결과가 없습니다.";
@@ -211,6 +234,12 @@ export const useDiaryList = () => {
             setDiaries(prev => updateList(prev));
             setSearchResults(prev => updateList(prev));
             setFilterResults(prev => updateList(prev));
+            // 즐겨찾기 해제 시 즐겨찾기 전용 목록에서는 아예 제거, 추가 시에는 상태만 갱신
+            setFavoriteResults(prev =>
+                newStatus === 0
+                    ? prev.filter(diary => diary.diaryNo !== diaryNo)
+                    : updateList(prev)
+            );
 
         } catch (error) {
             console.error(error)
