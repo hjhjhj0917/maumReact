@@ -96,6 +96,7 @@ export const useDiaryList = () => {
                     const data = await getMonthlyDiaries(dateQuery);
                     setDiaries(data || []);
                 } catch (error) {
+                    console.error(error)
                     setDiaries([]);
                 }
             };
@@ -110,6 +111,7 @@ export const useDiaryList = () => {
                     const data = await searchDiaries(keyword);
                     setSearchResults(processDiaryData(data));
                 } catch (error) {
+                    console.error(error)
                     setSearchResults([]);
                 }
             }, 300);
@@ -124,6 +126,7 @@ export const useDiaryList = () => {
                     const data = await filterDiariesByColors(selectedColors);
                     setFilterResults(processDiaryData(data));
                 } catch (error) {
+                    console.error(error)
                     setFilterResults([]);
                 }
             };
@@ -165,7 +168,7 @@ export const useDiaryList = () => {
             list = list.filter(diary => diary.isFavorite === 1);
         }
         return list;
-    }, [keyword, searchResults, selectedColors, filterResults, diaries, showFavorites]);
+    }, [keyword, searchResults, selectedColors, filterResults, diaries, showFavorites, processDiaryData]);
 
     const emptyMessage = useMemo(() => {
         if (keyword.trim()) return "검색 결과가 없습니다.";
@@ -210,6 +213,7 @@ export const useDiaryList = () => {
             setFilterResults(prev => updateList(prev));
 
         } catch (error) {
+            console.error(error)
             alert("즐겨찾기 상태 변경에 실패했습니다.");
         }
     };
