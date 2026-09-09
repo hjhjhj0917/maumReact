@@ -10,6 +10,10 @@ export const useChatBot = () => {
     const messagesEndRef = useRef(null);
     const textareaRef = useRef(null);
 
+    // TTS 오디오를 문장 순서대로 재생하기 위한 큐
+    const audioQueueRef = useRef([]);
+    const isPlayingAudioRef = useRef(false);
+
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
@@ -52,6 +56,35 @@ export const useChatBot = () => {
         scrollToBottom();
     }, [messages]);
 
+    // 큐에 쌓인 오디오를 순서대로 하나씩 재생함
+    const playNextAudio = () => {
+        if (audioQueueRef.current.length === 0) {
+            isPlayingAudioRef.current = false;
+            return;
+        }
+
+        isPlayingAudioRef.current = true;
+        const audio = audioQueueRef.current.shift();
+
+        audio.onended = playNextAudio;
+        audio.onerror = playNextAudio; // 재생 실패해도 다음 문장은 이어서 재생
+
+        audio.play().catch(error => {
+            console.error("오디오 재생 에러:", error);
+            playNextAudio();
+        });
+    };
+
+    // base64로 받은 문장 단위 오디오를 큐에 넣고, 재생 중이 아니면 바로 재생 시작
+    const handleAudioChunk = (base64Audio) => {
+        const audio = new Audio(`data:audio/mp3;base64,${base64Audio}`);
+        audioQueueRef.current.push(audio);
+
+        if (!isPlayingAudioRef.current) {
+            playNextAudio();
+        }
+    };
+
     const sendMessage = async () => {
         if (!input.trim() || isStreaming) return;
 
@@ -80,6 +113,7 @@ export const useChatBot = () => {
                     }
                 });
             },
+            handleAudioChunk,
             (error) => {
                 console.error(error);
                 setIsStreaming(false);

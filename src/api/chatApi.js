@@ -10,7 +10,37 @@ export const getChatHistoryApi = async () => {
     }
 };
 
-export const streamChatApi = async (message, onChunk, onError, onComplete) => {
+// TTS 오디오 라인인지 확인하고, 맞다면 base64 오디오 데이터만 추출함
+const AUDIO_PREFIX = '[[AUDIO]]';
+const AUDIO_SUFFIX = '[[/AUDIO]]';
+
+const extractAudioBase64 = (text) => {
+    if (text.startsWith(AUDIO_PREFIX) && text.endsWith(AUDIO_SUFFIX)) {
+        return text.slice(AUDIO_PREFIX.length, -AUDIO_SUFFIX.length);
+    }
+    return null;
+};
+
+// 한 줄(data: 이후 내용)을 텍스트/오디오로 구분해서 각각의 콜백으로 전달
+const dispatchLine = (rawText, onChunk, onAudio) => {
+    let text = rawText;
+    if (text.startsWith(' ')) {
+        text = text.substring(1);
+    }
+
+    if (!text || text === '[DONE]') return;
+
+    const audioBase64 = extractAudioBase64(text);
+    if (audioBase64) {
+        onAudio(audioBase64);
+        return;
+    }
+
+    text = text.split('<br>').join('  \n').split('<sp>').join(' ');
+    onChunk(text);
+};
+
+export const streamChatApi = async (message, onChunk, onAudio, onError, onComplete) => {
     try {
         const response = await fetch('/api/v1/chat/stream', {
             method: 'POST',
@@ -41,29 +71,13 @@ export const streamChatApi = async (message, onChunk, onError, onComplete) => {
 
             for (let line of lines) {
                 if (line.startsWith('data:')) {
-                    let text = line.substring(5);
-
-                    if (text.startsWith(' ')) {
-                        text = text.substring(1);
-                    }
-
-                    if (text === '[DONE]') break;
-
-                    if (text) {
-                        text = text.split('<br>').join('  \n').split('<sp>').join(' ');
-                        onChunk(text);
-                    }
+                    dispatchLine(line.substring(5), onChunk, onAudio);
                 }
             }
         }
 
         if (buffer.startsWith('data:')) {
-            let text = buffer.substring(5);
-            if (text.startsWith(' ')) text = text.substring(1);
-            if (text && text !== '[DONE]') {
-                text = text.split('<br>').join('  \n').split('<sp>').join(' ');
-                onChunk(text);
-            }
+            dispatchLine(buffer.substring(5), onChunk, onAudio);
         }
 
         onComplete();
