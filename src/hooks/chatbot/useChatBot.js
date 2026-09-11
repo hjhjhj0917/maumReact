@@ -85,6 +85,21 @@ export const useChatBot = () => {
         }
     };
 
+    // 정책/기관 카드 데이터를 답변 텍스트와 별개로 마지막 봇 메시지에 붙임
+    const handleCardsChunk = (cards) => {
+        setMessages(prev => {
+            const lastMessage = prev[prev.length - 1];
+            if (lastMessage && lastMessage.role === 'bot') {
+                const newMessages = [...prev];
+                const lastIndex = newMessages.length - 1;
+                newMessages[lastIndex] = { ...newMessages[lastIndex], cards };
+                return newMessages;
+            } else {
+                return [...prev, { role: 'bot', content: '', cards }];
+            }
+        });
+    };
+
     const sendMessage = async () => {
         if (!input.trim() || isStreaming) return;
 
@@ -114,6 +129,7 @@ export const useChatBot = () => {
                 });
             },
             handleAudioChunk,
+            handleCardsChunk,
             (error) => {
                 console.error(error);
                 setIsStreaming(false);

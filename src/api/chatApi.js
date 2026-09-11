@@ -21,8 +21,24 @@ const extractAudioBase64 = (text) => {
     return null;
 };
 
-// 한 줄(data: 이후 내용)을 텍스트/오디오로 구분해서 각각의 콜백으로 전달
-const dispatchLine = (rawText, onChunk, onAudio) => {
+// 정책/기관 카드 라인인지 확인하고, 맞다면 JSON 배열로 파싱해서 반환함
+const CARD_PREFIX = '[[CARD]]';
+const CARD_SUFFIX = '[[/CARD]]';
+
+const extractCards = (text) => {
+    if (!text.startsWith(CARD_PREFIX) || !text.endsWith(CARD_SUFFIX)) {
+        return null;
+    }
+    try {
+        return JSON.parse(text.slice(CARD_PREFIX.length, -CARD_SUFFIX.length));
+    } catch (error) {
+        console.error("카드 데이터 파싱 에러:", error);
+        return null;
+    }
+};
+
+// 한 줄(data: 이후 내용)을 텍스트/오디오/카드로 구분해서 각각의 콜백으로 전달
+const dispatchLine = (rawText, onChunk, onAudio, onCards) => {
     let text = rawText;
     if (text.startsWith(' ')) {
         text = text.substring(1);
@@ -36,11 +52,17 @@ const dispatchLine = (rawText, onChunk, onAudio) => {
         return;
     }
 
+    const cards = extractCards(text);
+    if (cards) {
+        onCards(cards);
+        return;
+    }
+
     text = text.split('<br>').join('  \n').split('<sp>').join(' ');
     onChunk(text);
 };
 
-export const streamChatApi = async (message, onChunk, onAudio, onError, onComplete) => {
+export const streamChatApi = async (message, onChunk, onAudio, onCards, onError, onComplete) => {
     try {
         const response = await fetch('/api/v1/chat/stream', {
             method: 'POST',
@@ -71,13 +93,13 @@ export const streamChatApi = async (message, onChunk, onAudio, onError, onComple
 
             for (let line of lines) {
                 if (line.startsWith('data:')) {
-                    dispatchLine(line.substring(5), onChunk, onAudio);
+                    dispatchLine(line.substring(5), onChunk, onAudio, onCards);
                 }
             }
         }
 
         if (buffer.startsWith('data:')) {
-            dispatchLine(buffer.substring(5), onChunk, onAudio);
+            dispatchLine(buffer.substring(5), onChunk, onAudio, onCards);
         }
 
         onComplete();

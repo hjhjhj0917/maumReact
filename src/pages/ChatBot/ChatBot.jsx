@@ -82,9 +82,32 @@ const ChatBot = () => {
                         }
 
                         const textToCopy = msg.role === 'user' ? msg.content : cleanContent;
+                        const isMessageStreaming = isStreaming && index === messages.length - 1;
 
                         return (
                             <S.MessageWrapper key={index} $isUser={msg.role === 'user'}>
+                                {msg.cards && msg.cards.length > 0 && (
+                                    <S.CardList>
+                                        {msg.cards.map((card, cardIdx) => (
+                                            <S.InfoCard key={cardIdx}>
+                                                <S.CardTitle>{card.name}</S.CardTitle>
+                                                {card.type === 'welfare' ? (
+                                                    <>
+                                                        {card.target && <S.CardRow><span>대상</span>{card.target}</S.CardRow>}
+                                                        {card.summary && <S.CardRow><span>내용</span>{card.summary}</S.CardRow>}
+                                                        {card.method && <S.CardRow><span>신청</span>{card.method}</S.CardRow>}
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        {card.category && <S.CardRow><span>구분</span>{card.category}</S.CardRow>}
+                                                        {card.address && <S.CardRow><span>주소</span>{card.address}</S.CardRow>}
+                                                        {card.contact && <S.CardRow><span>연락처</span>{card.contact}</S.CardRow>}
+                                                    </>
+                                                )}
+                                            </S.InfoCard>
+                                        ))}
+                                    </S.CardList>
+                                )}
                                 <S.Bubble $isUser={msg.role === 'user'}>
                                     {isThinking && (
                                         <S.ThinkingIndicator>
@@ -94,14 +117,17 @@ const ChatBot = () => {
                                     )}
                                     {msg.role === 'user' ? (
                                         msg.content
-                                    ) : (
-                                        cleanContent ? (
-                                            <ReactMarkdown>
-                                                {cleanContent + (isStreaming && index === messages.length - 1 ? ' ▌' : '')}
-                                            </ReactMarkdown>
+                                    ) : cleanContent ? (
+                                        isMessageStreaming ? (
+                                            // 스트리밍 중에는 매 글자마다 마크다운을 다시 파싱하면서
+                                            // 목록 등이 중간 상태로 깨진 채 DOM에 남는 문제가 있어서,
+                                            // 스트리밍 중엔 그냥 텍스트로만 보여주고 완료된 후에만 마크다운을 적용함
+                                            <>{cleanContent}{' ▌'}</>
                                         ) : (
-                                            !isThinking && isStreaming && index === messages.length - 1 ? ' ▌' : null
+                                            <ReactMarkdown>{cleanContent}</ReactMarkdown>
                                         )
+                                    ) : (
+                                        !isThinking && isMessageStreaming ? ' ▌' : null
                                     )}
                                 </S.Bubble>
 

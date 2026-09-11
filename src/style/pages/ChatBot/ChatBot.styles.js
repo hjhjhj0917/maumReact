@@ -163,10 +163,10 @@ export const Bubble = styled.div`
     color: #0d0d0d;
     box-shadow: ${({ $isUser }) => ($isUser ? '0 2px 8px rgba(0, 0, 0, 0.15)' : 'none')};
 
-    p { margin: 0 0 12px 0; }
+    p { margin: 0 0 6px 0; }
     p:last-child { margin: 0; }
     strong { font-weight: 600; }
-    ul, ol { margin-top: 4px; padding-left: 20px; }
+    ul, ol { margin: 4px 0; padding-left: 20px; }
     li { margin-bottom: 4px; }
 `;
 
@@ -321,6 +321,42 @@ export const ThinkingIndicator = styled.div`
         0% { opacity: 0.5; }
         50% { opacity: 1; }
         100% { opacity: 0.5; }
+    }
+`;
+
+export const CardList = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 420px;
+    margin-bottom: 12px;
+`;
+
+export const InfoCard = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px 16px;
+    border: 1px solid #e5e5e5;
+    border-radius: 16px;
+    background-color: #ffffff;
+`;
+
+export const CardTitle = styled.div`
+    font-size: 15px;
+    font-weight: 600;
+    color: #0d0d0d;
+`;
+
+export const CardRow = styled.div`
+    font-size: 13px;
+    color: #555555;
+    line-height: 1.5;
+
+    span {
+        color: #8e8e8e;
+        margin-right: 4px;
     }
 `;
 
