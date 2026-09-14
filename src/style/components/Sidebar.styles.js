@@ -207,21 +207,70 @@ export const BottomSection = styled.div`
 
 export const RecentDiarySection = styled.div`
     padding: 12px 4px;
-    margin-top: 30px;
+    margin-top: 16px;
     flex-shrink: 0;
     display: ${props => props.$show ? 'block' : 'none'};
+    max-height: 190px;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #cccccc;
+        border-radius: 4px;
+    }
 
     @media (max-width: 768px) {
         display: none !important;
     }
 `;
 
+export const RecentDiaryTitleRow = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 4px;
+    margin-bottom: 8px;
+`;
+
 export const RecentDiaryTitle = styled.div`
     font-size: 11px;
     color: #aaaaaa;
-    margin-bottom: 8px;
     padding-left: 12px;
     font-weight: 600;
+`;
+
+export const AddChatButton = styled.button`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border: none;
+    border-radius: 50%;
+    background-color: transparent;
+    color: #aaaaaa;
+    font-size: 12px;
+    cursor: pointer;
+    transition: color 0.2s, background-color 0.2s;
+
+    &:hover {
+        color: #333;
+        background-color: #e5e5e5;
+    }
+`;
+
+export const RecentDiaryItemRow = styled.div`
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    &:hover > div:last-child {
+        opacity: 1;
+        pointer-events: auto;
+    }
 `;
 
 export const RecentDiaryItem = styled.div`
@@ -229,15 +278,68 @@ export const RecentDiaryItem = styled.div`
     padding: 10px 12px;
     margin: 2px 0;
     font-size: 13.5px;
-    color: #333;
+    color: ${props => props.$active ? '#FFC700' : '#333'};
+    font-weight: ${props => props.$active ? '600' : '400'};
     border-radius: 24px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     transition: color 0.2s;
-    flex-shrink: 0;
+    flex: 1;
+    min-width: 0;
 
     &:hover {
         color: #FFC700;
     }
+`;
+
+export const ItemActions = styled.div`
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding-left: 6px;
+    background: linear-gradient(to right, transparent, #EEF4F8 30%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s;
+`;
+
+export const ItemActionIcon = styled.button`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border: none;
+    border-radius: 50%;
+    background-color: transparent;
+    color: ${props => props.$active ? '#FFC700' : '#999999'};
+    font-size: 10px;
+    cursor: pointer;
+    transition: color 0.2s, background-color 0.2s;
+
+    &:hover {
+        color: #333;
+        background-color: #e5e5e5;
+    }
+`;
+
+export const EditForm = styled.form`
+    padding: 2px 12px;
+    margin: 2px 0;
+`;
+
+export const EditInput = styled.input`
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 13.5px;
+    border: 1px solid #FFC700;
+    border-radius: 16px;
+    outline: none;
+    box-sizing: border-box;
+    background-color: #ffffff;
 `;

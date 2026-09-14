@@ -1,11 +1,61 @@
 import apiClient from './apiClient';
 
-export const getChatHistoryApi = async () => {
+export const createChatRoomApi = async () => {
     try {
-        const response = await apiClient.get('/chat/history');
+        const response = await apiClient.post('/chat/rooms');
         return response;
     } catch (error) {
-        console.error("채팅 내역 불러오기 에러:", error);
+        console.error("채팅방 생성 에러:", error);
+        throw error;
+    }
+};
+
+export const getChatRoomsApi = async () => {
+    try {
+        const response = await apiClient.get('/chat/rooms');
+        return response;
+    } catch (error) {
+        console.error("채팅방 목록 조회 에러:", error);
+        throw error;
+    }
+};
+
+export const getRoomMessagesApi = async (chatRoomNo) => {
+    try {
+        const response = await apiClient.get(`/chat/rooms/${chatRoomNo}/messages`);
+        return response;
+    } catch (error) {
+        console.error("채팅방 내역 조회 에러:", error);
+        throw error;
+    }
+};
+
+export const renameChatRoomApi = async (chatRoomNo, roomTitle) => {
+    try {
+        const response = await apiClient.post(`/chat/rooms/${chatRoomNo}/title`, { roomTitle });
+        return response;
+    } catch (error) {
+        console.error("채팅방 이름변경 에러:", error);
+        throw error;
+    }
+};
+
+export const pinChatRoomApi = async (chatRoomNo, isPinned) => {
+    try {
+        const response = await apiClient.post(`/chat/rooms/${chatRoomNo}/pin`, { isPinned });
+        return response;
+    } catch (error) {
+        console.error("채팅방 고정 에러:", error);
+        throw error;
+    }
+};
+
+export const deleteChatRoomApi = async (chatRoomNo) => {
+    try {
+        const response = await apiClient.delete(`/chat/rooms/${chatRoomNo}`);
+        return response;
+    } catch (error) {
+        console.error("채팅방 삭제 에러:", error);
         throw error;
     }
 };
@@ -37,14 +87,22 @@ const extractCards = (text) => {
     }
 };
 
-// 한 줄(data: 이후 내용)을 텍스트/오디오/카드로 구분해서 각각의 콜백으로 전달
-const dispatchLine = (rawText, onChunk, onAudio, onCards) => {
+// 텍스트 전송이 끝났음을 알리는 마커 (오디오는 이 이후에 이어서 옴)
+const TEXT_DONE_MARKER = '[[TEXT_DONE]]';
+
+// 한 줄(data: 이후 내용)을 텍스트/오디오/카드/완료신호로 구분해서 각각의 콜백으로 전달
+const dispatchLine = (rawText, onChunk, onAudio, onCards, onTextDone) => {
     let text = rawText;
     if (text.startsWith(' ')) {
         text = text.substring(1);
     }
 
     if (!text || text === '[DONE]') return;
+
+    if (text === TEXT_DONE_MARKER) {
+        onTextDone();
+        return;
+    }
 
     const audioBase64 = extractAudioBase64(text);
     if (audioBase64) {
@@ -62,7 +120,7 @@ const dispatchLine = (rawText, onChunk, onAudio, onCards) => {
     onChunk(text);
 };
 
-export const streamChatApi = async (message, onChunk, onAudio, onCards, onError, onComplete) => {
+export const streamChatApi = async (chatRoomNo, message, onChunk, onAudio, onCards, onTextDone, onError, onComplete) => {
     try {
         const response = await fetch('/api/v1/chat/stream', {
             method: 'POST',
@@ -71,7 +129,7 @@ export const streamChatApi = async (message, onChunk, onAudio, onCards, onError,
                 'Accept': 'text/event-stream'
             },
             credentials: 'include',
-            body: JSON.stringify({ message })
+            body: JSON.stringify({ chatRoomNo, message })
         });
 
         if (!response.ok) {
@@ -93,13 +151,13 @@ export const streamChatApi = async (message, onChunk, onAudio, onCards, onError,
 
             for (let line of lines) {
                 if (line.startsWith('data:')) {
-                    dispatchLine(line.substring(5), onChunk, onAudio, onCards);
+                    dispatchLine(line.substring(5), onChunk, onAudio, onCards, onTextDone);
                 }
             }
         }
 
         if (buffer.startsWith('data:')) {
-            dispatchLine(buffer.substring(5), onChunk, onAudio, onCards);
+            dispatchLine(buffer.substring(5), onChunk, onAudio, onCards, onTextDone);
         }
 
         onComplete();

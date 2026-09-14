@@ -5,7 +5,7 @@ import * as S from '../../style/pages/ChatBot/ChatBot.styles';
 
 const ChatBot = () => {
     const {
-        messages, input, setInput, isStreaming, isWaiting,
+        messages, input, setInput, isStreaming, isWaiting, isTextDone,
         messagesEndRef, textareaRef, sendMessage, handleKeyDown, handleInputResize
     } = useChatBot();
     const [toastState, setToastState] = useState({ show: false, message: '' });
@@ -82,7 +82,10 @@ const ChatBot = () => {
                         }
 
                         const textToCopy = msg.role === 'user' ? msg.content : cleanContent;
-                        const isMessageStreaming = isStreaming && index === messages.length - 1;
+                        // 텍스트 자체는 다 왔어도(isTextDone) 오디오가 아직 이어지는 중일 수 있는데,
+                        // 그때까지 마크다운 렌더링을 미루면 굵게/목록이 늦게 적용되는 것처럼 보이므로
+                        // isTextDone이 true가 되는 순간 바로 마크다운을 적용함
+                        const isMessageStreaming = isStreaming && index === messages.length - 1 && !isTextDone;
 
                         return (
                             <S.MessageWrapper key={index} $isUser={msg.role === 'user'}>

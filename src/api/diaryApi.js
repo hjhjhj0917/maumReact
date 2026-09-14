@@ -13,6 +13,12 @@ export const deleteDiary = (diaryNo) =>
 export const updateFavorite = (diaryNo, isFavorite) =>
     apiClient.post('/diary/favorite', { diaryNo, isFavorite });
 
+export const updateDiaryTitle = (diaryNo, title) =>
+    apiClient.post('/diary/title', { diaryNo, title });
+
+export const updateDiaryPinned = (diaryNo, isPinned) =>
+    apiClient.post('/diary/pin', { diaryNo, isPinned });
+
 
 /* [Diary Retrieval] */
 export const getMonthlyDiaries = (createdAt) =>

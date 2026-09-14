@@ -15,6 +15,15 @@ const Layout = () => {
         confirmLogout,
         isActive,
         recentDiaries,
+        renameDiary,
+        togglePinDiary,
+        removeDiary,
+        chatRooms,
+        currentRoomNo,
+        createNewChat,
+        renameChat,
+        togglePinChat,
+        removeChat,
         navigate
     } = useSidebar();
 
@@ -30,6 +39,15 @@ const Layout = () => {
                 isActive={isActive}
                 navigate={navigate}
                 recentDiaries={recentDiaries}
+                renameDiary={renameDiary}
+                togglePinDiary={togglePinDiary}
+                removeDiary={removeDiary}
+                chatRooms={chatRooms}
+                currentRoomNo={currentRoomNo}
+                createNewChat={createNewChat}
+                renameChat={renameChat}
+                togglePinChat={togglePinChat}
+                removeChat={removeChat}
             />
 
             <S.MainWrapper>

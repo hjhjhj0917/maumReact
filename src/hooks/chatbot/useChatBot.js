@@ -1,11 +1,19 @@
 import { useState, useRef, useEffect } from 'react';
-import { streamChatApi, getChatHistoryApi } from '../../api/chatApi';
+import { useSearchParams } from 'react-router-dom';
+import {
+    streamChatApi, createChatRoomApi, getChatRoomsApi, getRoomMessagesApi
+} from '../../api/chatApi';
 
 export const useChatBot = () => {
+    const [searchParams, setSearchParams] = useSearchParams();
+    const roomParam = searchParams.get('room');
+
+    const [currentRoomNo, setCurrentRoomNo] = useState(roomParam ? Number(roomParam) : null);
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
     const [isStreaming, setIsStreaming] = useState(false);
     const [isWaiting, setIsWaiting] = useState(false);
+    const [isTextDone, setIsTextDone] = useState(false); // 텍스트 전송 완료 시점(오디오는 이후에도 계속 옴) — 이 시점부터 마크다운 렌더링 가능
     const [isLoading, setIsLoading] = useState(true);
     const messagesEndRef = useRef(null);
     const textareaRef = useRef(null);
@@ -30,27 +38,53 @@ export const useChatBot = () => {
         handleInputResize();
     }, [input]);
 
+    // URL에 ?room= 이 있으면 그 방을 그대로 씀. 없으면(사이드바를 거치지 않고 /chatbot으로
+    // 바로 들어온 경우) 기존 방 중 가장 최근 걸 골라 쓰고, 방이 하나도 없으면 새로 만듦
     useEffect(() => {
-        const fetchHistory = async () => {
+        if (roomParam) {
+            setCurrentRoomNo(Number(roomParam));
+            return;
+        }
+
+        const pickRoom = async () => {
             try {
-                const history = await getChatHistoryApi();
-                if (history && history.length > 0) {
-                    const formattedHistory = history.map(msg => ({
-                        ...msg,
-                        content: msg.role === 'bot'
-                            ? msg.content.split('<br>').join('  \n').split('<sp>').join(' ')
-                            : msg.content
-                    }));
-                    setMessages(formattedHistory);
+                const roomList = await getChatRoomsApi();
+                let targetRoomNo;
+                if (roomList && roomList.length > 0) {
+                    targetRoomNo = roomList[0].chatRoomNo;
+                } else {
+                    const newRoom = await createChatRoomApi();
+                    targetRoomNo = newRoom.chatRoomNo;
                 }
+                setCurrentRoomNo(targetRoomNo);
+                setSearchParams({ room: targetRoomNo });
             } catch (error) {
                 console.error(error);
+                setIsLoading(false);
+            }
+        };
+        pickRoom();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [roomParam]);
+
+    // 선택된 채팅방이 바뀌면 그 방의 대화 내역을 불러옴
+    useEffect(() => {
+        if (!currentRoomNo) return;
+
+        const fetchMessages = async () => {
+            setIsLoading(true);
+            try {
+                const history = await getRoomMessagesApi(currentRoomNo);
+                setMessages(history || []);
+            } catch (error) {
+                console.error(error);
+                setMessages([]);
             } finally {
                 setIsLoading(false);
             }
         };
-        fetchHistory();
-    }, []);
+        fetchMessages();
+    }, [currentRoomNo]);
 
     useEffect(() => {
         scrollToBottom();
@@ -101,15 +135,17 @@ export const useChatBot = () => {
     };
 
     const sendMessage = async () => {
-        if (!input.trim() || isStreaming) return;
+        if (!input.trim() || isStreaming || !currentRoomNo) return;
 
         const userMessage = input.trim();
         setInput('');
         setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
         setIsStreaming(true);
         setIsWaiting(true);
+        setIsTextDone(false);
 
         await streamChatApi(
+            currentRoomNo,
             userMessage,
             (chunk) => {
                 setIsWaiting(false);
@@ -130,6 +166,7 @@ export const useChatBot = () => {
             },
             handleAudioChunk,
             handleCardsChunk,
+            () => setIsTextDone(true),
             (error) => {
                 console.error(error);
                 setIsStreaming(false);
@@ -138,6 +175,8 @@ export const useChatBot = () => {
             () => {
                 setIsStreaming(false);
                 setIsWaiting(false);
+                // 방금 보낸 메시지로 방 제목/최근순서가 바뀌었을 수 있으니 사이드바에 알려서 갱신시킴
+                window.dispatchEvent(new Event('chat-updated'));
             }
         );
     };
@@ -150,7 +189,7 @@ export const useChatBot = () => {
     };
 
     return {
-        messages, input, setInput, isStreaming, isWaiting, isLoading,
+        messages, input, setInput, isStreaming, isWaiting, isLoading, isTextDone,
         messagesEndRef, textareaRef, sendMessage, handleKeyDown, handleInputResize
     };
 };
