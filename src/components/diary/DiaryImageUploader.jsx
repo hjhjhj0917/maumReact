@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
@@ -21,6 +21,12 @@ const Thumb = styled.div`
         height: 100%;
         object-fit: cover;
         display: block;
+        cursor: pointer;
+        transition: transform 0.15s ease;
+    }
+
+    img:hover {
+        transform: scale(1.05);
     }
 `;
 
@@ -40,6 +46,7 @@ const RemoveButton = styled.button`
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 1;
 `;
 
 const AddButton = styled.button`
@@ -67,9 +74,83 @@ const AddButton = styled.button`
     }
 `;
 
+const LightboxOverlay = styled.div`
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+`;
+
+const LightboxImage = styled.img`
+    max-width: 88vw;
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: 8px;
+    user-select: none;
+`;
+
+const LightboxCloseButton = styled.button`
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.3);
+    }
+`;
+
+const LightboxNavButton = styled.button`
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    ${({ $side }) => ($side === 'left' ? 'left: 24px;' : 'right: 24px;')}
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.3);
+    }
+`;
+
+const LightboxCounter = styled.div`
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #ffffff;
+    font-size: 13px;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 4px 12px;
+    border-radius: 12px;
+`;
+
 // 일기 이미지를 최대 maxCount장까지 첨부/삭제하는 공용 UI.
 // images: 이미 업로드되어 서버에 저장된 이미지 [{ imageNo, imageUrl }]
 // pendingFiles: 아직 서버에 올리지 않고 브라우저에만 있는 파일 [{ file, previewUrl }] (일기 작성 중 diaryNo가 없을 때 사용)
+// 썸네일을 클릭하면 화면 중앙에 크게 보여주는 라이트박스가 뜨고, 좌우 화살표로 다른 이미지로 넘어갈 수 있음
 const DiaryImageUploader = ({
     images = [],
     pendingFiles = [],
@@ -80,9 +161,45 @@ const DiaryImageUploader = ({
     onRemovePending
 }) => {
     const fileInputRef = useRef(null);
+    const [lightboxIndex, setLightboxIndex] = useState(null);
 
     const totalCount = images.length + pendingFiles.length;
     const canAddMore = totalCount < maxCount && !disabled;
+
+    // 라이트박스에서는 기존 업로드 이미지 + 아직 첨부 대기 중인 이미지를 하나의 목록으로 합쳐서 넘겨봄
+    const allSlides = [
+        ...images.map(img => ({ url: img.imageUrl })),
+        ...pendingFiles.map(item => ({ url: item.previewUrl }))
+    ];
+
+    const closeLightbox = () => setLightboxIndex(null);
+
+    const showPrev = () => {
+        setLightboxIndex(prev => (prev === null ? prev : (prev - 1 + allSlides.length) % allSlides.length));
+    };
+
+    const showNext = () => {
+        setLightboxIndex(prev => (prev === null ? prev : (prev + 1) % allSlides.length));
+    };
+
+    useEffect(() => {
+        if (lightboxIndex === null) return undefined;
+
+        const slideCount = allSlides.length;
+
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') setLightboxIndex(null);
+            if (e.key === 'ArrowLeft') {
+                setLightboxIndex(prev => (prev === null ? prev : (prev - 1 + slideCount) % slideCount));
+            }
+            if (e.key === 'ArrowRight') {
+                setLightboxIndex(prev => (prev === null ? prev : (prev + 1) % slideCount));
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [lightboxIndex, allSlides.length]);
 
     const handleFileChange = (e) => {
         const files = Array.from(e.target.files || []);
@@ -97,9 +214,9 @@ const DiaryImageUploader = ({
 
     return (
         <Wrapper>
-            {images.map((img) => (
+            {images.map((img, idx) => (
                 <Thumb key={img.imageNo}>
-                    <img src={img.imageUrl} alt="일기 첨부 이미지" />
+                    <img src={img.imageUrl} alt="일기 첨부 이미지" onClick={() => setLightboxIndex(idx)} />
                     {!disabled && (
                         <RemoveButton onClick={() => onRemoveExisting?.(img.imageNo)} title="이미지 삭제">
                             <i className="fa-solid fa-xmark"></i>
@@ -110,7 +227,11 @@ const DiaryImageUploader = ({
 
             {pendingFiles.map((item, idx) => (
                 <Thumb key={`pending-${idx}`}>
-                    <img src={item.previewUrl} alt="첨부 예정 이미지" />
+                    <img
+                        src={item.previewUrl}
+                        alt="첨부 예정 이미지"
+                        onClick={() => setLightboxIndex(images.length + idx)}
+                    />
                     {!disabled && (
                         <RemoveButton onClick={() => onRemovePending?.(idx)} title="첨부 취소">
                             <i className="fa-solid fa-xmark"></i>
@@ -134,6 +255,46 @@ const DiaryImageUploader = ({
                         onChange={handleFileChange}
                     />
                 </>
+            )}
+
+            {lightboxIndex !== null && allSlides[lightboxIndex] && (
+                <LightboxOverlay onClick={closeLightbox}>
+                    <LightboxCloseButton onClick={closeLightbox} title="닫기">
+                        <i className="fa-solid fa-xmark"></i>
+                    </LightboxCloseButton>
+
+                    {allSlides.length > 1 && (
+                        <LightboxNavButton
+                            $side="left"
+                            onClick={(e) => { e.stopPropagation(); showPrev(); }}
+                            title="이전 이미지"
+                        >
+                            <i className="fa-solid fa-chevron-left"></i>
+                        </LightboxNavButton>
+                    )}
+
+                    <LightboxImage
+                        src={allSlides[lightboxIndex].url}
+                        alt="확대된 이미지"
+                        onClick={(e) => e.stopPropagation()}
+                    />
+
+                    {allSlides.length > 1 && (
+                        <LightboxNavButton
+                            $side="right"
+                            onClick={(e) => { e.stopPropagation(); showNext(); }}
+                            title="다음 이미지"
+                        >
+                            <i className="fa-solid fa-chevron-right"></i>
+                        </LightboxNavButton>
+                    )}
+
+                    {allSlides.length > 1 && (
+                        <LightboxCounter>
+                            {lightboxIndex + 1} / {allSlides.length}
+                        </LightboxCounter>
+                    )}
+                </LightboxOverlay>
             )}
         </Wrapper>
     );
