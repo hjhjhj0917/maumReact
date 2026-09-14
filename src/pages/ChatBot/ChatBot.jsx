@@ -1,14 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useChatBot } from '../../hooks/chatbot/useChatBot';
+import { useSpeechToText } from '../../hooks/chatbot/useSpeechToText';
+import VoiceWave from '../../components/chatbot/VoiceWave';
 import * as S from '../../style/pages/ChatBot/ChatBot.styles';
 
 const ChatBot = () => {
     const {
         messages, input, setInput, isStreaming, isWaiting, isTextDone,
-        messagesEndRef, textareaRef, sendMessage, handleKeyDown, handleInputResize
+        messagesEndRef, textareaRef, sendMessage, handleKeyDown, handleInputResize,
+        stopSpeaking, playMessageAudio, speakingIndex
     } = useChatBot();
     const [toastState, setToastState] = useState({ show: false, message: '' });
+
+    // 마이크 시작 시점의 입력창 내용 — 기존에 타이핑해둔 글을 지우지 않고 음성 인식 결과를 이어붙이기 위함
+    const baseInputRef = useRef('');
+
+    const { isSupported: isSttSupported, isRecording, isTranscribing, toggleRecording, analyserRef } = useSpeechToText({
+        onStart: () => {
+            baseInputRef.current = input.trim() ? input.trim() + ' ' : '';
+            stopSpeaking(); // 바지-인: 마이크로 말하기 시작하면 챗봇이 말하던 음성을 바로 멈춤
+        },
+        onResult: (text) => {
+            setInput(prev => (baseInputRef.current || (prev.trim() ? prev.trim() + ' ' : '')) + text);
+        }
+    });
 
     const suggestions = [
         {icon: 'fa-solid fa-hashtag', text: '나 요즘 지치고 힘들다. 예전에 나는 언제 기분이 좋았었지?'},
@@ -37,14 +53,26 @@ const ChatBot = () => {
             <S.StyledTextarea
                 ref={textareaRef}
                 rows={1}
-                placeholder="대화 내용을 입력해주세요."
+                placeholder={isTranscribing ? '음성을 텍스트로 변환하고 있어요...' : '대화 내용을 입력해주세요.'}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onInput={handleInputResize}
                 onKeyDown={handleKeyDown}
                 disabled={isStreaming}
             />
+            <VoiceWave analyserRef={analyserRef} active={isRecording} />
             <S.RightActions>
+                {isSttSupported && (
+                    <S.MicButton
+                        type="button"
+                        onClick={toggleRecording}
+                        disabled={isStreaming || isTranscribing}
+                        $listening={isRecording}
+                        title={isRecording ? '녹음 중지' : '음성으로 입력'}
+                    >
+                        <i className={`fa-solid ${isTranscribing ? 'fa-spinner fa-spin' : 'fa-microphone'}`}></i>
+                    </S.MicButton>
+                )}
                 <S.SendButton onClick={sendMessage} disabled={!input.trim() || isStreaming}>
                     <i className="fa-solid fa-arrow-up"></i>
                 </S.SendButton>
@@ -136,6 +164,14 @@ const ChatBot = () => {
 
                                 {textToCopy.trim().length > 0 && (
                                     <S.MessageActions $isUser={msg.role === 'user'}>
+                                        {msg.role === 'bot' && msg.audioChunks?.length > 0 && (
+                                            <S.ActionIcon
+                                                onClick={() => playMessageAudio(index)}
+                                                title={speakingIndex === index ? '음성 중지' : '음성으로 듣기'}
+                                            >
+                                                <i className={`fa-solid ${speakingIndex === index ? 'fa-stop' : 'fa-volume-high'}`}></i>
+                                            </S.ActionIcon>
+                                        )}
                                         <S.ActionIcon onClick={() => handleCopy(textToCopy)}>
                                             <i className="fa-regular fa-copy"></i>
                                         </S.ActionIcon>

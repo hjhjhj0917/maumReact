@@ -18,9 +18,11 @@ export const useChatBot = () => {
     const messagesEndRef = useRef(null);
     const textareaRef = useRef(null);
 
-    // TTS 오디오를 문장 순서대로 재생하기 위한 큐
+    // TTS 오디오를 문장 순서대로 재생하기 위한 큐 (자동재생 대신, 사용자가 버튼을 눌렀을 때만 재생함)
     const audioQueueRef = useRef([]);
     const isPlayingAudioRef = useRef(false);
+    const currentAudioRef = useRef(null); // 지금 재생 중인 오디오 (바지-인/정지 시 즉시 멈추기 위해 따로 참조를 들고 있음)
+    const [speakingIndex, setSpeakingIndex] = useState(null); // 지금 소리로 재생 중인 메시지의 인덱스 (버튼 표시용)
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -91,32 +93,73 @@ export const useChatBot = () => {
     }, [messages]);
 
     // 큐에 쌓인 오디오를 순서대로 하나씩 재생함
-    const playNextAudio = () => {
+    const playNextAudio = (index) => {
         if (audioQueueRef.current.length === 0) {
             isPlayingAudioRef.current = false;
+            setSpeakingIndex(null);
             return;
         }
 
         isPlayingAudioRef.current = true;
         const audio = audioQueueRef.current.shift();
+        currentAudioRef.current = audio;
 
-        audio.onended = playNextAudio;
-        audio.onerror = playNextAudio; // 재생 실패해도 다음 문장은 이어서 재생
+        audio.onended = () => playNextAudio(index);
+        audio.onerror = () => playNextAudio(index); // 재생 실패해도 다음 문장은 이어서 재생
 
         audio.play().catch(error => {
             console.error("오디오 재생 에러:", error);
-            playNextAudio();
+            playNextAudio(index);
         });
     };
 
-    // base64로 받은 문장 단위 오디오를 큐에 넣고, 재생 중이 아니면 바로 재생 시작
+    // base64로 받은 문장 단위 오디오를 자동 재생하지 않고, 해당 메시지에 쌓아만 둠
+    // (사용자가 스피커 버튼을 눌렀을 때 playMessageAudio로 재생)
     const handleAudioChunk = (base64Audio) => {
-        const audio = new Audio(`data:audio/mp3;base64,${base64Audio}`);
-        audioQueueRef.current.push(audio);
+        setMessages(prev => {
+            const lastMessage = prev[prev.length - 1];
+            if (lastMessage && lastMessage.role === 'bot') {
+                const newMessages = [...prev];
+                const lastIndex = newMessages.length - 1;
+                const audioChunks = [...(newMessages[lastIndex].audioChunks || []), base64Audio];
+                newMessages[lastIndex] = { ...newMessages[lastIndex], audioChunks };
+                return newMessages;
+            } else {
+                return [...prev, { role: 'bot', content: '', audioChunks: [base64Audio] }];
+            }
+        });
+    };
 
-        if (!isPlayingAudioRef.current) {
-            playNextAudio();
+    // 챗봇 음성 재생을 즉시 중단함 (바지-인: 마이크로 말하기 시작할 때, 또는 스피커 버튼으로 정지할 때 호출)
+    const stopSpeaking = () => {
+        if (currentAudioRef.current) {
+            currentAudioRef.current.onended = null;
+            currentAudioRef.current.onerror = null;
+            currentAudioRef.current.pause();
+            currentAudioRef.current = null;
         }
+        audioQueueRef.current = [];
+        isPlayingAudioRef.current = false;
+        setSpeakingIndex(null);
+    };
+
+    // 특정 메시지(index)에 쌓인 오디오 조각들을 순서대로 재생함. 이미 재생 중이면 정지시킴(토글)
+    const playMessageAudio = (index) => {
+        if (speakingIndex === index) {
+            stopSpeaking();
+            return;
+        }
+
+        stopSpeaking();
+
+        const message = messages[index];
+        if (!message?.audioChunks?.length) return;
+
+        audioQueueRef.current = message.audioChunks.map(
+            base64Audio => new Audio(`data:audio/mp3;base64,${base64Audio}`)
+        );
+        setSpeakingIndex(index);
+        playNextAudio(index);
     };
 
     // 정책/기관 카드 데이터를 답변 텍스트와 별개로 마지막 봇 메시지에 붙임
@@ -190,6 +233,7 @@ export const useChatBot = () => {
 
     return {
         messages, input, setInput, isStreaming, isWaiting, isLoading, isTextDone,
-        messagesEndRef, textareaRef, sendMessage, handleKeyDown, handleInputResize
+        messagesEndRef, textareaRef, sendMessage, handleKeyDown, handleInputResize,
+        stopSpeaking, playMessageAudio, speakingIndex
     };
 };

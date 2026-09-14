@@ -60,6 +60,25 @@ export const deleteChatRoomApi = async (chatRoomNo) => {
     }
 };
 
+// 마이크로 녹음한 오디오(webm/opus)를 서버로 올려서 텍스트로 변환함 (GCP Speech-to-Text)
+export const sttApi = async (audioBlob) => {
+    try {
+        const formData = new FormData();
+        formData.append('audio', audioBlob, 'recording.webm');
+
+        // apiClient 인스턴스 기본 헤더(Content-Type: application/json)가 그대로 나가면
+        // 브라우저가 FormData용 multipart boundary를 못 붙여서 Spring이 멀티파트 요청으로
+        // 인식을 못 함 — 이 요청에서만 명시적으로 지워서 브라우저가 자동으로 채우게 함
+        const response = await apiClient.post('/stt', formData, {
+            headers: { 'Content-Type': undefined }
+        });
+        return response;
+    } catch (error) {
+        console.error("음성 인식 에러:", error);
+        throw error;
+    }
+};
+
 // TTS 오디오 라인인지 확인하고, 맞다면 base64 오디오 데이터만 추출함
 const AUDIO_PREFIX = '[[AUDIO]]';
 const AUDIO_SUFFIX = '[[/AUDIO]]';

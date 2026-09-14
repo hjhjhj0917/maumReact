@@ -285,6 +285,37 @@ export const RightActions = styled.div`
     gap: 8px;
 `;
 
+const micPulse = keyframes`
+    0% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.4); }
+    70% { box-shadow: 0 0 0 8px rgba(255, 59, 48, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); }
+`;
+
+export const MicButton = styled.button`
+    background-color: ${({ $listening, disabled }) => (disabled ? '#e5e5e5' : $listening ? '#FF3B30' : '#f0f0f0')};
+    color: ${({ $listening, disabled }) => (disabled ? '#a3a3a3' : $listening ? '#ffffff' : '#333333')};
+    border: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+    transition: background-color 0.2s, color 0.2s;
+    margin-bottom: 1px;
+    flex-shrink: 0;
+    animation: ${({ $listening }) => ($listening ? micPulse : 'none')} 1.5s infinite;
+
+    &:hover {
+        background-color: ${({ $listening, disabled }) => (disabled ? '#e5e5e5' : $listening ? '#E5342B' : '#e0e0e0')};
+    }
+
+    i {
+        font-size: 15px;
+    }
+`;
+
 export const SendButton = styled.button`
     background-color: ${({ disabled }) => (disabled ? '#e5e5e5' : '#000000')};
     color: ${({ disabled }) => (disabled ? '#a3a3a3' : '#ffffff')};
