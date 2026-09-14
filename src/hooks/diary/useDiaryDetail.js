@@ -1,6 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getDiaryDetail, updateDiary, deleteDiary, updateFavorite } from '../../api/diaryApi.js';
+import {
+    getDiaryDetail, updateDiary, deleteDiary, updateFavorite,
+    uploadDiaryImages, deleteDiaryImage
+} from '../../api/diaryApi.js';
+
+const MAX_DIARY_IMAGE_COUNT = 3;
 
 export const useDiaryDetail = () => {
     const { diaryNo } = useParams();
@@ -123,6 +128,32 @@ export const useDiaryDetail = () => {
         });
     };
 
+    const handleAddImages = async (files) => {
+        if (!diary) return;
+
+        try {
+            const uploaded = await uploadDiaryImages(diaryNo, files);
+            setDiary(prev => ({
+                ...prev,
+                images: [...(prev.images || []), ...uploaded]
+            }));
+        } catch (error) {
+            showAlert("오류", error.response?.data?.message || "이미지 업로드에 실패했습니다.");
+        }
+    };
+
+    const handleRemoveImage = async (imageNo) => {
+        try {
+            await deleteDiaryImage(imageNo);
+            setDiary(prev => ({
+                ...prev,
+                images: (prev.images || []).filter(img => img.imageNo !== imageNo)
+            }));
+        } catch (error) {
+            showAlert("오류", error.response?.data?.message || "이미지 삭제에 실패했습니다.");
+        }
+    };
+
     const handleToggleFavorite = async () => {
         if (!diary) return;
 
@@ -155,6 +186,9 @@ export const useDiaryDetail = () => {
         handleSaveClick,
         handleDeleteClick,
         handleToggleFavorite,
+        handleAddImages,
+        handleRemoveImage,
+        maxImageCount: MAX_DIARY_IMAGE_COUNT,
         modal, setModal
     };
 };

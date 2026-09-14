@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { useDiaryDetail } from '../../hooks/diary/useDiaryDetail';
 import CustomModal from '../../components/CustomModal';
+import DiaryImageUploader from '../../components/diary/DiaryImageUploader';
 import * as S from '../../style/pages/Diary/DiaryDetail.styles';
 
 const DiaryDetail = () => {
@@ -8,6 +9,7 @@ const DiaryDetail = () => {
         diary, loading, handleGoBack,
         isEditing, editTitle, setEditTitle, editContent, setEditContent,
         handleEditClick, handleCancelEdit, handleSaveClick, handleDeleteClick, handleToggleFavorite,
+        handleAddImages, handleRemoveImage, maxImageCount,
         modal, setModal
     } = useDiaryDetail();
 
@@ -170,6 +172,16 @@ const DiaryDetail = () => {
                             />
                         ) : (
                             <S.EntryContent>{diary.content}</S.EntryContent>
+                        )}
+
+                        {(isEditing || (diary.images && diary.images.length > 0)) && (
+                            <DiaryImageUploader
+                                images={diary.images || []}
+                                maxCount={maxImageCount}
+                                disabled={!isEditing || loading}
+                                onSelectFiles={handleAddImages}
+                                onRemoveExisting={handleRemoveImage}
+                            />
                         )}
                     </S.EntrySection>
                 </S.ContentWrapper>

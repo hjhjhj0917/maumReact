@@ -19,6 +19,21 @@ export const updateDiaryTitle = (diaryNo, title) =>
 export const updateDiaryPinned = (diaryNo, isPinned) =>
     apiClient.post('/diary/pin', { diaryNo, isPinned });
 
+// 일기 이미지 업로드 (GCS, 최대 3장) - apiClient 기본 Content-Type(application/json)을 지워서
+// 브라우저가 FormData용 multipart boundary를 자동으로 채우게 함 (STT 업로드와 동일한 패턴)
+export const uploadDiaryImages = (diaryNo, files) => {
+    const formData = new FormData();
+    formData.append('diaryNo', diaryNo);
+    files.forEach(file => formData.append('images', file));
+
+    return apiClient.post('/diary/images/upload', formData, {
+        headers: { 'Content-Type': undefined }
+    });
+};
+
+export const deleteDiaryImage = (imageNo) =>
+    apiClient.post('/diary/images/delete', { imageNo });
+
 
 /* [Diary Retrieval] */
 export const getMonthlyDiaries = (createdAt) =>

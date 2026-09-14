@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDiaryWriteForm } from '../../hooks/diary/useDiaryWriteForm';
 import CustomModal from '../../components/CustomModal';
+import DiaryImageUploader from '../../components/diary/DiaryImageUploader';
 import * as S from '../../style/pages/Diary/DiaryWrite.styles';
 
 const DiaryWrite = () => {
@@ -12,7 +13,8 @@ const DiaryWrite = () => {
         formattedDate,
         handleSubmit,
         isLoading,
-        modal, setModal
+        modal, setModal,
+        pendingImages, handleAddImages, handleRemovePendingImage, maxImageCount
     } = useDiaryWriteForm();
 
     const textareaRef = useRef(null);
@@ -91,6 +93,14 @@ const DiaryWrite = () => {
                             onChange={(e) => setContent(e.target.value)}
                             disabled={isLoading}
                             rows={1}
+                        />
+
+                        <DiaryImageUploader
+                            pendingFiles={pendingImages}
+                            maxCount={maxImageCount}
+                            disabled={isLoading}
+                            onSelectFiles={handleAddImages}
+                            onRemovePending={handleRemovePendingImage}
                         />
                     </S.EntrySection>
                 </S.ContentWrapper>
