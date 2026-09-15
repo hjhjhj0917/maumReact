@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { useDiaryDetail } from '../../hooks/diary/useDiaryDetail';
 import CustomModal from '../../components/CustomModal';
 import DiaryImageUploader from '../../components/diary/DiaryImageUploader';
+import DiaryMusicList from '../../components/diary/DiaryMusicList';
 import * as S from '../../style/pages/Diary/DiaryDetail.styles';
 
 const DiaryDetail = () => {
@@ -183,6 +184,8 @@ const DiaryDetail = () => {
                                 onRemoveExisting={handleRemoveImage}
                             />
                         )}
+
+                        {!isEditing && <DiaryMusicList musics={diary.musics} />}
                     </S.EntrySection>
                 </S.ContentWrapper>
             </S.PageContainer>
