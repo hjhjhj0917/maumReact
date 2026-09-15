@@ -13,6 +13,7 @@ const DiaryWrite = () => {
         formattedDate,
         handleSubmit,
         isLoading,
+        handleDraftSave, isDraftSaving,
         modal, setModal,
         pendingImages, handleAddImages, handleRemovePendingImage, maxImageCount
     } = useDiaryWriteForm();
@@ -62,6 +63,9 @@ const DiaryWrite = () => {
                     </S.ActionButton>
 
                     <S.ButtonGroup>
+                        <S.ActionButton onClick={handleDraftSave} disabled={isLoading || isDraftSaving}>
+                            {isDraftSaving ? '저장 중...' : '임시저장'}
+                        </S.ActionButton>
                         <S.SaveButton onClick={handleSubmit} disabled={isLoading}>
                             {isLoading ? '분석 중...' : '작성 완료'}
                         </S.SaveButton>

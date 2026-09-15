@@ -136,6 +136,7 @@ export const DeleteButton = styled(ActionButton)`
 `;
 
 export const ContentWrapper = styled.div`
+    width: 100%;
     flex: 1;
     min-width: 0;
     max-width: 900px;

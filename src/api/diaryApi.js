@@ -4,6 +4,11 @@ import apiClient from './apiClient';
 export const insertDiary = (title, content, createdAt) =>
     apiClient.post('/diary/diaryInsert', { title, content, createdAt });
 
+// 일기 임시저장 (AI 분석 없이 제목/내용만 저장) - diaryNo가 없으면 새로 생성하고,
+// 있으면 그 자리에 덮어씀. 작성 중 주기적으로 자동 호출됨
+export const draftSaveDiary = (diaryNo, title, content, createdAt) =>
+    apiClient.post('/diary/draftSave', { diaryNo, title, content, createdAt });
+
 export const updateDiary = (diaryNo, title, content) =>
     apiClient.post('/diary/diaryUpdate', { diaryNo, title, content });
 

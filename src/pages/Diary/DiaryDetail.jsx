@@ -53,6 +53,95 @@ const DiaryDetail = () => {
 
     if (!diary) return null;
 
+    const hasMusic = !isEditing && diary.musics && diary.musics.length > 0;
+
+    const content = (
+        <S.ContentWrapper>
+            <S.TitleContainer>
+                {isEditing ? (
+                    <S.TitleInput
+                        value={editTitle}
+                        onChange={(e) => setEditTitle(e.target.value)}
+                        placeholder="제목을 입력하세요"
+                        disabled={loading}
+                    />
+                ) : (
+                    <S.PageTitle>{diary.title}</S.PageTitle>
+                )}
+
+                {!isEditing && (
+                    <S.FavoriteButton
+                        $isFavorite={diary.isFavorite === 1}
+                        onClick={handleToggleFavorite}
+                        disabled={loading}
+                    >
+                        <i className={diary.isFavorite === 1 ? "fa-solid fa-star" : "fa-regular fa-star"}></i>
+                    </S.FavoriteButton>
+                )}
+            </S.TitleContainer>
+
+            {!isEditing && diary.summary && (
+                <S.AICallout>
+                    <S.CalloutHeader>
+                        AI 감정 분석
+                    </S.CalloutHeader>
+                    <S.CalloutContent>
+                        <S.CalloutRow>
+                            <S.CalloutLabel>감정</S.CalloutLabel>
+                            <S.EmotionTag>
+                                <S.ColorDot $color={diary.emotionColor || '#e0e0e0'} />
+                                {diary.mainEmotion}
+                            </S.EmotionTag>
+                        </S.CalloutRow>
+                        <S.CalloutRow>
+                            <S.CalloutLabel>요약</S.CalloutLabel>
+                            <S.CalloutText>"{diary.summary}"</S.CalloutText>
+                        </S.CalloutRow>
+                        {diary.depLvl != null && (
+                            <S.CalloutRow>
+                                <S.CalloutLabel>우울증상</S.CalloutLabel>
+                                <S.CalloutText>{diary.depLvl === 1 ? "Y" : "N"}</S.CalloutText>
+                            </S.CalloutRow>
+                        )}
+                    </S.CalloutContent>
+                </S.AICallout>
+            )}
+
+            <S.EntrySection>
+                <S.EntryHeader>
+                    <S.EntryDate>
+                        @{diary?.createdAt?.substring(0, 4)}년
+                        &nbsp;{diary?.createdAt?.substring(5, 7)}월
+                        &nbsp;{diary?.createdAt?.substring(8, 10)}일
+                    </S.EntryDate>
+                </S.EntryHeader>
+
+                {isEditing ? (
+                    <S.ContentTextarea
+                        ref={textareaRef}
+                        value={editContent}
+                        onChange={(e) => setEditContent(e.target.value)}
+                        placeholder="일기 내용을 입력하세요..."
+                        disabled={loading}
+                        rows={1}
+                    />
+                ) : (
+                    <S.EntryContent>{diary.content}</S.EntryContent>
+                )}
+
+                {(isEditing || (diary.images && diary.images.length > 0)) && (
+                    <DiaryImageUploader
+                        images={diary.images || []}
+                        maxCount={maxImageCount}
+                        disabled={!isEditing || loading}
+                        onSelectFiles={handleAddImages}
+                        onRemoveExisting={handleRemoveImage}
+                    />
+                )}
+            </S.EntrySection>
+        </S.ContentWrapper>
+    );
+
     return (
         <>
             <CustomModal
@@ -102,98 +191,16 @@ const DiaryDetail = () => {
                     </S.ButtonGroup>
                 </S.TopBar>
 
-                <S.DetailLayout>
-                <S.ContentWrapper>
-                    <S.TitleContainer>
-                        {isEditing ? (
-                            <S.TitleInput
-                                value={editTitle}
-                                onChange={(e) => setEditTitle(e.target.value)}
-                                placeholder="제목을 입력하세요"
-                                disabled={loading}
-                            />
-                        ) : (
-                            <S.PageTitle>{diary.title}</S.PageTitle>
-                        )}
-
-                        {!isEditing && (
-                            <S.FavoriteButton
-                                $isFavorite={diary.isFavorite === 1}
-                                onClick={handleToggleFavorite}
-                                disabled={loading}
-                            >
-                                <i className={diary.isFavorite === 1 ? "fa-solid fa-star" : "fa-regular fa-star"}></i>
-                            </S.FavoriteButton>
-                        )}
-                    </S.TitleContainer>
-
-                    {!isEditing && diary.summary && (
-                        <S.AICallout>
-                            <S.CalloutHeader>
-                                AI 감정 분석
-                            </S.CalloutHeader>
-                            <S.CalloutContent>
-                                <S.CalloutRow>
-                                    <S.CalloutLabel>감정</S.CalloutLabel>
-                                    <S.EmotionTag>
-                                        <S.ColorDot $color={diary.emotionColor || '#e0e0e0'} />
-                                        {diary.mainEmotion}
-                                    </S.EmotionTag>
-                                </S.CalloutRow>
-                                <S.CalloutRow>
-                                    <S.CalloutLabel>요약</S.CalloutLabel>
-                                    <S.CalloutText>"{diary.summary}"</S.CalloutText>
-                                </S.CalloutRow>
-                                {diary.depLvl != null && (
-                                    <S.CalloutRow>
-                                        <S.CalloutLabel>우울증상</S.CalloutLabel>
-                                        <S.CalloutText>{diary.depLvl === 1 ? "Y" : "N"}</S.CalloutText>
-                                    </S.CalloutRow>
-                                )}
-                            </S.CalloutContent>
-                        </S.AICallout>
-                    )}
-
-                    <S.EntrySection>
-                        <S.EntryHeader>
-                            <S.EntryDate>
-                                @{diary?.createdAt?.substring(0, 4)}년
-                                &nbsp;{diary?.createdAt?.substring(5, 7)}월
-                                &nbsp;{diary?.createdAt?.substring(8, 10)}일
-                            </S.EntryDate>
-                        </S.EntryHeader>
-
-                        {isEditing ? (
-                            <S.ContentTextarea
-                                ref={textareaRef}
-                                value={editContent}
-                                onChange={(e) => setEditContent(e.target.value)}
-                                placeholder="일기 내용을 입력하세요..."
-                                disabled={loading}
-                                rows={1}
-                            />
-                        ) : (
-                            <S.EntryContent>{diary.content}</S.EntryContent>
-                        )}
-
-                        {(isEditing || (diary.images && diary.images.length > 0)) && (
-                            <DiaryImageUploader
-                                images={diary.images || []}
-                                maxCount={maxImageCount}
-                                disabled={!isEditing || loading}
-                                onSelectFiles={handleAddImages}
-                                onRemoveExisting={handleRemoveImage}
-                            />
-                        )}
-                    </S.EntrySection>
-                </S.ContentWrapper>
-
-                {!isEditing && diary.musics && diary.musics.length > 0 && (
-                    <S.MusicSidebar>
-                        <DiaryMusicList musics={diary.musics} />
-                    </S.MusicSidebar>
+                {hasMusic ? (
+                    <S.DetailLayout>
+                        {content}
+                        <S.MusicSidebar>
+                            <DiaryMusicList musics={diary.musics} />
+                        </S.MusicSidebar>
+                    </S.DetailLayout>
+                ) : (
+                    content
                 )}
-                </S.DetailLayout>
             </S.PageContainer>
         </>
     );

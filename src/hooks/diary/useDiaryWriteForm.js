@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { insertDiary, uploadDiaryImages } from '../../api/diaryApi.js';
+import { insertDiary, updateDiary, draftSaveDiary, uploadDiaryImages } from '../../api/diaryApi.js';
 
 const MAX_DIARY_IMAGE_COUNT = 3;
 
@@ -53,6 +53,35 @@ export const useDiaryWriteForm = () => {
     const formattedDate = `${date.year}년 ${String(date.month).padStart(2, '0')}월 ${String(date.day).padStart(2, '0')}일`;
     const apiDate = `${date.year}-${String(date.month).padStart(2, '0')}-${String(date.day).padStart(2, '0')}`;
 
+    // 임시저장으로 이미 만들어진 일기가 있으면 그 diaryNo를 들고 있다가, 다음 임시저장/작성완료 때
+    // 새로 만들지 않고 그 자리에 계속 덮어씀
+    const draftDiaryNoRef = useRef(null);
+    const [isDraftSaving, setIsDraftSaving] = useState(false);
+
+    // 버튼을 눌렀을 때만 임시저장함 (AI 분석 없이 제목/내용만 저장)
+    const handleDraftSave = async () => {
+        if (!title.trim() && !content.trim()) {
+            return showAlert('알림', '저장할 내용이 없습니다.');
+        }
+
+        try {
+            setIsDraftSaving(true);
+            const diaryNo = await draftSaveDiary(draftDiaryNoRef.current, title, content, apiDate);
+
+            if (diaryNo) {
+                draftDiaryNoRef.current = diaryNo;
+                showAlert('알림', '임시저장되었습니다.');
+            } else {
+                showAlert('오류', '임시저장에 실패했습니다.');
+            }
+        } catch (error) {
+            const errorMsg = error.response?.data?.message || "서버 통신 중 오류가 발생했습니다.";
+            showAlert('오류', errorMsg);
+        } finally {
+            setIsDraftSaving(false);
+        }
+    };
+
     const handleSubmit = async () => {
         if (!title.trim()) return showAlert('알림', '제목을 입력해주세요.');
         if (!content.trim()) return showAlert('알림', '내용을 입력해주세요.');
@@ -60,7 +89,10 @@ export const useDiaryWriteForm = () => {
         try {
             setIsLoading(true);
 
-            const res = await insertDiary(title, content, apiDate);
+            // 임시저장으로 이미 diaryNo가 있으면 그 일기를 수정(재분석)하고, 없으면 새로 등록함
+            const res = draftDiaryNoRef.current
+                ? await updateDiary(draftDiaryNoRef.current, title, content).then(() => draftDiaryNoRef.current)
+                : await insertDiary(title, content, apiDate);
 
             if (res) {
                 if (pendingImages.length > 0) {
@@ -94,6 +126,8 @@ export const useDiaryWriteForm = () => {
         formattedDate,
         handleSubmit,
         isLoading,
+        handleDraftSave,
+        isDraftSaving,
         modal, setModal,
         pendingImages, handleAddImages, handleRemovePendingImage,
         maxImageCount: MAX_DIARY_IMAGE_COUNT

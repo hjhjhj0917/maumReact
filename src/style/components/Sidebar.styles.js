@@ -98,17 +98,10 @@ export const NavSection = styled.nav`
     overflow-y: auto;
     min-height: 0;
 
+    -ms-overflow-style: none;
+    scrollbar-width: none;
     &::-webkit-scrollbar {
-        width: 4px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-        background-color: #555;
-        border-radius: 4px;
-    }
-
-    &::-webkit-scrollbar-track {
-        background: transparent;
+        display: none;
     }
 
     @media (max-width: 768px) {
@@ -213,13 +206,10 @@ export const RecentDiarySection = styled.div`
     max-height: 190px;
     overflow-y: auto;
 
+    -ms-overflow-style: none;
+    scrollbar-width: none;
     &::-webkit-scrollbar {
-        width: 4px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-        background-color: #cccccc;
-        border-radius: 4px;
+        display: none;
     }
 
     @media (max-width: 768px) {
