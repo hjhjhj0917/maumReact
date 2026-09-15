@@ -102,6 +102,7 @@ const DiaryDetail = () => {
                     </S.ButtonGroup>
                 </S.TopBar>
 
+                <S.DetailLayout>
                 <S.ContentWrapper>
                     <S.TitleContainer>
                         {isEditing ? (
@@ -184,10 +185,15 @@ const DiaryDetail = () => {
                                 onRemoveExisting={handleRemoveImage}
                             />
                         )}
-
-                        {!isEditing && <DiaryMusicList musics={diary.musics} />}
                     </S.EntrySection>
                 </S.ContentWrapper>
+
+                {!isEditing && diary.musics && diary.musics.length > 0 && (
+                    <S.MusicSidebar>
+                        <DiaryMusicList musics={diary.musics} />
+                    </S.MusicSidebar>
+                )}
+                </S.DetailLayout>
             </S.PageContainer>
         </>
     );

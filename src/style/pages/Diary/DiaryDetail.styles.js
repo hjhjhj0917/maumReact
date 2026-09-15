@@ -52,12 +52,41 @@ export const PageContainer = styled.div`
 
 export const TopBar = styled.div`
     width: 100%;
-    max-width: 900px;
+    max-width: 1300px;
     padding: 20px 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     box-sizing: border-box;
+`;
+
+export const DetailLayout = styled.div`
+    width: 100%;
+    max-width: 1300px;
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+
+    @media (max-width: 1024px) {
+        flex-direction: column;
+    }
+`;
+
+export const MusicSidebar = styled.div`
+    width: 360px;
+    min-width: 340px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 40px;
+    padding: 40px 16px 40px 0;
+    box-sizing: border-box;
+
+    @media (max-width: 1024px) {
+        width: 100%;
+        min-width: 0;
+        position: static;
+        padding: 0 40px 40px 40px;
+    }
 `;
 
 export const ButtonGroup = styled.div`
@@ -107,7 +136,8 @@ export const DeleteButton = styled(ActionButton)`
 `;
 
 export const ContentWrapper = styled.div`
-    width: 100%;
+    flex: 1;
+    min-width: 0;
     max-width: 900px;
     padding: 40px 40px;
     display: flex;

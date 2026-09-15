@@ -5,7 +5,6 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin: 16px 0;
 `;
 
 const SectionLabel = styled.div`
