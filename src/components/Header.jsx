@@ -10,8 +10,11 @@ const Header = () => {
         showLogoutModal,
         setShowLogoutModal,
         user,
+        currentStreak,
         toggleProfileModal,
         goToMyPage,
+        goToEditProfile,
+        goToTodayWrite,
         handleLogoutClick,
         confirmLogout
     } = useHeader();
@@ -47,8 +50,15 @@ const Header = () => {
                         <S.ModalLargeImg src={user.profileImg} alt="프로필" />
                         <S.ModalGreeting>안녕하세요, {user.name}님.</S.ModalGreeting>
 
+                        {currentStreak > 0 && (
+                            <S.StreakBadge>🔥 {currentStreak}일 연속 작성 중</S.StreakBadge>
+                        )}
+
+                        <S.TodayWriteBtn onClick={goToTodayWrite}>오늘 일기 쓰기</S.TodayWriteBtn>
+
                         <S.ModalButtonGroup>
                             <S.ModalActionBtn onClick={goToMyPage}>마이페이지</S.ModalActionBtn>
+                            <S.ModalActionBtn onClick={goToEditProfile}>계정 수정</S.ModalActionBtn>
                             <S.ModalActionBtn onClick={handleLogoutClick}>로그아웃</S.ModalActionBtn>
                         </S.ModalButtonGroup>
                     </S.ProfileModalContainer>

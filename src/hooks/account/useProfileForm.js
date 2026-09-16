@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
     getUserStatus,
@@ -31,6 +31,7 @@ const characters = characterData.map(c => c.url);
 
 export const useProfile = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const { setUser } = useAuth();
     const [modal, setModal] = useState({ show: false, title: '', message: '', onConfirm: null });
 
@@ -96,6 +97,27 @@ export const useProfile = () => {
                         detailAddr: res.detailAddr || '',
                         profileImgUrl: res.profileImgUrl || characters[0]
                     });
+
+                    // 헤더의 "계정 수정" 버튼으로 진입한 경우, 프로필 수정 모달을 바로 열어줌
+                    // (이 시점의 userInfo state는 아직 갱신 전이라, openActionModal 대신 res 값을 직접 사용함)
+                    if (location.state?.openEdit) {
+                        setEditForm({
+                            currentPassword: '',
+                            newPassword: '',
+                            newEmail: '',
+                            emailCode: '',
+                            newAddr: res.addr || '',
+                            newDetailAddr: res.detailAddr || ''
+                        });
+                        setVerifyState(prev => ({
+                            ...prev,
+                            isPasswordVerified: false,
+                            isEmailCodeSent: false,
+                            isEmailVerified: false
+                        }));
+                        setActiveModalType('edit');
+                        navigate(location.pathname, { replace: true });
+                    }
                 }
             } catch (error) {
                 showAlert("오류", error.response?.data?.message || "회원 정보를 불러오는데 실패했습니다.", () => {
@@ -114,6 +136,8 @@ export const useProfile = () => {
         return () => {
             document.body.removeChild(script);
         };
+        // location은 마운트 시점의 state(openEdit)만 한 번 확인하면 되므로 의도적으로 제외함
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [navigate]);
 
     const isProfileModified =

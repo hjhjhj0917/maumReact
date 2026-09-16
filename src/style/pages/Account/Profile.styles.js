@@ -2,8 +2,8 @@ import styled from 'styled-components';
 
 export const PageWrapper = styled.div`
     width: 100%;
-    height: 100vh;
-    overflow: hidden;
+    min-height: 100vh;
+    overflow-y: auto;
     background-color: #ffffff;
     display: flex;
     flex-direction: column;
@@ -13,9 +13,6 @@ export const PageWrapper = styled.div`
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
 
     @media (max-width: 768px) {
-        height: auto;
-        min-height: 100vh;
-        overflow-y: auto;
         padding-top: 80px;
         padding-bottom: 120px;
     }

@@ -61,3 +61,16 @@ export const getFavoriteDiaries = () =>
 
 export const getEmotionStats = () =>
     apiClient.get('/diary/emotions/stats');
+
+/* [MyPage Stats] */
+export const getDiaryStats = () =>
+    apiClient.get('/diary/stats/summary');
+
+export const getDepressionTrend = () =>
+    apiClient.get('/diary/stats/trend');
+
+export const getTopMusic = () =>
+    apiClient.get('/diary/stats/top-music');
+
+export const getWeeklyReport = () =>
+    apiClient.get('/diary/stats/report');

@@ -165,12 +165,44 @@ export const ModalGreeting = styled.div`
     font-size: 22px;
     font-weight: 400;
     color: #333;
-    margin-bottom: 42px;
+    margin-bottom: 12px;
+`;
+
+export const StreakBadge = styled.div`
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #fff3d6;
+    color: #a8710a;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+`;
+
+export const TodayWriteBtn = styled.button`
+    width: 100%;
+    background-color: #333333;
+    border: none;
+    color: #fff;
+    padding: 12px;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+        background-color: #000;
+    }
 `;
 
 export const ModalButtonGroup = styled.div`
     display: flex;
-    gap: 12px;
+    flex-wrap: wrap;
+    gap: 10px;
     width: 100%;
     justify-content: center;
 `;

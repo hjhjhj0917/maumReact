@@ -1,12 +1,21 @@
 import React from 'react';
 import * as S from '../../style/pages/Account/Profile.styles';
 import { useProfile } from '../../hooks/account/useProfileForm';
+import { useMyPageStats } from '../../hooks/diary/useMyPageStats';
 import logo from '../../assets/images/includes/logo.webp';
 import CustomModal from '../../components/CustomModal';
 import EmotionGraph from '../../components/EmotionGraph';
 import InputField from '../../components/InputField';
+import DiaryStatsCard from '../../components/DiaryStatsCard';
+import DepressionTrendChart from '../../components/DepressionTrendChart';
+import TopMusicList from '../../components/TopMusicList';
+import FavoriteDiaryPreview from '../../components/FavoriteDiaryPreview';
+import WeeklyReportCard from '../../components/WeeklyReportCard';
+import * as W from '../../style/components/MyPageWidgets.styles';
 
 const ProfilePage = () => {
+    const { diaryStats, depressionTrend, topMusic, favoriteDiaries, weeklyReport, isReportLoading } = useMyPageStats();
+
     const {
         userInfo,
         characters,
@@ -101,6 +110,15 @@ const ProfilePage = () => {
                         </S.ActionCard>
                     </S.RightColumn>
                 </S.ProfileHeaderSection>
+
+                <WeeklyReportCard report={weeklyReport} isLoading={isReportLoading} />
+
+                <W.WidgetGrid>
+                    <DiaryStatsCard stats={diaryStats} />
+                    <DepressionTrendChart trend={depressionTrend} />
+                    <TopMusicList tracks={topMusic} />
+                    <FavoriteDiaryPreview diaries={favoriteDiaries} />
+                </W.WidgetGrid>
 
                 <S.MainContent>
                     <S.MainTitle>나의 감정 통계</S.MainTitle>
