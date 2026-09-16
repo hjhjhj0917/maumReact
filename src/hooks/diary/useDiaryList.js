@@ -17,7 +17,10 @@ export const EMOTION_GROUPS = {
 export const useDiaryList = () => {
     const navigate = useNavigate();
 
-    const [currentDate, setCurrentDate] = useState(new Date());
+    const [currentDate, setCurrentDate] = useState(() => {
+        const savedDate = sessionStorage.getItem('diary-current-date');
+        return savedDate ? new Date(savedDate) : new Date();
+    });
 
     const [keyword, setKeyword] = useState(() => {
         return sessionStorage.getItem('diary-keyword') || '';
@@ -49,6 +52,10 @@ export const useDiaryList = () => {
     useEffect(() => {
         sessionStorage.setItem('diary-favorites', JSON.stringify(showFavorites));
     }, [showFavorites]);
+
+    useEffect(() => {
+        sessionStorage.setItem('diary-current-date', currentDate.toISOString());
+    }, [currentDate]);
 
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth() + 1;
