@@ -112,10 +112,10 @@ export const ProfileModalContainer = styled.div`
     position: absolute;
     top: 70px;
     right: 40px;
-    width: 320px;
+    width: 300px;
     background-color: #f4f7f9;
     border-radius: 24px;
-    padding: 16px 20px 30px 20px;
+    padding: 20px 24px 24px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     color: #333;
     z-index: 1002;
@@ -139,33 +139,27 @@ export const ModalCloseBtn = styled.button`
     font-size: 18px;
     cursor: pointer;
     padding: 5px;
+    margin-bottom: 8px;
 
     &:hover {
         color: #333;
     }
 `;
 
-export const ModalEmail = styled.div`
-    font-size: 14px;
-    font-weight: 500;
-    color: #666;
-    margin-bottom: 10px;
-`;
-
 export const ModalLargeImg = styled.img`
-    width: 150px;
-    height: 150px;
+    width: 110px;
+    height: 110px;
     border-radius: 50%;
     object-fit: cover;
     margin-bottom: 16px;
-    border: 3px solid #FFE3A2;
+    border: 2px solid #FFE3A2;
 `;
 
 export const ModalGreeting = styled.div`
-    font-size: 22px;
-    font-weight: 400;
+    font-size: 16px;
+    font-weight: 700;
     color: #333;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
 `;
 
 export const StreakBadge = styled.div`
@@ -181,17 +175,24 @@ export const StreakBadge = styled.div`
     margin-bottom: 20px;
 `;
 
-export const TodayWriteBtn = styled.button`
+export const ModalButtonGroup = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+`;
+
+export const PrimaryActionBtn = styled.button`
     width: 100%;
     background-color: #333333;
-    border: none;
+    border: 1px solid #333333;
     color: #fff;
     padding: 12px;
     border-radius: 14px;
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    margin-bottom: 20px;
+    box-sizing: border-box;
     transition: background-color 0.2s ease;
 
     &:hover {
@@ -199,26 +200,41 @@ export const TodayWriteBtn = styled.button`
     }
 `;
 
-export const ModalButtonGroup = styled.div`
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+export const SecondaryActionBtn = styled.button`
     width: 100%;
-    justify-content: center;
-`;
-
-export const ModalActionBtn = styled.button`
-    background-color: #5f6368;
-    border: 1px solid #5f6368;
-    color: #fff;
-    padding: 8px 18px;
-    border-radius: 20px;
+    background-color: transparent;
+    border: 1px solid #d8dce0;
+    color: #333333;
+    padding: 12px;
+    border-radius: 14px;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
+    box-sizing: border-box;
     transition: background-color 0.2s ease;
 
     &:hover {
-        background-color: #333;
+        background-color: rgba(0, 0, 0, 0.04);
+    }
+`;
+
+export const ModalDivider = styled.hr`
+    width: 100%;
+    border: none;
+    border-top: 1px solid #e2e6ea;
+    margin: 18px 0 12px;
+`;
+
+export const LogoutLink = styled.button`
+    background: none;
+    border: none;
+    color: #8a8f96;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 4px;
+    transition: color 0.2s ease;
+
+    &:hover {
+        color: #333;
     }
 `;

@@ -13,7 +13,6 @@ const Header = () => {
         currentStreak,
         toggleProfileModal,
         goToMyPage,
-        goToEditProfile,
         goToTodayWrite,
         handleLogoutClick,
         confirmLogout
@@ -46,21 +45,21 @@ const Header = () => {
                 {isProfileModalOpen && user && (
                     <S.ProfileModalContainer>
                         <S.ModalCloseBtn onClick={toggleProfileModal}>✕</S.ModalCloseBtn>
-                        <S.ModalEmail>{user.email}</S.ModalEmail>
                         <S.ModalLargeImg src={user.profileImg} alt="프로필" />
-                        <S.ModalGreeting>안녕하세요, {user.name}님.</S.ModalGreeting>
+                        <S.ModalGreeting>안녕하세요, {user.name}님</S.ModalGreeting>
 
                         {currentStreak > 0 && (
                             <S.StreakBadge>🔥 {currentStreak}일 연속 작성 중</S.StreakBadge>
                         )}
 
-                        <S.TodayWriteBtn onClick={goToTodayWrite}>오늘 일기 쓰기</S.TodayWriteBtn>
-
                         <S.ModalButtonGroup>
-                            <S.ModalActionBtn onClick={goToMyPage}>마이페이지</S.ModalActionBtn>
-                            <S.ModalActionBtn onClick={goToEditProfile}>계정 수정</S.ModalActionBtn>
-                            <S.ModalActionBtn onClick={handleLogoutClick}>로그아웃</S.ModalActionBtn>
+                            <S.PrimaryActionBtn onClick={goToTodayWrite}>오늘 일기 쓰기</S.PrimaryActionBtn>
+                            <S.SecondaryActionBtn onClick={goToMyPage}>마이페이지</S.SecondaryActionBtn>
                         </S.ModalButtonGroup>
+
+                        <S.ModalDivider />
+
+                        <S.LogoutLink onClick={handleLogoutClick}>로그아웃</S.LogoutLink>
                     </S.ProfileModalContainer>
                 )}
             </S.HeaderContainer>

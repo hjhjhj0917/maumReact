@@ -1,6 +1,30 @@
 import React, { useState, useEffect } from 'react';
+import {
+    RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
+    Radar, Tooltip, ResponsiveContainer
+} from 'recharts';
 import { getEmotionStats } from '../api/diaryApi';
 import * as S from '../style/components/EmotionGraph.styles';
+
+// 축이 너무 많으면 레이더가 읽기 어려워져서 상위 감정만 표시함
+const MAX_AXES = 10;
+
+const RadarDot = (props) => {
+    const { cx, cy, payload } = props;
+    return <circle cx={cx} cy={cy} r={4} fill={payload.color} stroke="#ffffff" strokeWidth={1.5} />;
+};
+
+const RadarTooltip = ({ active, payload }) => {
+    if (!active || !payload || payload.length === 0) return null;
+
+    const { subject, count } = payload[0].payload;
+
+    return (
+        <S.TooltipBox>
+            <strong>{subject}</strong> {count}회
+        </S.TooltipBox>
+    );
+};
 
 const EmotionGraph = () => {
     const [stats, setStats] = useState([]);
@@ -20,34 +44,36 @@ const EmotionGraph = () => {
         fetchStats();
     }, []);
 
-    const maxCount = stats.length > 0 ? stats[0].count : 1;
+    const chartData = stats.slice(0, MAX_AXES).map(stat => ({
+        subject: stat.emotion,
+        count: stat.count,
+        color: stat.color
+    }));
 
     return (
         <S.GraphContainer>
-
-            {stats.length === 0 ? (
+            {chartData.length === 0 ? (
                 <S.EmptyState>
                     아직 충분히 분석된 감정 데이터가 없습니다.
                 </S.EmptyState>
             ) : (
-                <S.GraphBody>
-                    {stats.map((stat, index) => {
-                        const percent = (stat.count / maxCount) * 100;
-                        const isInside = percent > 15;
-
-                        return (
-                            <S.Row key={index}>
-                                <S.LabelArea>{stat.emotion}</S.LabelArea>
-                                <S.TrackArea>
-                                    <S.Bar $percent={percent} $color={stat.color} $isInside={isInside}>
-                                        {isInside && <S.CountText $isInside={true}>{stat.count}회</S.CountText>}
-                                    </S.Bar>
-                                    {!isInside && <S.CountText $isInside={false}>{stat.count}회</S.CountText>}
-                                </S.TrackArea>
-                            </S.Row>
-                        );
-                    })}
-                </S.GraphBody>
+                <S.ChartWrapper>
+                    <ResponsiveContainer width="100%" height={360}>
+                        <RadarChart data={chartData} outerRadius="70%">
+                            <PolarGrid stroke="#ededeb" />
+                            <PolarAngleAxis dataKey="subject" tick={{ fontSize: 13, fill: '#37352f' }} />
+                            <PolarRadiusAxis angle={90} allowDecimals={false} tick={{ fontSize: 10, fill: '#9b9a97' }} />
+                            <Radar
+                                dataKey="count"
+                                stroke="#8fa8db"
+                                fill="#8fa8db"
+                                fillOpacity={0.35}
+                                dot={<RadarDot />}
+                            />
+                            <Tooltip content={<RadarTooltip />} />
+                        </RadarChart>
+                    </ResponsiveContainer>
+                </S.ChartWrapper>
             )}
         </S.GraphContainer>
     );

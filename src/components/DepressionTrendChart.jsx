@@ -37,7 +37,7 @@ const DepressionTrendChart = ({ trend }) => {
         <S.WidgetCard>
             <S.WidgetTitle>월별 우울 지수 추이</S.WidgetTitle>
             <S.TrendChartWrapper>
-                <svg width={CHART_WIDTH} height={CHART_HEIGHT} viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`}>
+                <svg viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`} preserveAspectRatio="xMidYMid meet">
                     <polyline
                         points={polylinePoints}
                         fill="none"

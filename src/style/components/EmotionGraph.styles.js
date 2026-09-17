@@ -1,14 +1,11 @@
-import styled, { keyframes } from 'styled-components';
-
-const fillBar = keyframes`
-    from { width: 0%; }
-`;
+import styled from 'styled-components';
 
 export const GraphContainer = styled.div`
     width: 100%;
     background: #ffffff;
     border-radius: 8px;
     padding: 24px;
+    box-sizing: border-box;
 `;
 
 export const Header = styled.div`
@@ -49,57 +46,17 @@ export const EmptyState = styled.div`
     padding: 40px 0;
 `;
 
-export const GraphBody = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+export const ChartWrapper = styled.div`
+    width: 100%;
+    min-width: 0;
 `;
 
-export const Row = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    height: 32px;
-`;
-
-export const LabelArea = styled.div`
-    width: 80px;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    font-size: 14px;
-    font-weight: 600;
-    color: #37352f;
-`;
-
-export const TrackArea = styled.div`
-    flex: 1;
-    background-color: #f7f7f5;
+export const TooltipBox = styled.div`
+    background: #ffffff;
+    border: 1px solid #ededeb;
     border-radius: 6px;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    position: relative;
-`;
-
-export const Bar = styled.div`
-    height: 100%;
-    background-color: ${props => props.$color || '#8fa8db'};
-    width: ${props => props.$percent}%;
-    animation: ${fillBar} 0.6s ease-out forwards;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding-right: ${props => props.$isInside ? '12px' : '0'};
-    box-sizing: border-box;
-    min-width: 4px;
-`;
-
-export const CountText = styled.span`
-    color: ${props => (props.$isInside ? '#333' : '#333')};
+    padding: 8px 12px;
     font-size: 13px;
-    font-weight: 600;
-    margin-left: ${props => (props.$isInside ? '0' : '8px')};
-    white-space: nowrap;
+    color: #37352f;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 `;

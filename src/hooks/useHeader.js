@@ -52,11 +52,6 @@ export const useHeader = () => {
         navigate('/account/profile');
     };
 
-    const goToEditProfile = () => {
-        setIsProfileModalOpen(false);
-        navigate('/account/profile', { state: { openEdit: true } });
-    };
-
     const goToTodayWrite = () => {
         setIsProfileModalOpen(false);
         navigate(`/diary/write?date=${getTodayDateStr()}`);
@@ -95,7 +90,6 @@ export const useHeader = () => {
         toggleMobileMenu,
         toggleProfileModal,
         goToMyPage,
-        goToEditProfile,
         goToTodayWrite,
         handleLogoutClick,
         confirmLogout

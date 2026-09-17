@@ -2,15 +2,16 @@ import styled from 'styled-components';
 
 export const WidgetGrid = styled.div`
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 16px;
 
     @media (max-width: 600px) {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
     }
 `;
 
 export const WidgetCard = styled.div`
+    min-width: 0;
     background: #ffffff;
     border: 1px solid #ededeb;
     border-radius: 8px;
@@ -18,6 +19,7 @@ export const WidgetCard = styled.div`
     display: flex;
     flex-direction: column;
     gap: 14px;
+    box-sizing: border-box;
 `;
 
 export const WidgetTitle = styled.h3`
@@ -62,7 +64,13 @@ export const StatLabel = styled.div`
 /* 우울 지수 추이 */
 export const TrendChartWrapper = styled.div`
     width: 100%;
-    overflow-x: auto;
+    min-width: 0;
+
+    svg {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
 `;
 
 /* 인기 추천곡 */
