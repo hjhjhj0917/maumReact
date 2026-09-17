@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import {Link} from 'react-router-dom';
 import LoginSlider from '../../components/LoginSlider';
 import {useLoginForm} from '../../hooks/account/useLoginForm';
@@ -12,6 +12,12 @@ const Login = ({onClose}) => {
         messages, clearMessage,
         handleLogin, handleKeyDown
     } = useLoginForm();
+
+    const userIdInputRef = useRef(null);
+
+    useEffect(() => {
+        userIdInputRef.current?.focus();
+    }, []);
 
     const handleOverlayClick = (e) => {
         if (e.target === e.currentTarget) {
@@ -44,6 +50,7 @@ const Login = ({onClose}) => {
                                         placeholder="아이디를 입력하세요"
                                         required
                                         autoComplete="off"
+                                        ref={userIdInputRef}
                                         value={userId}
                                         onChange={(e) => {
                                             setUserId(e.target.value);

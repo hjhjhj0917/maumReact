@@ -28,10 +28,9 @@ export const updateDiaryPinned = (diaryNo, isPinned) =>
 // 브라우저가 FormData용 multipart boundary를 자동으로 채우게 함 (STT 업로드와 동일한 패턴)
 export const uploadDiaryImages = (diaryNo, files) => {
     const formData = new FormData();
-    formData.append('diaryNo', diaryNo);
     files.forEach(file => formData.append('images', file));
 
-    return apiClient.post('/diary/images/upload', formData, {
+    return apiClient.post(`/diary/${diaryNo}/images/upload`, formData, {
         headers: { 'Content-Type': undefined }
     });
 };
@@ -45,7 +44,7 @@ export const getMonthlyDiaries = (createdAt) =>
     apiClient.get('/diary/monthly', { params: { createdAt } });
 
 export const getDiaryDetail = (diaryNo) =>
-    apiClient.get('/diary/detail', { params: { diaryNo } });
+    apiClient.get(`/diary/${diaryNo}`);
 
 export const searchDiaries = (keyword) =>
     apiClient.get('/diary/search', { params: { keyword } });
