@@ -76,7 +76,7 @@ const Index = () => {
                 <S.HeroContent>
                     <S.Title>감정을 기록하는<br />AI 마음 연구소, MauM</S.Title>
                     <S.Subtitle>
-                        HyperCLOVA X와 감정 분석 모델을 통해 당신의 일상 속에 숨겨진 감정을 발견하세요.
+                        Gemini와 감정 분석 모델을 통해 당신의 일상 속에 숨겨진 감정을 발견하세요.
                         AI와의 대화를 통해 지친 마음을 다독이고 내일을 위한 힘을 <br />얻어 보세요.
                     </S.Subtitle>
                     <S.Button $primary style={{ padding: '16px 32px', fontSize: '18px' }} onClick={() => setIsLoginModalOpen(true)}>
@@ -118,7 +118,7 @@ const Index = () => {
                     </S.Card>
                     <S.Card>
                         <h3>서술형 일기 요약</h3>
-                        <p>HyperCLOVA X(HCX-007)가 긴 일기를 따뜻한 문체로 요약하여 기록해줍니다.</p>
+                        <p>Gemini가 긴 일기를 따뜻한 문체로 요약하여 기록해줍니다.</p>
                     </S.Card>
                     <S.Card>
                         <h3>RAG 기반 AI 챗봇</h3>
@@ -195,7 +195,7 @@ const Index = () => {
                     <div>
                         <h4>Technology</h4>
                         <ul>
-                            <li><Link to="https://clova.ai/hyperclova" target="_blank" rel="noopener noreferrer">HyperCLOVA X</Link></li>
+                            <li><Link to="https://ai.google.dev/gemini-api/docs" target="_blank" rel="noopener noreferrer">Gemini</Link></li>
                             <li><Link to="https://github.com/monologg/KoELECTRA" target="_blank" rel="noopener noreferrer">KoELECTRA</Link></li>
                             <li><Link to="https://www.aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&&srchDataRealmCode=REALM006&aihubDataSe=data&dataSetSn=71806" target="_blank" rel="noopener noreferrer">AI Hub Data</Link></li>
                         </ul>
