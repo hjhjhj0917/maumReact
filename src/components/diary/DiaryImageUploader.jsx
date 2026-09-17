@@ -216,7 +216,7 @@ const DiaryImageUploader = ({
         <Wrapper>
             {images.map((img, idx) => (
                 <Thumb key={img.imageNo}>
-                    <img src={img.imageUrl} alt="일기 첨부 이미지" onClick={() => setLightboxIndex(idx)} />
+                    <img src={img.imageUrl} alt="일기 첨부 이미지" loading="lazy" onClick={() => setLightboxIndex(idx)} />
                     {!disabled && (
                         <RemoveButton onClick={() => onRemoveExisting?.(img.imageNo)} title="이미지 삭제">
                             <i className="fa-solid fa-xmark"></i>
