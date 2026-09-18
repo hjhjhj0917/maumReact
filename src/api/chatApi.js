@@ -60,15 +60,14 @@ export const deleteChatRoomApi = async (chatRoomNo) => {
     }
 };
 
-// 마이크로 녹음한 오디오(webm/opus)를 서버로 올려서 텍스트로 변환함 (GCP Speech-to-Text)
 export const sttApi = async (audioBlob) => {
     try {
         const formData = new FormData();
         formData.append('audio', audioBlob, 'recording.webm');
 
-        // apiClient 인스턴스 기본 헤더(Content-Type: application/json)가 그대로 나가면
-        // 브라우저가 FormData용 multipart boundary를 못 붙여서 Spring이 멀티파트 요청으로
-        // 인식을 못 함 — 이 요청에서만 명시적으로 지워서 브라우저가 자동으로 채우게 함
+        // apiClient의 기본 Content-Type(application/json)이 그대로 나가면 브라우저가 FormData용
+        // multipart boundary를 못 붙여 Spring이 멀티파트 요청으로 인식하지 못함 — 여기서만 지워서
+        // 브라우저가 자동으로 채우게 함
         const response = await apiClient.post('/stt', formData, {
             headers: { 'Content-Type': undefined }
         });
@@ -79,7 +78,7 @@ export const sttApi = async (audioBlob) => {
     }
 };
 
-// TTS 오디오 라인인지 확인하고, 맞다면 base64 오디오 데이터만 추출함
+// 서버가 스트림 안에서 TTS 오디오 청크를 텍스트와 구분하기 위해 이 마커로 감싸서 보냄
 const AUDIO_PREFIX = '[[AUDIO]]';
 const AUDIO_SUFFIX = '[[/AUDIO]]';
 
@@ -90,7 +89,7 @@ const extractAudioBase64 = (text) => {
     return null;
 };
 
-// 정책/기관 카드 라인인지 확인하고, 맞다면 JSON 배열로 파싱해서 반환함
+// 서버가 정책/기관 추천 카드를 JSON 배열로 보낼 때 텍스트와 구분하기 위해 감싸는 마커
 const CARD_PREFIX = '[[CARD]]';
 const CARD_SUFFIX = '[[/CARD]]';
 
@@ -109,7 +108,6 @@ const extractCards = (text) => {
 // 텍스트 전송이 끝났음을 알리는 마커 (오디오는 이 이후에 이어서 옴)
 const TEXT_DONE_MARKER = '[[TEXT_DONE]]';
 
-// 한 줄(data: 이후 내용)을 텍스트/오디오/카드/완료신호로 구분해서 각각의 콜백으로 전달
 const dispatchLine = (rawText, onChunk, onAudio, onCards, onTextDone) => {
     let text = rawText;
     if (text.startsWith(' ')) {

@@ -114,7 +114,6 @@ export const useSidebar = () => {
         return () => window.removeEventListener('chat-updated', fetchRooms);
     }, []);
 
-    // 새 채팅방을 만들고 그 방으로 이동함
     const createNewChat = async (e) => {
         if (e) e.preventDefault();
         try {

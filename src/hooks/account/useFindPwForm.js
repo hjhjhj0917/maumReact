@@ -21,7 +21,6 @@ export const useFindPwForm = () => {
         onConfirm: null
     });
 
-    // 비밀번호 숨김/표시 상태 추가
     const [showPassword, setShowPassword] = useState(false);
     const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 

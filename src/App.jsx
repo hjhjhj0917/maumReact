@@ -21,7 +21,6 @@ function App() {
             <AuthProvider>
                 <GlobalStyle />
                 <Routes>
-                    {/* Public Route */}
                     <Route element={<PublicRoute />}>
                         <Route path="/" element={<Index />} />
 
@@ -30,7 +29,6 @@ function App() {
                         </Route>
                     </Route>
 
-                    {/* Protected Route */}
                     <Route element={<ProtectedRoute />}>
                         <Route element={<Layout />}>
                             <Route path="/diary/write" element={<DiaryWrite />} />
@@ -42,7 +40,6 @@ function App() {
                         </Route>
                     </Route>
 
-                    {/* 404 Not Found */}
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </AuthProvider>

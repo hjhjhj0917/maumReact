@@ -19,7 +19,7 @@ export const FindIdWrapper = styled.div`
     background-color: #ffffff;
     justify-content: center;
 
-    /* 👉 핵심: 모바일에서는 중앙 정렬을 풀어, margin-top 50px이 아래로 삐져나가지 않게 꽉 잡아줍니다 */
+    /* 모바일에서 center 정렬을 유지하면 margin-top 50px만큼 아래로 밀려 잘려 보여서, 이 구간에서는 상단 정렬로 전환함 */
     @media (max-width: 768px) {
         justify-content: flex-start;
     }
@@ -33,11 +33,10 @@ export const Container = styled.div`
     padding: 20px 20px;
     box-sizing: border-box;
 
-    /* 회원님이 작성하신 이상적인 여백 유지! */
     @media (max-width: 768px) {
         margin-top: 50px;
         padding: 40px 40px;
-        /* 내부 콘텐츠도 위쪽을 기준으로 안정적으로 배치되도록 추가 */
+        /* 위 FindIdWrapper의 flex-start 전환에 맞춰 내부 콘텐츠도 상단 기준으로 배치함 */
         align-items: flex-start;
     }
 `;
