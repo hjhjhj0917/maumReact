@@ -33,6 +33,7 @@ MAUM은 3개 저장소로 구성됩니다.
 ### Third-Party API
 - **Map**: `react-kakao-maps-sdk` (Kakao Map)
 - **Markdown**: `react-markdown` (챗봇 답변 렌더링)
+- **Data Viz**: `recharts` (마이페이지 감정 통계 레이더 차트)
 
 ---
 
@@ -46,8 +47,8 @@ MAUM은 3개 저장소로 구성됩니다.
 - 일기 작성/수정/삭제, 월별·검색·감정 필터·즐겨찾기 조회 등 CRUD 전반을 지원합니다.
 - 작성 중에는 AI 분석 없이 **임시저장** 버튼으로 내용만 저장하고, "작성 완료" 시점에만 AI 분석이 실행됩니다.
 - 일기당 최대 3장까지 이미지를 첨부(`DiaryImageUploader`)할 수 있고, 썸네일 클릭 시 라이트박스로 확대/슬라이드 볼 수 있습니다.
-- 감정 분석 결과 기반으로 추천된 곡을 `DiaryMusicList`에서 Spotify 임베드 플레이어로 미리듣기하거나 바로 이동해 들을 수 있습니다.
-- 서버가 분석한 감정 통계를 `EmotionGraph` 컴포넌트로 시각화합니다.
+- 감정 분석 결과 기반으로 추천된 곡을 `DiaryMusicList`에서 Spotify 임베드 플레이어로 미리듣기하거나 바로 이동해 들을 수 있습니다. 임베드는 곡마다 즉시 마운트하지 않고 재생 버튼을 눌렀을 때만 로드해 렌더링 부하를 줄였습니다.
+- 서버가 분석한 감정 통계를 `EmotionGraph` 컴포넌트(recharts 레이더 차트)로 시각화합니다.
 
 ### 3. 실시간 AI 상담 챗봇 UI
 - Gemini 기반 RAG 서버로부터 전달받는 답변을 실시간 스트리밍으로 보여주는 대화형 인터페이스(`ChatBot`)를 구축했습니다.
@@ -56,6 +57,11 @@ MAUM은 3개 저장소로 구성됩니다.
 
 ### 4. 위치 기반 심리상담기관 지도 연동
 - Kakao Map API와 연동해 사용자 주변의 심리상담기관 정보를 지도(`Map`)에 시각화합니다.
+
+### 5. 마이페이지 통계 & 주간 리포트
+- 총 작성 수 · 연속 작성일(최장 기록 포함), 최근 6개월 월별 우울 지수 추이, 가장 많이 추천된 음악 Top 5, 즐겨찾기 일기 미리보기를 위젯 형태로 한눈에 보여줍니다.
+- 최근 일주일 일기를 바탕으로 AI가 생성한 격려 코멘트를 **주간 리포트 카드**로 제공합니다.
+- 헤더 프로필 드롭다운에서 연속 작성일 배지를 확인하고, "오늘 일기 쓰기"로 바로 작성 화면으로 이동할 수 있습니다.
 
 ---
 
@@ -67,8 +73,11 @@ src/
  ├── components/       # CustomModal, EmotionGraph, Header, Sidebar 등 공통 UI
  │    ├── chatbot/     # VoiceWave(음성 파형) 등 챗봇 전용 컴포넌트
  │    └── diary/       # DiaryImageUploader, DiaryMusicList 등 일기 전용 컴포넌트
+ │    (DiaryStatsCard, DepressionTrendChart, TopMusicList, FavoriteDiaryPreview,
+ │     WeeklyReportCard 등 마이페이지 위젯 컴포넌트 포함)
  ├── context/          # 전역 인증 상태(AuthContext)
  ├── hooks/            # 도메인별(Account, ChatBot, Diary, Map) 비즈니스 로직 Custom Hooks
+ │    └── diary/       # useDiaryList, useDiaryDetail, useMyPageStats 등
  ├── pages/            # 서비스 주요 화면 (Account, ChatBot, Diary, Map, NotFound)
  ├── routes/           # 도메인별 라우트 그룹 (AccountRoutes 등)
  ├── style/            # 전역 스타일(GlobalStyle) 및 페이지/컴포넌트별 styled-components
