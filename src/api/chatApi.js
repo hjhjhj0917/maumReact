@@ -60,6 +60,16 @@ export const deleteChatRoomApi = async (chatRoomNo) => {
     }
 };
 
+export const synthesizeMessageAudioApi = async (chatMsgNo) => {
+    try {
+        const response = await apiClient.post(`/chat/messages/${chatMsgNo}/tts`);
+        return response; // base64 오디오 문자열(또는 합성 실패 시 null)
+    } catch (error) {
+        console.error("음성 재생성 에러:", error);
+        throw error;
+    }
+};
+
 export const sttApi = async (audioBlob) => {
     try {
         const formData = new FormData();

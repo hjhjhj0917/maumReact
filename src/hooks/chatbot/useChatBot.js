@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
-    streamChatApi, createChatRoomApi, getChatRoomsApi, getRoomMessagesApi
+    streamChatApi, createChatRoomApi, getChatRoomsApi, getRoomMessagesApi, synthesizeMessageAudioApi
 } from '../../api/chatApi';
 
 export const useChatBot = () => {
@@ -23,6 +23,7 @@ export const useChatBot = () => {
     const isPlayingAudioRef = useRef(false);
     const currentAudioRef = useRef(null); // 지금 재생 중인 오디오 (바지-인/정지 시 즉시 멈추기 위해 따로 참조를 들고 있음)
     const [speakingIndex, setSpeakingIndex] = useState(null); // 지금 소리로 재생 중인 메시지의 인덱스 (버튼 표시용)
+    const [synthesizingIndex, setSynthesizingIndex] = useState(null); // 과거 내역의 오디오를 재생성하는 동안(버튼 로딩 표시용)
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -143,8 +144,18 @@ export const useChatBot = () => {
         setSpeakingIndex(null);
     };
 
+    const playAudioChunks = (index, audioChunks) => {
+        audioQueueRef.current = audioChunks.map(
+            base64Audio => new Audio(`data:audio/mp3;base64,${base64Audio}`)
+        );
+        setSpeakingIndex(index);
+        playNextAudio(index);
+    };
+
     // 특정 메시지(index)에 쌓인 오디오 조각들을 순서대로 재생함. 이미 재생 중이면 정지시킴(토글)
-    const playMessageAudio = (index) => {
+    // 라이브 스트리밍 중 받은 audioChunks가 없고(=채팅방을 나갔다 돌아온 경우) hasAudio만 true면,
+    // 저장된 텍스트로 TTS를 다시 합성해서 재생함(음성 데이터 자체는 저장하지 않으므로)
+    const playMessageAudio = async (index) => {
         if (speakingIndex === index) {
             stopSpeaking();
             return;
@@ -153,13 +164,31 @@ export const useChatBot = () => {
         stopSpeaking();
 
         const message = messages[index];
-        if (!message?.audioChunks?.length) return;
+        if (!message) return;
 
-        audioQueueRef.current = message.audioChunks.map(
-            base64Audio => new Audio(`data:audio/mp3;base64,${base64Audio}`)
-        );
-        setSpeakingIndex(index);
-        playNextAudio(index);
+        if (message.audioChunks?.length) {
+            playAudioChunks(index, message.audioChunks);
+            return;
+        }
+
+        if (message.hasAudio && message.chatMsgNo) {
+            setSynthesizingIndex(index);
+            try {
+                const audioChunks = await synthesizeMessageAudioApi(message.chatMsgNo);
+                if (!audioChunks?.length) return;
+
+                setMessages(prev => {
+                    const newMessages = [...prev];
+                    newMessages[index] = { ...newMessages[index], audioChunks };
+                    return newMessages;
+                });
+                playAudioChunks(index, audioChunks);
+            } catch (error) {
+                console.error("음성 재생성 에러:", error);
+            } finally {
+                setSynthesizingIndex(null);
+            }
+        }
     };
 
     // 정책/기관 카드 데이터를 답변 텍스트와 별개로 마지막 봇 메시지에 붙임
@@ -234,6 +263,6 @@ export const useChatBot = () => {
     return {
         messages, input, setInput, isStreaming, isWaiting, isLoading, isTextDone,
         messagesEndRef, textareaRef, sendMessage, handleKeyDown, handleInputResize,
-        stopSpeaking, playMessageAudio, speakingIndex
+        stopSpeaking, playMessageAudio, speakingIndex, synthesizingIndex
     };
 };

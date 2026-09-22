@@ -9,7 +9,7 @@ const ChatBot = () => {
     const {
         messages, input, setInput, isStreaming, isWaiting, isTextDone,
         messagesEndRef, textareaRef, sendMessage, handleKeyDown, handleInputResize,
-        stopSpeaking, playMessageAudio, speakingIndex
+        stopSpeaking, playMessageAudio, speakingIndex, synthesizingIndex
     } = useChatBot();
     const [toastState, setToastState] = useState({ show: false, message: '' });
 
@@ -164,12 +164,16 @@ const ChatBot = () => {
 
                                 {textToCopy.trim().length > 0 && (
                                     <S.MessageActions $isUser={msg.role === 'user'}>
-                                        {msg.role === 'bot' && msg.audioChunks?.length > 0 && (
+                                        {msg.role === 'bot' && (msg.audioChunks?.length > 0 || msg.hasAudio) && (
                                             <S.ActionIcon
                                                 onClick={() => playMessageAudio(index)}
                                                 title={speakingIndex === index ? '음성 중지' : '음성으로 듣기'}
                                             >
-                                                <i className={`fa-solid ${speakingIndex === index ? 'fa-stop' : 'fa-volume-high'}`}></i>
+                                                <i className={`fa-solid ${
+                                                    synthesizingIndex === index ? 'fa-spinner fa-spin'
+                                                        : speakingIndex === index ? 'fa-stop'
+                                                        : 'fa-volume-high'
+                                                }`}></i>
                                             </S.ActionIcon>
                                         )}
                                         <S.ActionIcon onClick={() => handleCopy(textToCopy)}>
