@@ -250,7 +250,7 @@ export const useDiaryList = () => {
 
         } catch (error) {
             console.error(error)
-            alert("즐겨찾기 상태 변경에 실패했습니다.");
+            alert(error.message || "즐겨찾기 상태 변경에 실패했습니다.");
         }
     };
 

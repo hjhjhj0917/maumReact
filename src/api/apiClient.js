@@ -81,6 +81,21 @@ apiClient.interceptors.response.use(
             });
         }
 
+        /* GlobalExceptionHandler가 비즈니스 예외에도 실제 상태 코드(400/409 등)로 응답하므로,
+           호출부가 항상 error.message로 서버 메시지를 꺼내 쓸 수 있도록 보정함
+           (CommonResponse는 message에 상태 라벨을, data에 실제 안내 문구를 담는 컨벤션이라 data를 우선 사용하고,
+            data가 MsgDTO({result, msg}) 형태인 경우까지 함께 처리함) */
+        const body = error.response?.data;
+        if (body) {
+            if (typeof body.data === 'string' && body.data) {
+                error.message = body.data;
+            } else if (body.data && typeof body.data.msg === 'string' && body.data.msg) {
+                error.message = body.data.msg;
+            } else {
+                error.message = body.message || error.message;
+            }
+        }
+
         return Promise.reject(error);
     }
 );
