@@ -5,6 +5,7 @@ import Sidebar from './Sidebar';
 import { useSidebar } from '../hooks/useSidebar';
 import * as S from '../style/components/AppLayout.styles';
 
+// ★ 즐겨찾기 이후 추가/수정
 const Layout = () => {
     const {
         isSidebarOpen,

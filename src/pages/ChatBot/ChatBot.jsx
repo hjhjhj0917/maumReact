@@ -5,6 +5,7 @@ import { useSpeechToText } from '../../hooks/chatbot/useSpeechToText';
 import VoiceWave from '../../components/chatbot/VoiceWave';
 import * as S from '../../style/pages/ChatBot/ChatBot.styles';
 
+// ★ 즐겨찾기 이후 추가/수정
 const ChatBot = () => {
     const {
         messages, input, setInput, isStreaming, isWaiting, isTextDone,

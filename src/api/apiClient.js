@@ -27,6 +27,7 @@ apiClient.interceptors.response.use(
         }
         return response.data;
     },
+    // ★ 즐겨찾기 이후 추가/수정
     async (error) => {
         const originalRequest = error.config;
 

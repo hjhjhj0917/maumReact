@@ -1,6 +1,7 @@
 import React from 'react';
 import * as S from '../style/components/MyPageWidgets.styles';
 
+// ★ 즐겨찾기 이후 추가/수정
 const TopMusicList = ({ tracks }) => {
     return (
         <S.WidgetCard>

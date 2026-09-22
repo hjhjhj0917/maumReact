@@ -8,6 +8,7 @@ import Profile from '../pages/Account/Profile';
 
 // Login은 모달 형태(onClose prop 필요)로 설계돼서, /account/login 경로로 직접 진입했을 때는
 // 닫기 동작으로 이전 페이지로 돌아가도록 onClose를 여기서 만들어 넘겨줌
+// ★ 즐겨찾기 이후 추가/수정
 const LoginRoute = () => {
     const navigate = useNavigate();
     return <Login onClose={() => navigate(-1)} />;

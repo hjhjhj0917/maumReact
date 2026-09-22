@@ -4,6 +4,7 @@ import LoginSlider from '../../components/LoginSlider';
 import {useLoginForm} from '../../hooks/account/useLoginForm';
 import * as S from '../../style/pages/Account/Login.styles';
 
+// ★ 즐겨찾기 이후 추가/수정
 const Login = ({onClose}) => {
     const {
         userId, setUserId,

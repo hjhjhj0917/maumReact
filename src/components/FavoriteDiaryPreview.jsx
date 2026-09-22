@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as S from '../style/components/MyPageWidgets.styles';
 
+// ★ 즐겨찾기 이후 추가/수정
 const FavoriteDiaryPreview = ({ diaries }) => {
     const navigate = useNavigate();
 

@@ -3,6 +3,7 @@ import { getDiaryStats, getDepressionTrend, getTopMusic, getFavoriteDiaries, get
 
 const FAVORITE_PREVIEW_COUNT = 3;
 
+// ★ 즐겨찾기 이후 추가/수정
 export const useMyPageStats = () => {
     const [diaryStats, setDiaryStats] = useState({ totalCount: 0, currentStreak: 0, longestStreak: 0 });
     const [depressionTrend, setDepressionTrend] = useState([]);

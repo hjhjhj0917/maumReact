@@ -6,6 +6,7 @@ const CHART_HEIGHT = 140;
 const PADDING_X = 30;
 const PADDING_Y = 20;
 
+// ★ 즐겨찾기 이후 추가/수정
 const DepressionTrendChart = ({ trend }) => {
     if (!trend || trend.length === 0) {
         return (

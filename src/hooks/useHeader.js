@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { logoutUser } from '../api/authApi';
 import { getDiaryStats } from '../api/diaryApi';
 
+// ★ 즐겨찾기 이후 추가/수정
 const getTodayDateStr = () => {
     const today = new Date();
     const year = today.getFullYear();
@@ -52,6 +53,7 @@ export const useHeader = () => {
         navigate('/account/profile');
     };
 
+    // ★ 즐겨찾기 이후 추가/수정
     const goToTodayWrite = () => {
         setIsProfileModalOpen(false);
         navigate(`/diary/write?date=${getTodayDateStr()}`);

@@ -25,11 +25,13 @@ export const useDiaryWriteForm = () => {
     // 작성 완료 시점에 diaryNo를 받은 후에 한꺼번에 업로드함
     const [pendingImages, setPendingImages] = useState([]); // [{ file, previewUrl }]
 
+    // ★ 즐겨찾기 이후 추가/수정
     const handleAddImages = (files) => {
         const newItems = files.map(file => ({ file, previewUrl: URL.createObjectURL(file) }));
         setPendingImages(prev => [...prev, ...newItems].slice(0, MAX_DIARY_IMAGE_COUNT));
     };
 
+    // ★ 즐겨찾기 이후 추가/수정
     const handleRemovePendingImage = (index) => {
         setPendingImages(prev => {
             const target = prev[index];
@@ -59,6 +61,7 @@ export const useDiaryWriteForm = () => {
     const [isDraftSaving, setIsDraftSaving] = useState(false);
 
     // 버튼을 눌렀을 때만 임시저장함 (AI 분석 없이 제목/내용만 저장)
+    // ★ 즐겨찾기 이후 추가/수정
     const handleDraftSave = async () => {
         if (!title.trim() && !content.trim()) {
             return showAlert('알림', '저장할 내용이 없습니다.');
@@ -82,6 +85,7 @@ export const useDiaryWriteForm = () => {
         }
     };
 
+    // ★ 즐겨찾기 이후 추가/수정
     const handleSubmit = async () => {
         if (!title.trim()) return showAlert('알림', '제목을 입력해주세요.');
         if (!content.trim()) return showAlert('알림', '내용을 입력해주세요.');

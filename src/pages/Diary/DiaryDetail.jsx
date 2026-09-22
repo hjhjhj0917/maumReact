@@ -5,6 +5,7 @@ import DiaryImageUploader from '../../components/diary/DiaryImageUploader';
 import DiaryMusicList from '../../components/diary/DiaryMusicList';
 import * as S from '../../style/pages/Diary/DiaryDetail.styles';
 
+// ★ 즐겨찾기 이후 추가/수정
 const DiaryDetail = () => {
     const {
         diary, loading, handleGoBack,

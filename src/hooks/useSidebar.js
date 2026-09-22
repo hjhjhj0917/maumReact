@@ -64,6 +64,7 @@ export const useSidebar = () => {
     }, []);
 
     // 일기 이름변경/고정/삭제 — 성공하면 diary-updated 이벤트로 목록을 다시 불러오게 함
+    // ★ 즐겨찾기 이후 추가/수정
     const renameDiary = async (diaryNo, title) => {
         try {
             await updateDiaryTitle(diaryNo, title);
@@ -73,6 +74,7 @@ export const useSidebar = () => {
         }
     };
 
+    // ★ 즐겨찾기 이후 추가/수정
     const togglePinDiary = async (diary) => {
         try {
             await updateDiaryPinned(diary.diaryNo, diary.isPinned === 1 ? 0 : 1);
@@ -82,6 +84,7 @@ export const useSidebar = () => {
         }
     };
 
+    // ★ 즐겨찾기 이후 추가/수정
     const removeDiary = async (diaryNo) => {
         try {
             await deleteDiary(diaryNo);
@@ -114,6 +117,7 @@ export const useSidebar = () => {
         return () => window.removeEventListener('chat-updated', fetchRooms);
     }, []);
 
+    // ★ 즐겨찾기 이후 추가/수정
     const createNewChat = async (e) => {
         if (e) e.preventDefault();
         try {
@@ -127,6 +131,7 @@ export const useSidebar = () => {
 
     const currentRoomNo = new URLSearchParams(location.search).get('room');
 
+    // ★ 즐겨찾기 이후 추가/수정
     const renameChat = async (chatRoomNo, roomTitle) => {
         try {
             await renameChatRoomApi(chatRoomNo, roomTitle);
@@ -136,6 +141,7 @@ export const useSidebar = () => {
         }
     };
 
+    // ★ 즐겨찾기 이후 추가/수정
     const togglePinChat = async (room) => {
         try {
             await pinChatRoomApi(room.chatRoomNo, room.isPinned === 1 ? 0 : 1);
@@ -145,6 +151,7 @@ export const useSidebar = () => {
         }
     };
 
+    // ★ 즐겨찾기 이후 추가/수정
     const removeChat = async (chatRoomNo) => {
         try {
             await deleteChatRoomApi(chatRoomNo);

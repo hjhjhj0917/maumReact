@@ -13,6 +13,7 @@ import FavoriteDiaryPreview from '../../components/FavoriteDiaryPreview';
 import WeeklyReportCard from '../../components/WeeklyReportCard';
 import * as W from '../../style/components/MyPageWidgets.styles';
 
+// ★ 즐겨찾기 이후 추가/수정
 const ProfilePage = () => {
     const { diaryStats, depressionTrend, topMusic, favoriteDiaries, weeklyReport, isReportLoading } = useMyPageStats();
 

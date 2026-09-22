@@ -3,6 +3,7 @@ import { sttApi } from '../../api/chatApi';
 
 // 마이크로 녹음한 오디오를 서버(GCP Speech-to-Text)로 올려서 텍스트로 변환함.
 // 텍스트 입력은 항상 그대로 두고, 마이크 버튼으로 텍스트를 채워주는 하이브리드 입력 방식.
+// ★ 즐겨찾기 이후 추가/수정
 export const useSpeechToText = ({ onResult, onStart, onEnd }) => {
     const [isRecording, setIsRecording] = useState(false);
     const [isTranscribing, setIsTranscribing] = useState(false);

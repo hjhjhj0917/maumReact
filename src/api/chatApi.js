@@ -1,5 +1,6 @@
 import apiClient from './apiClient';
 
+// ★ 즐겨찾기 이후 추가/수정
 export const createChatRoomApi = async () => {
     try {
         const response = await apiClient.post('/chat/rooms');
@@ -10,6 +11,7 @@ export const createChatRoomApi = async () => {
     }
 };
 
+// ★ 즐겨찾기 이후 추가/수정
 export const getChatRoomsApi = async () => {
     try {
         const response = await apiClient.get('/chat/rooms');
@@ -20,6 +22,7 @@ export const getChatRoomsApi = async () => {
     }
 };
 
+// ★ 즐겨찾기 이후 추가/수정
 export const getRoomMessagesApi = async (chatRoomNo) => {
     try {
         const response = await apiClient.get(`/chat/rooms/${chatRoomNo}/messages`);
@@ -30,6 +33,7 @@ export const getRoomMessagesApi = async (chatRoomNo) => {
     }
 };
 
+// ★ 즐겨찾기 이후 추가/수정
 export const renameChatRoomApi = async (chatRoomNo, roomTitle) => {
     try {
         const response = await apiClient.post(`/chat/rooms/${chatRoomNo}/title`, { roomTitle });
@@ -40,6 +44,7 @@ export const renameChatRoomApi = async (chatRoomNo, roomTitle) => {
     }
 };
 
+// ★ 즐겨찾기 이후 추가/수정
 export const pinChatRoomApi = async (chatRoomNo, isPinned) => {
     try {
         const response = await apiClient.post(`/chat/rooms/${chatRoomNo}/pin`, { isPinned });
@@ -50,6 +55,7 @@ export const pinChatRoomApi = async (chatRoomNo, isPinned) => {
     }
 };
 
+// ★ 즐겨찾기 이후 추가/수정
 export const deleteChatRoomApi = async (chatRoomNo) => {
     try {
         const response = await apiClient.delete(`/chat/rooms/${chatRoomNo}`);
@@ -60,6 +66,7 @@ export const deleteChatRoomApi = async (chatRoomNo) => {
     }
 };
 
+// ★ 즐겨찾기 이후 추가/수정
 export const synthesizeMessageAudioApi = async (chatMsgNo) => {
     try {
         const response = await apiClient.post(`/chat/messages/${chatMsgNo}/tts`);
@@ -70,6 +77,7 @@ export const synthesizeMessageAudioApi = async (chatMsgNo) => {
     }
 };
 
+// ★ 즐겨찾기 이후 추가/수정
 export const sttApi = async (audioBlob) => {
     try {
         const formData = new FormData();
@@ -92,6 +100,7 @@ export const sttApi = async (audioBlob) => {
 const AUDIO_PREFIX = '[[AUDIO]]';
 const AUDIO_SUFFIX = '[[/AUDIO]]';
 
+// ★ 즐겨찾기 이후 추가/수정
 const extractAudioBase64 = (text) => {
     if (text.startsWith(AUDIO_PREFIX) && text.endsWith(AUDIO_SUFFIX)) {
         return text.slice(AUDIO_PREFIX.length, -AUDIO_SUFFIX.length);
@@ -103,6 +112,7 @@ const extractAudioBase64 = (text) => {
 const CARD_PREFIX = '[[CARD]]';
 const CARD_SUFFIX = '[[/CARD]]';
 
+// ★ 즐겨찾기 이후 추가/수정
 const extractCards = (text) => {
     if (!text.startsWith(CARD_PREFIX) || !text.endsWith(CARD_SUFFIX)) {
         return null;
@@ -118,6 +128,7 @@ const extractCards = (text) => {
 // 텍스트 전송이 끝났음을 알리는 마커 (오디오는 이 이후에 이어서 옴)
 const TEXT_DONE_MARKER = '[[TEXT_DONE]]';
 
+// ★ 즐겨찾기 이후 추가/수정
 const dispatchLine = (rawText, onChunk, onAudio, onCards, onTextDone) => {
     let text = rawText;
     if (text.startsWith(' ')) {
@@ -147,6 +158,7 @@ const dispatchLine = (rawText, onChunk, onAudio, onCards, onTextDone) => {
     onChunk(text);
 };
 
+// ★ 즐겨찾기 이후 추가/수정
 export const streamChatApi = async (chatRoomNo, message, onChunk, onAudio, onCards, onTextDone, onError, onComplete) => {
     try {
         const response = await fetch('/api/v1/chat/stream', {

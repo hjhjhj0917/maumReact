@@ -128,6 +128,7 @@ export const useDiaryDetail = () => {
         });
     };
 
+    // ★ 즐겨찾기 이후 추가/수정
     const handleAddImages = async (files) => {
         if (!diary) return;
 
@@ -142,6 +143,7 @@ export const useDiaryDetail = () => {
         }
     };
 
+    // ★ 즐겨찾기 이후 추가/수정
     const handleRemoveImage = async (imageNo) => {
         try {
             await deleteDiaryImage(imageNo);
@@ -154,6 +156,7 @@ export const useDiaryDetail = () => {
         }
     };
 
+    // ★ 즐겨찾기 이후 추가/수정
     const handleToggleFavorite = async () => {
         if (!diary) return;
 

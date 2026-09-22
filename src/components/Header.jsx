@@ -4,6 +4,7 @@ import logoImg from '../assets/images/includes/logo.webp';
 import CustomModal from './CustomModal';
 import * as S from '../style/components/Header.styles';
 
+// ★ 즐겨찾기 이후 추가/수정
 const Header = () => {
     const {
         isProfileModalOpen,

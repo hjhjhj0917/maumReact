@@ -9,11 +9,13 @@ import * as S from '../style/components/EmotionGraph.styles';
 // 축이 너무 많으면 레이더가 읽기 어려워져서 상위 감정만 표시함
 const MAX_AXES = 10;
 
+// ★ 즐겨찾기 이후 추가/수정
 const RadarDot = (props) => {
     const { cx, cy, payload } = props;
     return <circle cx={cx} cy={cy} r={4} fill={payload.color} stroke="#ffffff" strokeWidth={1.5} />;
 };
 
+// ★ 즐겨찾기 이후 추가/수정
 const RadarTooltip = ({ active, payload }) => {
     if (!active || !payload || payload.length === 0) return null;
 
@@ -26,6 +28,7 @@ const RadarTooltip = ({ active, payload }) => {
     );
 };
 
+// ★ 즐겨찾기 이후 추가/수정
 const EmotionGraph = () => {
     const [stats, setStats] = useState([]);
 

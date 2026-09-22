@@ -106,6 +106,7 @@ const OpenLink = styled.a`
 // Spotify 임베드는 iframe 하나하나가 자체 JS 플레이어를 띄우는 무거운 위젯이라,
 // 처음부터 전부 마운트하면 곡 수만큼(최대 5개) 동시에 로드되며 렌더링이 버벅이는 원인이 됨.
 // 그래서 트랙 정보만 가볍게 먼저 보여주고, 재생 버튼을 눌렀을 때만 해당 곡의 iframe을 마운트함
+// ★ 즐겨찾기 이후 추가/수정
 const DiaryMusicList = ({ musics = [] }) => {
     const [expandedIds, setExpandedIds] = useState(() => new Set());
 

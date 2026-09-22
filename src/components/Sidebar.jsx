@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import CustomModal from './CustomModal';
 import * as S from '../style/components/Sidebar.styles';
 
+// ★ 즐겨찾기 이후 추가/수정
 const Sidebar = ({
                      isOpen,
                      toggleSidebar,
@@ -27,13 +28,16 @@ const Sidebar = ({
     // 삭제 확인 대기 중인 항목: { type: 'diary' | 'chat', id, title }
     const [deleteTarget, setDeleteTarget] = useState(null);
 
+    // ★ 즐겨찾기 이후 추가/수정
     const startEdit = (e, type, id, currentTitle) => {
         e.stopPropagation();
         setEditing({ type, id, value: currentTitle || '' });
     };
 
+    // ★ 즐겨찾기 이후 추가/수정
     const cancelEdit = () => setEditing(null);
 
+    // ★ 즐겨찾기 이후 추가/수정
     const submitEdit = async (e) => {
         e.preventDefault();
         if (!editing || !editing.value.trim()) {
@@ -48,11 +52,13 @@ const Sidebar = ({
         setEditing(null);
     };
 
+    // ★ 즐겨찾기 이후 추가/수정
     const askDelete = (e, type, id, title) => {
         e.stopPropagation();
         setDeleteTarget({ type, id, title });
     };
 
+    // ★ 즐겨찾기 이후 추가/수정
     const confirmDelete = async () => {
         if (!deleteTarget) return;
         if (deleteTarget.type === 'diary') {
@@ -63,6 +69,7 @@ const Sidebar = ({
         setDeleteTarget(null);
     };
 
+    // ★ 즐겨찾기 이후 추가/수정
     const renderItemActions = (type, id, title, isPinned, onTogglePin) => (
         <S.ItemActions>
             <S.ItemActionIcon

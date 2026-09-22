@@ -7,6 +7,7 @@ const getEmotionName = (color) => {
     return entry ? entry[0] : '기록';
 };
 
+// ★ 즐겨찾기 이후 추가/수정
 const DiaryList = () => {
     const {
         year, month, daysList,

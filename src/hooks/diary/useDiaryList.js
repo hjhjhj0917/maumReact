@@ -91,6 +91,7 @@ export const useDiaryList = () => {
         });
     };
 
+    // ★ 즐겨찾기 이후 추가/수정
     const clearFilters = () => {
         setSelectedColors([]);
         setFilterResults([]);
@@ -178,6 +179,7 @@ export const useDiaryList = () => {
         });
     }, [diaries, daysInMonth, dateQuery]);
 
+    // ★ 즐겨찾기 이후 추가/수정
     const finalList = useMemo(() => {
         let list = [];
         if (keyword.trim()) {
@@ -200,6 +202,7 @@ export const useDiaryList = () => {
         return list;
     }, [keyword, searchResults, selectedColors, filterResults, diaries, showFavorites, favoriteResults, processDiaryData]);
 
+    // ★ 즐겨찾기 이후 추가/수정
     const emptyMessage = useMemo(() => {
         if (keyword.trim()) return "검색 결과가 없습니다.";
         if (selectedColors.length > 0 && showFavorites) return "해당 감정이면서 즐겨찾기한 일기가 없습니다.";
@@ -223,6 +226,7 @@ export const useDiaryList = () => {
         navigate(`/diary/${diaryNo}`);
     };
 
+    // ★ 즐겨찾기 이후 추가/수정
     const handleToggleFavorite = async (e, diaryNo, currentStatus) => {
         e.stopPropagation();
 

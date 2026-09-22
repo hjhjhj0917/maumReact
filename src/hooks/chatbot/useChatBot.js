@@ -4,6 +4,7 @@ import {
     streamChatApi, createChatRoomApi, getChatRoomsApi, getRoomMessagesApi, synthesizeMessageAudioApi
 } from '../../api/chatApi';
 
+// ★ 즐겨찾기 이후 추가/수정
 export const useChatBot = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const roomParam = searchParams.get('room');
@@ -94,6 +95,7 @@ export const useChatBot = () => {
     }, [messages]);
 
     // 큐에 쌓인 오디오를 순서대로 하나씩 재생함
+    // ★ 즐겨찾기 이후 추가/수정
     const playNextAudio = (index) => {
         if (audioQueueRef.current.length === 0) {
             isPlayingAudioRef.current = false;
@@ -116,6 +118,7 @@ export const useChatBot = () => {
 
     // base64로 받은 문장 단위 오디오를 자동 재생하지 않고, 해당 메시지에 쌓아만 둠
     // (사용자가 스피커 버튼을 눌렀을 때 playMessageAudio로 재생)
+    // ★ 즐겨찾기 이후 추가/수정
     const handleAudioChunk = (base64Audio) => {
         setMessages(prev => {
             const lastMessage = prev[prev.length - 1];
@@ -132,6 +135,7 @@ export const useChatBot = () => {
     };
 
     // 챗봇 음성 재생을 즉시 중단함 (바지-인: 마이크로 말하기 시작할 때, 또는 스피커 버튼으로 정지할 때 호출)
+    // ★ 즐겨찾기 이후 추가/수정
     const stopSpeaking = () => {
         if (currentAudioRef.current) {
             currentAudioRef.current.onended = null;
@@ -144,6 +148,7 @@ export const useChatBot = () => {
         setSpeakingIndex(null);
     };
 
+    // ★ 즐겨찾기 이후 추가/수정
     const playAudioChunks = (index, audioChunks) => {
         audioQueueRef.current = audioChunks.map(
             base64Audio => new Audio(`data:audio/mp3;base64,${base64Audio}`)
@@ -155,6 +160,7 @@ export const useChatBot = () => {
     // 특정 메시지(index)에 쌓인 오디오 조각들을 순서대로 재생함. 이미 재생 중이면 정지시킴(토글)
     // 라이브 스트리밍 중 받은 audioChunks가 없고(=채팅방을 나갔다 돌아온 경우) hasAudio만 true면,
     // 저장된 텍스트로 TTS를 다시 합성해서 재생함(음성 데이터 자체는 저장하지 않으므로)
+    // ★ 즐겨찾기 이후 추가/수정
     const playMessageAudio = async (index) => {
         if (speakingIndex === index) {
             stopSpeaking();
@@ -192,6 +198,7 @@ export const useChatBot = () => {
     };
 
     // 정책/기관 카드 데이터를 답변 텍스트와 별개로 마지막 봇 메시지에 붙임
+    // ★ 즐겨찾기 이후 추가/수정
     const handleCardsChunk = (cards) => {
         setMessages(prev => {
             const lastMessage = prev[prev.length - 1];
@@ -206,6 +213,7 @@ export const useChatBot = () => {
         });
     };
 
+    // ★ 즐겨찾기 이후 추가/수정
     const sendMessage = async () => {
         if (!input.trim() || isStreaming || !currentRoomNo) return;
 

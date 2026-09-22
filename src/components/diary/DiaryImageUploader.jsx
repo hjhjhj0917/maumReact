@@ -151,6 +151,7 @@ const LightboxCounter = styled.div`
 // images: 이미 업로드되어 서버에 저장된 이미지 [{ imageNo, imageUrl }]
 // pendingFiles: 아직 서버에 올리지 않고 브라우저에만 있는 파일 [{ file, previewUrl }] (일기 작성 중 diaryNo가 없을 때 사용)
 // 썸네일을 클릭하면 화면 중앙에 크게 보여주는 라이트박스가 뜨고, 좌우 화살표로 다른 이미지로 넘어갈 수 있음
+// ★ 즐겨찾기 이후 추가/수정
 const DiaryImageUploader = ({
     images = [],
     pendingFiles = [],

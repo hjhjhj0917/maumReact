@@ -5,6 +5,7 @@ import CustomModal from '../../components/CustomModal';
 import DiaryImageUploader from '../../components/diary/DiaryImageUploader';
 import * as S from '../../style/pages/Diary/DiaryWrite.styles';
 
+// ★ 즐겨찾기 이후 추가/수정
 const DiaryWrite = () => {
     const navigate = useNavigate();
     const {
