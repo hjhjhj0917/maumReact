@@ -86,8 +86,11 @@ export const sttApi = async (audioBlob) => {
         // apiClient의 기본 Content-Type(application/json)이 그대로 나가면 브라우저가 FormData용
         // multipart boundary를 못 붙여 Spring이 멀티파트 요청으로 인식하지 못함 — 여기서만 지워서
         // 브라우저가 자동으로 채우게 함
+        // 백엔드(SttService)에 20초 타임아웃을 걸어뒀지만, 그 응답조차 안 돌아오는 경우까지
+        // 대비해 프론트에도 타임아웃을 걸어 무한 로딩(isTranscribing 고착)을 방지함
         const response = await apiClient.post('/stt', formData, {
-            headers: { 'Content-Type': undefined }
+            headers: { 'Content-Type': undefined },
+            timeout: 25000
         });
         return response;
     } catch (error) {

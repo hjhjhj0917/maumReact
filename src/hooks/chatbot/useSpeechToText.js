@@ -48,6 +48,14 @@ export const useSpeechToText = ({ onResult, onStart, onEnd }) => {
                 analyserRef.current = null;
 
                 const audioBlob = new Blob(chunksRef.current, { type: 'audio/webm;codecs=opus' });
+
+                // 말을 안 하고 바로 닫으면 dataavailable이 한 번도 안 와서 거의 빈 블롭이 되는 경우가 있음 —
+                // 이런 데이터는 서버까지 보낼 필요 없이 바로 끝내서 불필요한 STT 호출 자체를 피함
+                if (audioBlob.size < 1000) {
+                    onEnd?.();
+                    return;
+                }
+
                 setIsTranscribing(true);
                 try {
                     const text = await sttApi(audioBlob);
