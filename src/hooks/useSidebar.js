@@ -68,6 +68,8 @@ export const useSidebar = () => {
     const renameDiary = async (diaryNo, title) => {
         try {
             await updateDiaryTitle(diaryNo, title);
+            // 서버에서 목록을 다시 불러오기 전에도 바뀐 제목이 바로 보이도록 먼저 화면 상태를 갱신함
+            setRecentDiaries(prev => prev.map(d => d.diaryNo === diaryNo ? { ...d, title } : d));
             window.dispatchEvent(new Event('diary-updated'));
         } catch (err) {
             console.error("일기 이름변경 실패", err);
