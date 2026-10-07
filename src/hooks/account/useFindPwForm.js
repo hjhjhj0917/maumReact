@@ -145,7 +145,7 @@ export const useFindPwForm = () => {
         try {
             const res = await updateUserPw(formData.userEmail, formData.password, formData.code);
             if (res.result === 1) {
-                showAlert("변경 완료", "비밀번호가 성공적으로 변경되었습니다.", () => navigate('/account/login'));
+                showAlert("변경 완료", "비밀번호가 성공적으로 변경되었습니다.", () => navigate('/'));
             } else {
                 showAlert("변경 실패", res.msg || "다시 시도해 주세요.");
             }

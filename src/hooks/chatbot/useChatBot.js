@@ -59,6 +59,8 @@ export const useChatBot = () => {
                 } else {
                     const newRoom = await createChatRoomApi();
                     targetRoomNo = newRoom.chatRoomNo;
+                    // 사이드바는 이미 빈 목록으로 한 번 불러온 뒤라서, 여기서 방을 만들었다는 걸 알려줘야 바로 보임
+                    window.dispatchEvent(new Event('chat-updated'));
                 }
                 setCurrentRoomNo(targetRoomNo);
                 setSearchParams({ room: targetRoomNo });

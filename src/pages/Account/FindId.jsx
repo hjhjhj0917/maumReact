@@ -123,7 +123,7 @@ const FindId = () => {
                                     <S.HighlightIdBox>
                                         {foundId}
                                     </S.HighlightIdBox>
-                                    <S.BtnConfirm type="button" onClick={() => navigate('/account/login')}>
+                                    <S.BtnConfirm type="button" onClick={() => navigate('/')}>
                                         확인
                                     </S.BtnConfirm>
                                 </S.ResultContainer>
