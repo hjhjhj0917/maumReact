@@ -245,8 +245,8 @@ const MentalMap = () => {
                                         <S.RouteButtonRound
                                             href={
                                                 myLocation
-                                                    ? `https://map.kakao.com/link/from/내위치,${myLocation.lat},${myLocation.lng}/to/${selectedInst.name || selectedInst.NAME},${selectedInst.location.coordinates[1]},${selectedInst.location.coordinates[0]}`
-                                                    : `https://map.kakao.com/link/to/${selectedInst.name || selectedInst.NAME},${selectedInst.location.coordinates[1]},${selectedInst.location.coordinates[0]}`
+                                                    ? `https://map.kakao.com/link/from/${encodeURIComponent('내위치')},${myLocation.lat},${myLocation.lng}/to/${encodeURIComponent(selectedInst.name || selectedInst.NAME)},${selectedInst.location.coordinates[1]},${selectedInst.location.coordinates[0]}`
+                                                    : `https://map.kakao.com/link/to/${encodeURIComponent(selectedInst.name || selectedInst.NAME)},${selectedInst.location.coordinates[1]},${selectedInst.location.coordinates[0]}`
                                             }
                                             target="_blank"
                                             rel="noopener noreferrer"
