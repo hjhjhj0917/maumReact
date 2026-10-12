@@ -1,0 +1,14 @@
+.git
+.idea
+.claude
+node_modules
+dist
+dist-ssr
+
+# 로컬 환경변수 파일은 빌드에 포함하지 않음 (VITE_KAKAO_JS_KEY는 --build-arg로 전달)
+.env
+.env.*
+
+Dockerfile
+.dockerignore
+README.md
